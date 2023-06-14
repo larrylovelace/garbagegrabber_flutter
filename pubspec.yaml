@@ -41,6 +41,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   email_validator: ^2.1.17
   pin_code_fields: ^7.4.0
+  dropdown_button2: ^2.1.3
   
 
 dev_dependencies:

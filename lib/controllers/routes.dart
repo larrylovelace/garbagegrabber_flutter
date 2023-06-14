@@ -1,3 +1,4 @@
+import 'package:garbage_grabber/pages/setup/form_fill.dart';
 import 'package:garbage_grabber/pages/setup/login.dart';
 import 'package:garbage_grabber/pages/setup/otp_screen.dart';
 import 'package:garbage_grabber/pages/setup/signup.dart';
@@ -7,6 +8,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String otpscreen = '/otpscreen';
+  static const String formfill = '/formfill';
 
   static final List<GetPage> routes = [
     // GetPage(
@@ -33,6 +35,12 @@ class AppRoutes {
       binding: OtpScreenBinding(),
       transition: Transition.fadeIn,
     ),
+    GetPage(
+      name: formfill,
+      page: () => const FormFillScreen(),
+      binding: FormFillScreenBinding(),
+      transition: Transition.fadeIn,
+    ),
   ];
 }
 
@@ -53,6 +61,13 @@ class RegisterBinding extends Bindings {
 class OtpScreenBinding extends Bindings {
   @override
   void dependencies() {
-    // Dependencies for the Register screen can be added here
+    // Dependencies for the Otp screen can be added here
+  }
+}
+
+class FormFillScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Fromfill screen can be added here
   }
 }

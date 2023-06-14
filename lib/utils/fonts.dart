@@ -5,7 +5,9 @@ class AppFonts {
   static final TextStyle poppinsRegular = GoogleFonts.poppins(
     fontWeight: FontWeight.normal,
   );
-
+  static final TextStyle poppinsLightMedium = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+  );
   static final TextStyle poppinsMedium = GoogleFonts.poppins(
     fontWeight: FontWeight.w600,
   );

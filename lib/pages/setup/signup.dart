@@ -55,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             key: _formKey2,
             child: ListView(physics: const ClampingScrollPhysics(), children: [
               SizedBox(
-                height: deviceHeight * 0.06,
+                height: deviceHeight * 0.02,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -258,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6)),
                           onPressed: () async {
-                            // final isvalid = _formKey2.currentState!.validate();
+                            final isvalid = _formKey2.currentState!.validate();
                           },
                           child: Text('Sign up',
                               style: AppFonts.poppinsMedium.copyWith(

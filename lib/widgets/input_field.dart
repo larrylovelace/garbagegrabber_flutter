@@ -39,6 +39,7 @@ class InputField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       cursorColor: Colors.black,
+      cursorHeight: deviceHeight * 0.027,
       style: AppFonts.poppinsRegular.copyWith(),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: keywordType,
@@ -50,7 +51,7 @@ class InputField extends StatelessWidget {
         prefixIcon: prefixIcon,
         prefixIconColor: AppColors.iconColor,
         errorText: errorText,
-        fillColor: Colors.transparent.withOpacity(0.018),
+        fillColor: AppColors.fillColor,
         filled: true,
         contentPadding: EdgeInsets.only(
           bottom: deviceHeight * 0.018,
@@ -95,10 +96,7 @@ class InputField extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
         ),
         errorMaxLines: 3,
-        errorStyle: GoogleFonts.poppins(
-          fontSize: 12,
-          textBaseline: TextBaseline.alphabetic,
-        ),
+        errorStyle: GoogleFonts.poppins(color: Colors.red),
       ),
       validator: (value) => validation(value),
     );

@@ -138,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6)),
                           onPressed: () async {
-                            // final isvalid = _formKey1.currentState!.validate();
+                            final isvalid = _formKey1.currentState!.validate();
                           },
                           child: Text('Login',
                               style: AppFonts.poppinsMedium.copyWith(
