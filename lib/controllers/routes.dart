@@ -1,14 +1,17 @@
-import 'package:garbage_grabber/pages/setup/form_fill.dart';
-import 'package:garbage_grabber/pages/setup/login.dart';
-import 'package:garbage_grabber/pages/setup/otp_screen.dart';
-import 'package:garbage_grabber/pages/setup/signup.dart';
+import 'package:garbage_grabber/pages/home/homescreen.dart';
+import 'package:garbage_grabber/pages/screens/login.dart';
+import 'package:garbage_grabber/pages/screens/signup.dart';
 import 'package:get/get.dart';
+
+import '../pages/screens/form_fill.dart';
+import '../pages/screens/otp_screen.dart';
 
 class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String otpscreen = '/otpscreen';
   static const String formfill = '/formfill';
+  static const String homescreen = '/homescreen';
 
   static final List<GetPage> routes = [
     // GetPage(
@@ -41,6 +44,12 @@ class AppRoutes {
       binding: FormFillScreenBinding(),
       transition: Transition.fadeIn,
     ),
+    GetPage(
+      name: homescreen,
+      page: () => const HomeScreen(),
+      binding: HomeScreenBinding(),
+      transition: Transition.fadeIn,
+    ),
   ];
 }
 
@@ -69,5 +78,12 @@ class FormFillScreenBinding extends Bindings {
   @override
   void dependencies() {
     // Dependencies for the Fromfill screen can be added here
+  }
+}
+
+class HomeScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Home screen can be added here
   }
 }

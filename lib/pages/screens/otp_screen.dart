@@ -22,12 +22,11 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
-
-  var enteredCode;
+  String? enteredCode;
   bool isLoading = false;
   bool isotpInvalid = false;
 
-  var email;
+  String? email;
   int countdown = 60;
   bool showResendText = true;
 

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/controllers/dropdown_controller.dart';
-import 'package:garbage_grabber/controllers/multistep_controller.dart';
+
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
 import 'package:garbage_grabber/widgets/dropdown.dart';
 import 'package:garbage_grabber/widgets/input_field.dart';
 import 'package:get/get.dart';
+
+import '../../controllers/setup_controller.dart';
 
 class FormFillScreen extends StatefulWidget {
   const FormFillScreen({super.key});
@@ -15,8 +16,8 @@ class FormFillScreen extends StatefulWidget {
 }
 
 class _FormFillScreenState extends State<FormFillScreen> {
-  StepController controller = Get.put(StepController());
-  DropDownController dcontroller = Get.put(DropDownController());
+  SetupScreenController controller = Get.put(SetupScreenController());
+
   final GlobalKey<FormState> _formKey4 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey5 = GlobalKey<FormState>();
   var apartmentName = [
@@ -61,7 +62,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
             content: Builder(builder: (context) {
               double deviceHeight = MediaQuery.of(context).size.height;
               // double deviceWidth = MediaQuery.of(context).size.width;
-              return GetBuilder<DropDownController>(
+              return GetBuilder<SetupScreenController>(
                 builder: (controller) {
                   return Form(
                     key: _formKey4,
@@ -72,11 +73,11 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Select your apartment',
                         ),
                         DropDown(
-                            currentSelectedValue: dcontroller.dropDownValue,
+                            currentSelectedValue: controller.dropDownValue,
                             selectingCategory: apartmentName,
                             heightofCategory: deviceHeight * 0.56,
                             onSelecting: (value) {
-                              dcontroller.onSelecting(value);
+                              controller.onSelecting(value);
                             },
                             formvalidation: (value) {
                               if (value == null || value.isEmpty) {
@@ -88,7 +89,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                         SizedBox(
                           height: deviceHeight * 0.02,
                         ),
-                        dcontroller.apartmentothersValue
+                        controller.apartmentothersValue
                             ? Column(
                                 children: [
                                   Header(
@@ -96,18 +97,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                                     text: 'Apartment name',
                                   ),
                                   InputField(
-                                      errorText: null,
-                                      hintText: 'Apartment name',
-                                      keywordType: TextInputType.name,
-                                      validation: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Required ';
-                                        } else {
-                                          return null;
-                                        }
-                                      },
-                                      obscureText: false,
-                                      lastname: true),
+                                    isPrefix: false,
+                                    errorText: null,
+                                    hintText: 'Apartment name',
+                                    keywordType: TextInputType.name,
+                                    validation: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Required ';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
+                                    obscureText: false,
+                                  ),
                                   SizedBox(
                                     height: deviceHeight * 0.02,
                                   ),
@@ -119,18 +121,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Apartment number',
                         ),
                         InputField(
-                            errorText: null,
-                            hintText: 'Apartment number',
-                            keywordType: TextInputType.number,
-                            validation: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required ';
-                              } else {
-                                return null;
-                              }
-                            },
-                            obscureText: false,
-                            lastname: true),
+                          isPrefix: false,
+                          errorText: null,
+                          hintText: 'Apartment number',
+                          keywordType: TextInputType.number,
+                          validation: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Required ';
+                            } else {
+                              return null;
+                            }
+                          },
+                          obscureText: false,
+                        ),
                         SizedBox(
                           height: deviceHeight * 0.02,
                         ),
@@ -139,18 +142,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Unit number',
                         ),
                         InputField(
-                            errorText: null,
-                            hintText: 'Unit number',
-                            keywordType: TextInputType.number,
-                            validation: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required ';
-                              } else {
-                                return null;
-                              }
-                            },
-                            obscureText: false,
-                            lastname: true),
+                          isPrefix: false,
+                          errorText: null,
+                          hintText: 'Unit number',
+                          keywordType: TextInputType.number,
+                          validation: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Required ';
+                            } else {
+                              return null;
+                            }
+                          },
+                          obscureText: false,
+                        ),
                         SizedBox(
                           height: deviceHeight * 0.02,
                         ),
@@ -159,18 +163,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'What floor',
                         ),
                         InputField(
-                            errorText: null,
-                            hintText: 'What floor',
-                            keywordType: TextInputType.number,
-                            validation: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required ';
-                              } else {
-                                return null;
-                              }
-                            },
-                            obscureText: false,
-                            lastname: true)
+                          isPrefix: false,
+                          errorText: null,
+                          hintText: 'What floor',
+                          keywordType: TextInputType.number,
+                          validation: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Required ';
+                            } else {
+                              return null;
+                            }
+                          },
+                          obscureText: false,
+                        )
                       ],
                     ),
                   );
@@ -196,18 +201,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'Street address',
                     ),
                     InputField(
-                        errorText: null,
-                        hintText: 'Street address',
-                        keywordType: TextInputType.name,
-                        validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Required ';
-                          } else {
-                            return null;
-                          }
-                        },
-                        obscureText: false,
-                        lastname: true),
+                      isPrefix: false,
+                      errorText: null,
+                      hintText: 'Street address',
+                      keywordType: TextInputType.name,
+                      validation: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required ';
+                        } else {
+                          return null;
+                        }
+                      },
+                      obscureText: false,
+                    ),
                     SizedBox(
                       height: deviceHeight * 0.02,
                     ),
@@ -216,18 +222,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'City',
                     ),
                     InputField(
-                        errorText: null,
-                        hintText: 'City',
-                        keywordType: TextInputType.name,
-                        validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Required ';
-                          } else {
-                            return null;
-                          }
-                        },
-                        obscureText: false,
-                        lastname: true),
+                      isPrefix: false,
+                      errorText: null,
+                      hintText: 'City',
+                      keywordType: TextInputType.name,
+                      validation: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required ';
+                        } else {
+                          return null;
+                        }
+                      },
+                      obscureText: false,
+                    ),
                     SizedBox(
                       height: deviceHeight * 0.02,
                     ),
@@ -236,18 +243,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'State',
                     ),
                     InputField(
-                        errorText: null,
-                        hintText: 'State',
-                        keywordType: TextInputType.name,
-                        validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Required ';
-                          } else {
-                            return null;
-                          }
-                        },
-                        obscureText: false,
-                        lastname: true),
+                      isPrefix: false,
+                      errorText: null,
+                      hintText: 'State',
+                      keywordType: TextInputType.name,
+                      validation: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required ';
+                        } else {
+                          return null;
+                        }
+                      },
+                      obscureText: false,
+                    ),
                     SizedBox(
                       height: deviceHeight * 0.02,
                     ),
@@ -256,18 +264,19 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'Zip code',
                     ),
                     InputField(
-                        errorText: null,
-                        hintText: 'Zip code',
-                        keywordType: TextInputType.number,
-                        validation: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Required ';
-                          } else {
-                            return null;
-                          }
-                        },
-                        obscureText: false,
-                        lastname: true)
+                      isPrefix: false,
+                      errorText: null,
+                      hintText: 'Zip code',
+                      keywordType: TextInputType.number,
+                      validation: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required ';
+                        } else {
+                          return null;
+                        }
+                      },
+                      obscureText: false,
+                    )
                   ],
                 ),
               );
@@ -306,7 +315,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
               colorScheme: ColorScheme.light(
                   secondary: AppColors.planeColor,
                   primary: AppColors.primaryColor)),
-          child: GetBuilder<StepController>(
+          child: GetBuilder<SetupScreenController>(
             builder: (controller) {
               return Stepper(
                 physics: const ClampingScrollPhysics(),

@@ -12,9 +12,9 @@ class InputField extends StatelessWidget {
     required this.validation,
     required this.obscureText,
     this.controller,
+    required this.isPrefix,
     this.suffix,
     this.prefixIcon,
-    required this.lastname,
     this.onFieldSubmitted,
     this.focusNode,
   }) : super(key: key);
@@ -25,9 +25,10 @@ class InputField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType keywordType;
   final bool obscureText;
+  final bool isPrefix;
   final Widget? suffix;
   final Widget? prefixIcon;
-  final bool lastname;
+
   final void Function(String)? onFieldSubmitted;
   final FocusNode? focusNode;
 
@@ -44,7 +45,7 @@ class InputField extends StatelessWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: keywordType,
       obscureText: obscureText,
-      textInputAction: lastname ? TextInputAction.done : TextInputAction.next,
+      textInputAction: TextInputAction.next,
       onFieldSubmitted: onFieldSubmitted,
       focusNode: focusNode,
       decoration: InputDecoration(
@@ -57,9 +58,9 @@ class InputField extends StatelessWidget {
           bottom: deviceHeight * 0.018,
           top: deviceHeight * 0.015,
         ),
-        prefix: lastname
-            ? Padding(padding: EdgeInsets.only(left: deviceWidth * 0.04))
-            : const Padding(padding: EdgeInsets.zero),
+        prefix: isPrefix
+            ? const Padding(padding: EdgeInsets.zero)
+            : Padding(padding: EdgeInsets.only(left: deviceWidth * 0.04)),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             width: 0.1,
@@ -85,10 +86,7 @@ class InputField extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            width: 0.8,
-            color: Color.fromRGBO(0, 0, 0, 0.15),
-          ),
+          borderSide: const BorderSide(width: 0.8, color: Colors.red),
           borderRadius: BorderRadius.circular(6),
         ),
         errorBorder: OutlineInputBorder(
