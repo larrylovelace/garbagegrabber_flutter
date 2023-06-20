@@ -6,6 +6,7 @@ import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
 import 'package:get/get.dart';
 import '../../controllers/apihandler.dart';
+import '../../controllers/routes.dart';
 import '../../controllers/setup_controller.dart';
 import '../../widgets/error_handling.dart';
 import '../../widgets/input_field.dart';
@@ -33,8 +34,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       String uri = APIConstants.baseURI + APIConstants.customersignUp;
       var response = await http.post(Uri.parse(uri), body: sendingBody);
-      print(response.body);
+
       if (response.statusCode == 200) {
+        Get.toNamed(AppRoutes.otpscreen, arguments: {'email': email.text});
+        controller.isLoadingindicator();
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
         Map extractedvalue = value['errors'];
@@ -319,7 +322,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         sendingBody = {
                                           "first_name": firstname.text,
                                           "last_name": lastname.text,
-                                          "phone_number": phoneNum.text,
+                                          "phone_number": "+1${phoneNum.text}",
                                           "email": email.text,
                                           "password": password.text,
                                           "confirm_password": password.text,

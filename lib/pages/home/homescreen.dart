@@ -199,7 +199,7 @@ class CustomCard extends StatelessWidget {
                     Text(
                       timeperiod,
                       style: AppFonts.poppinsRegular.copyWith(
-                          color: AppColors.primaryColor.withOpacity(0.8)),
+                          color: AppColors.primaryColor.withOpacity(0.9)),
                     )
                   ],
                 )

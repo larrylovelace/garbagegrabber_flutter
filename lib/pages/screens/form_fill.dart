@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:garbage_grabber/controllers/routes.dart';
 
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
@@ -6,7 +10,12 @@ import 'package:garbage_grabber/widgets/dropdown.dart';
 import 'package:garbage_grabber/widgets/input_field.dart';
 import 'package:get/get.dart';
 
+import '../../controllers/apihandler.dart';
 import '../../controllers/setup_controller.dart';
+import 'package:http/http.dart ' as http;
+
+import '../../widgets/error_handling.dart';
+import '../../widgets/error_snackbar.dart';
 
 class FormFillScreen extends StatefulWidget {
   const FormFillScreen({super.key});
@@ -16,6 +25,8 @@ class FormFillScreen extends StatefulWidget {
 }
 
 class _FormFillScreenState extends State<FormFillScreen> {
+  final storage = const FlutterSecureStorage();
+
   SetupScreenController controller = Get.put(SetupScreenController());
 
   final GlobalKey<FormState> _formKey4 = GlobalKey<FormState>();
@@ -47,6 +58,41 @@ class _FormFillScreenState extends State<FormFillScreen> {
   TextEditingController city = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController zipcode = TextEditingController();
+  Map sendingDetails = {};
+
+  Future<void> sendfromDetails(sendigdetails) async {
+    try {
+      String uri = APIConstants.baseURI + APIConstants.sendfromData;
+      var response = await http.post(Uri.parse(uri), body: sendingDetails);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+
+        await storage.write(
+            key: 'refreshtoken', value: data['token']['refresh'].toString());
+        await storage.write(
+            key: 'accesstoken', value: data['token']['access'].toString());
+        controller.isLoadingindicator();
+        Get.offAllNamed(AppRoutes.homescreen);
+      } else {
+        // ignore: use_build_context_synchronously
+        CustomSnackBar.show(
+          context,
+          'Error',
+          'Something went wrong',
+          Colors.red, // Custom background color
+          Icons.error_rounded, // Custom icon
+          Colors.red, // Custom icon color
+        );
+        controller.isLoadingindicator();
+      }
+    } catch (e) {
+      print(e);
+      controller.isLoadingindicator();
+      final snackBar = buildErrorSnackBar(context, e);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
 
   List<Step> getSteps() => [
         Step(
@@ -78,6 +124,11 @@ class _FormFillScreenState extends State<FormFillScreen> {
                             heightofCategory: deviceHeight * 0.56,
                             onSelecting: (value) {
                               controller.onSelecting(value);
+                              if (value != 'Other') {
+                                apartmentname.text = value;
+                              } else {
+                                apartmentname.text = '';
+                              }
                             },
                             formvalidation: (value) {
                               if (value == null || value.isEmpty) {
@@ -97,6 +148,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                                     text: 'Apartment name',
                                   ),
                                   InputField(
+                                    controller: apartmentname,
                                     isPrefix: false,
                                     errorText: null,
                                     hintText: 'Apartment name',
@@ -121,6 +173,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Apartment number',
                         ),
                         InputField(
+                          controller: apartmentnumber,
                           isPrefix: false,
                           errorText: null,
                           hintText: 'Apartment number',
@@ -142,6 +195,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Unit number',
                         ),
                         InputField(
+                          controller: unitnumber,
                           isPrefix: false,
                           errorText: null,
                           hintText: 'Unit number',
@@ -163,6 +217,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'What floor',
                         ),
                         InputField(
+                          controller: whatfloornumber,
                           isPrefix: false,
                           errorText: null,
                           hintText: 'What floor',
@@ -201,6 +256,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'Street address',
                     ),
                     InputField(
+                      controller: streetaddress,
                       isPrefix: false,
                       errorText: null,
                       hintText: 'Street address',
@@ -222,6 +278,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'City',
                     ),
                     InputField(
+                      controller: city,
                       isPrefix: false,
                       errorText: null,
                       hintText: 'City',
@@ -243,6 +300,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'State',
                     ),
                     InputField(
+                      controller: state,
                       isPrefix: false,
                       errorText: null,
                       hintText: 'State',
@@ -264,6 +322,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'Zip code',
                     ),
                     InputField(
+                      controller: zipcode,
                       isPrefix: false,
                       errorText: null,
                       hintText: 'Zip code',
@@ -321,7 +380,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                 physics: const ClampingScrollPhysics(),
                 type: StepperType.vertical,
                 currentStep: controller.currentPosition,
-                onStepContinue: () {
+                onStepContinue: () async {
                   final isValid = _formKey4.currentState!.validate();
 
                   if (isValid) {
@@ -329,7 +388,25 @@ class _FormFillScreenState extends State<FormFillScreen> {
                         controller.currentPosition == getSteps().length - 1;
                     if (isLastStep) {
                       final isValid = _formKey5.currentState!.validate();
-                      if (isValid) {}
+                      if (isValid) {
+                        controller.isLoadingindicator();
+                        sendingDetails = {
+                          "email": controller.sendemail,
+                          "password": controller.password,
+                          "appartment_complex_name": apartmentname.text,
+                          "appartment_number": apartmentnumber.text,
+                          "unit_number": unitnumber.text,
+                          "floor_number": whatfloornumber.text,
+                          "street_address": streetaddress.text,
+                          "city": city.text,
+                          "state": state.text,
+                          "zipcode": zipcode.text,
+                          "visitor_location": ''
+                        };
+                        print(sendingDetails);
+
+                        await sendfromDetails(sendingDetails);
+                      }
                       // Handle last step completion
                     } else {
                       _formKey4.currentState!.save(); // Save the form data
@@ -353,26 +430,44 @@ class _FormFillScreenState extends State<FormFillScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                                backgroundColor:
-                                    MaterialStateProperty.all<Color>(
-                                        AppColors.primaryColor),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6),
-                                ))),
-                            onPressed: () {
-                              details.onStepContinue!();
-                            },
-                            child: Text(
-                              'Next',
-                              style: AppFonts.poppinsMedium.copyWith(
-                                  fontSize: AppFonts.mediumFontSize,
-                                  color: AppColors.planeColor),
-                            ),
-                          ),
+                          child: controller.isindicatorLoading
+                              ? Container(
+                                  height: deviceHeight * 0.05,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: AppColors.primaryColor),
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: deviceHeight * 0.03,
+                                      width: deviceWidth * 0.064,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 1.4,
+                                        color: AppColors.planeColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  height: deviceHeight * 0.05,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: AppColors.primaryColor),
+                                  child: MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(6)),
+                                    onPressed: () {
+                                      details.onStepContinue!();
+                                    },
+                                    child: Text(
+                                      'Next',
+                                      style: AppFonts.poppinsMedium.copyWith(
+                                          fontSize: AppFonts.mediumFontSize,
+                                          color: AppColors.planeColor),
+                                    ),
+                                  ),
+                                ),
                         ),
                         if (controller.currentPosition != 0)
                           SizedBox(
@@ -380,25 +475,23 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           ),
                         if (controller.currentPosition != 0)
                           Expanded(
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                    AppColors.secondaryColor.withOpacity(1),
-                                  ),
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ))),
-                              onPressed: () {
-                                details.onStepCancel!();
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: AppFonts.poppinsMedium.copyWith(
-                                    fontSize: AppFonts.mediumFontSize,
-                                    color: Colors.black87),
+                            child: Container(
+                              height: deviceHeight * 0.05,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(6),
+                                  color:
+                                      AppColors.secondaryColor.withOpacity(1)),
+                              child: MaterialButton(
+                                onPressed: () {
+                                  details.onStepCancel!();
+                                },
+                                child: Text(
+                                  'Cancel',
+                                  style: AppFonts.poppinsMedium.copyWith(
+                                      fontSize: AppFonts.mediumFontSize,
+                                      color: AppColors.cancelColor),
+                                ),
                               ),
                             ),
                           ),

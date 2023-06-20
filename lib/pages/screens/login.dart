@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:garbage_grabber/controllers/routes.dart';
 import 'package:garbage_grabber/utils/colors.dart';
@@ -10,6 +11,8 @@ import 'package:get/get.dart';
 import '../../controllers/apihandler.dart';
 import '../../controllers/setup_controller.dart';
 import '../../widgets/error_handling.dart';
+import '../../widgets/error_snackbar.dart';
+import '../../widgets/formfilldialog.dart';
 import '../../widgets/input_field.dart';
 import 'package:http/http.dart ' as http;
 
@@ -21,6 +24,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final storage = const FlutterSecureStorage();
+
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
@@ -34,6 +39,22 @@ class _LoginScreenState extends State<LoginScreen> {
       var response = await http.post(Uri.parse(uri), body: sendingBody);
 
       if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+
+        await storage.write(
+            key: 'refreshtoken', value: data['token']['refresh'].toString());
+        await storage.write(
+            key: 'accesstoken', value: data['token']['access'].toString());
+        // ignore: use_build_context_synchronously
+        CustomSnackBar.show(
+          context,
+          'Success',
+          'Login successfully',
+          AppColors.primaryColor, // Custom background color
+          Icons.check, // Custom icon
+          AppColors.primaryColor, // Custom icon color
+        );
+        controller.isLoadingindicator();
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 
@@ -42,6 +63,19 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (value.containsKey("non_field_errors")) {
           controller.errormailoccur(value['non_field_errors'][0]);
         }
+        controller.isLoadingindicator();
+      } else if (response.statusCode == 403) {
+        // ignore: use_build_context_synchronously
+        showDialog(
+            context: context, builder: (context) => OtpDialog(email: email));
+        controller.isLoadingindicator();
+      } else if (response.statusCode == 422) {
+        controller.sendcredentials([email.text, password.text]);
+        // ignore: use_build_context_synchronously
+        showDialog(
+            context: context, builder: (context) => const FormFillDialog());
+        controller.isLoadingindicator();
+      } else {
         controller.isLoadingindicator();
       }
     } catch (e) {
@@ -217,6 +251,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: AppFonts.poppinsRegular.copyWith()),
                               TextButton(
                                   onPressed: () {
+                                    Get.deleteAll();
                                     Get.toNamed(AppRoutes.register);
                                   },
                                   child: Text(
@@ -238,3 +273,184 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+// ignore: must_be_immutable
+class OtpDialog extends StatelessWidget {
+  OtpDialog({
+    super.key,
+    required this.email,
+  });
+
+  final TextEditingController email;
+
+  SetupScreenController controller = Get.put(SetupScreenController());
+  @override
+  Widget build(BuildContext context) {
+    double deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
+    return AlertDialog(
+      backgroundColor: const Color.fromARGB(255, 255, 252, 252),
+      elevation: 0,
+      scrollable: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(6),
+          topRight: Radius.circular(6),
+          bottomLeft: Radius.circular(6),
+          bottomRight: Radius.circular(6),
+        ),
+      ),
+      title: SingleChildScrollView(
+        child: SizedBox(
+          height: deviceHeight * 0.2,
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("Please verify your email",
+                    style: AppFonts.poppinsLightMedium
+                        .copyWith(fontSize: AppFonts.mediumFontSize)),
+              ],
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Text('Send the verification code to',
+                        style: AppFonts.poppinsRegular
+                            .copyWith(fontSize: AppFonts.smallFontSize)),
+                  ],
+                ),
+                SizedBox(height: deviceHeight * 0.005),
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(left: deviceWidth * 0.04),
+                      width: deviceWidth * 0.55,
+                      decoration: BoxDecoration(
+                          color: AppColors.iconColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: Text(email.text,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppFonts.poppinsMedium.copyWith(
+                                    fontSize: AppFonts.snackBarfontlarge)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: deviceHeight * 0.042,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GetBuilder<SetupScreenController>(
+                      builder: (controller) {
+                        return SizedBox(
+                          width: deviceWidth * 0.24,
+                          child: controller.isindicatorLoading
+                              ? Container(
+                                  height: deviceHeight * 0.044,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: AppColors.primaryColor),
+                                  child: Center(
+                                    child: SizedBox(
+                                      height: deviceHeight * 0.028,
+                                      width: deviceWidth * 0.059,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 1.4,
+                                        color: AppColors.planeColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  height: deviceHeight * 0.044,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(6),
+                                      color: AppColors.primaryColor),
+                                  child: MaterialButton(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(6)),
+                                    onPressed: () async {
+                                      controller.isLoadingindicator();
+                                      try {
+                                        String uri = APIConstants.baseURI +
+                                            APIConstants
+                                                .customerEmailVerification;
+                                        var response = await http
+                                            .post(Uri.parse(uri), body: {
+                                          "email": email.text,
+                                        });
+                                        if (response.statusCode == 200) {
+                                          controller.isLoadingindicator();
+                                          Get.offNamed(AppRoutes.otpscreen,
+                                              arguments: {'email': email.text});
+                                        } else {
+                                          controller.isLoadingindicator();
+                                        }
+                                      } catch (e) {
+                                        controller.isLoadingindicator();
+                                        final snackBar =
+                                            buildErrorSnackBar(context, e);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      }
+                                    },
+                                    child: Text('Send',
+                                        style: AppFonts.poppinsLightMedium
+                                            .copyWith(
+                                                color: AppColors.planeColor,
+                                                fontSize: AppFonts
+                                                    .snackBarfontsmall)),
+                                  ),
+                                ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      width: deviceWidth * 0.03,
+                    ),
+                    SizedBox(
+                      width: deviceWidth * 0.24,
+                      child: Container(
+                        height: deviceHeight * 0.044,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: AppColors.errorColor),
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)),
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text('Cancel',
+                              style: AppFonts.poppinsLightMedium.copyWith(
+                                  color: AppColors.planeColor,
+                                  fontSize: AppFonts.snackBarfontsmall)),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable

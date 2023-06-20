@@ -10,6 +10,8 @@ class SetupScreenController extends GetxController {
   bool mailerror = false;
   bool phoneerror = false;
   String get dropDownValue => dropdown;
+  String email = '';
+  String password = '';
   bool get apartmentothersValue => apartmentothers;
   int get currentPosition => currentStep;
   bool get passwordObscuredlogin => loginPasswordVisibility;
@@ -21,6 +23,8 @@ class SetupScreenController extends GetxController {
   String get errormailvalue => errormailtext;
   String errorphonetext = '';
   String get errorhponevalue => errorphonetext;
+  String get sendemail => email;
+  String get sendpassword => password;
   void onSelecting(value) {
     dropdown = value;
     update();
@@ -76,5 +80,10 @@ class SetupScreenController extends GetxController {
       errorphonetext = '';
       update();
     });
+  }
+
+  void sendcredentials(value) {
+    email = value[0];
+    password = value[1];
   }
 }

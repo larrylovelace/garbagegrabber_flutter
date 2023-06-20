@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:garbage_grabber/utils/colors.dart';
@@ -7,6 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../../controllers/apihandler.dart';
+import '../../controllers/routes.dart';
+import '../../widgets/error_handling.dart';
+import '../../widgets/error_snackbar.dart';
+import 'package:http/http.dart ' as http;
 
 Timer? resendTimer;
 
@@ -22,87 +30,84 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
-  String? enteredCode;
+  var enteredCode = '';
   bool isLoading = false;
   bool isotpInvalid = false;
 
   String? email;
+
   int countdown = 60;
   bool showResendText = true;
 
   Future<void> verifyCode() async {
-    // if (enteredCode.length == 6) {
-    //   FocusScope.of(context).unfocus();
-    //   setState(() {
-    //     isLoading = true;
-    //   });
-    //   try {
-    //     String uri = APIConstants.baseURI + APIConstants.workerOtpValidate;
-    //     var response =
-    //         await http.post(Uri.parse(uri), body: {"otp": enteredCode});
+    if (enteredCode.length == 6) {
+      FocusScope.of(context).unfocus();
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        String uri = APIConstants.baseURI + APIConstants.customerOtpValidate;
+        var response =
+            await http.post(Uri.parse(uri), body: {"otp": enteredCode});
 
-    //     if (response.statusCode == 200) {
-    //       var data = jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          print(data);
 
-    //       await storage.write(
-    //           key: 'refreshtoken', value: data['token']['refresh'].toString());
-    //       await storage.write(
-    //           key: 'accesstoken', value: data['token']['access'].toString());
+          setState(() {
+            isLoading = false;
+            CustomSnackBar.show(
+              context,
+              'Success',
+              'OTP verified Successfully',
+              const Color.fromARGB(255, 15, 191, 98), // Custom background color
+              Icons.check, // Custom icon
+              const Color.fromARGB(255, 15, 191, 98), // Custom icon color
+            );
+            Get.offAllNamed(AppRoutes.formfill);
+          });
+        }
 
-    //       setState(() {
-    //         isLoading = false;
-    //         CustomSnackBar.show(
-    //           context,
-    //           'Success',
-    //           'Login Successfully',
-    //           const Color.fromARGB(255, 15, 191, 98), // Custom background color
-    //           Icons.check, // Custom icon
-    //           const Color.fromARGB(255, 15, 191, 98), // Custom icon color
-    //         );
-    //         Get.offAllNamed(AppRoutes.mainscreenhandler);
-    //       });
-    //     }
+        if (response.statusCode == 400) {
+          var errormsg = jsonDecode(response.body) as Map;
 
-    //     if (response.statusCode == 400) {
-    //       var errormsg = jsonDecode(response.body) as Map;
-
-    //       setState(() {
-    //         isotpInvalid = true;
-    //         isLoading = false;
-    //         CustomSnackBar.show(
-    //           context,
-    //           'Error',
-    //           errormsg['error'],
-    //           Colors.red, // Custom background color
-    //           Icons.error_rounded, // Custom icon
-    //           Colors.red, // Custom icon color
-    //         );
-    //       });
-    //       Future.delayed(const Duration(seconds: 5), () {
-    //         if (mounted) {
-    //           setState(() {
-    //             isotpInvalid = false;
-    //           });
-    //         }
-    //       });
-    //     }
-    //   } catch (e) {
-    //     setState(() {
-    //       isLoading = false;
-    //     });
-    //     final snackBar = buildErrorSnackBar(context, e);
-    //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    //     print(e);
-    //   }
-    //   // Trigger verification process here
-    // }
+          setState(() {
+            isotpInvalid = true;
+            isLoading = false;
+            CustomSnackBar.show(
+              context,
+              'Error',
+              errormsg['error'],
+              Colors.red, // Custom background color
+              Icons.error_rounded, // Custom icon
+              Colors.red, // Custom icon color
+            );
+          });
+          Future.delayed(const Duration(seconds: 5), () {
+            if (mounted) {
+              setState(() {
+                isotpInvalid = false;
+              });
+            }
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        final snackBar = buildErrorSnackBar(context, e);
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        print(e);
+      }
+      // Trigger verification process here
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    email = 'test';
-    // email = Get.arguments['email'];
+
+    email = Get.arguments['email'];
 
     // Use the email address argument as needed
   }
@@ -237,38 +242,38 @@ class _OtpScreenState extends State<OtpScreen> {
                         if (showResendText)
                           TextButton(
                             onPressed: () async {
-                              // try {
-                              //   String uri = APIConstants.baseURI +
-                              //       APIConstants.workerEmailVerification;
-                              //   var response =
-                              //       await http.post(Uri.parse(uri), body: {
-                              //     "email":
-                              //         email, // Use the email variable directly
-                              //   });
-                              //   if (response.statusCode == 200) {
-                              //     setState(() {
-                              //       // Start the resend timer and hide the resend text
-                              //       showResendText = false;
-                              //       countdown = 59;
-                              //       startResendTimer();
-                              //       CustomSnackBar.show(
-                              //         context,
-                              //         'Success',
-                              //         'OTP code sent successfully',
-                              //         const Color.fromARGB(255, 15, 191,
-                              //             98), // Custom background color
-                              //         Icons.check, // Custom icon
-                              //         const Color.fromARGB(255, 15, 191,
-                              //             98), // Custom icon color
-                              //       );
-                              //     });
-                              //   }
-                              // } catch (e) {
-                              //   final snackBar = buildErrorSnackBar(context, e);
-                              //   ScaffoldMessenger.of(context)
-                              //       .showSnackBar(snackBar);
-                              //   print(e);
-                              // }
+                              try {
+                                String uri = APIConstants.baseURI +
+                                    APIConstants.customerEmailVerification;
+                                var response =
+                                    await http.post(Uri.parse(uri), body: {
+                                  "email":
+                                      email, // Use the email variable directly
+                                });
+                                if (response.statusCode == 200) {
+                                  setState(() {
+                                    // Start the resend timer and hide the resend text
+                                    showResendText = false;
+                                    countdown = 59;
+                                    startResendTimer();
+                                    CustomSnackBar.show(
+                                      context,
+                                      'Success',
+                                      'OTP code sent successfully',
+                                      const Color.fromARGB(255, 15, 191,
+                                          98), // Custom background color
+                                      Icons.check, // Custom icon
+                                      const Color.fromARGB(255, 15, 191,
+                                          98), // Custom icon color
+                                    );
+                                  });
+                                }
+                              } catch (e) {
+                                final snackBar = buildErrorSnackBar(context, e);
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                                print(e);
+                              }
                             },
                             child: Text(
                               'Resend code',
@@ -300,23 +305,21 @@ class _OtpScreenState extends State<OtpScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6)),
                           onPressed: () async {
-                            // if (enteredCode == null ||
-                            //     enteredCode.isEmpty ||
-                            //     enteredCode.length < 6) {
-                            //   setState(() {
-                            //     isLoading = false;
-                            //     CustomSnackBar.show(
-                            //       context,
-                            //       'Error',
-                            //       'Enter the OTP',
-                            //       Colors.red, // Custom background color
-                            //       Icons.error_rounded, // Custom icon
-                            //       Colors.red, // Custom icon color
-                            //     );
-                            //   });
-                            // } else {
-                            //   verifyCode();
-                            // }
+                            if (enteredCode.isEmpty || enteredCode.length < 6) {
+                              setState(() {
+                                isLoading = false;
+                                CustomSnackBar.show(
+                                  context,
+                                  'Error',
+                                  'Enter the OTP',
+                                  Colors.red, // Custom background color
+                                  Icons.error_rounded, // Custom icon
+                                  Colors.red, // Custom icon color
+                                );
+                              });
+                            } else {
+                              verifyCode();
+                            }
                           },
                           child: isLoading
                               ? Row(
