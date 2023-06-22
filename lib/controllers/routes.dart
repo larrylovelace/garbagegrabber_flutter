@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 
 import '../pages/screens/form_fill.dart';
 import '../pages/screens/otp_screen.dart';
+import '../pages/screens/splash_screen.dart';
 
 class AppRoutes {
+  static const String splash = '/';
   static const String login = '/login';
   static const String register = '/register';
   static const String otpscreen = '/otpscreen';
@@ -14,11 +16,11 @@ class AppRoutes {
   static const String homescreen = '/homescreen';
 
   static final List<GetPage> routes = [
-    // GetPage(
-    //   name: splash,
-    //   page: () => const SplashScreen(),
-    //   binding: SplashBinding(),
-    // ),
+    GetPage(
+      name: splash,
+      page: () => const SplashScreen(),
+      binding: SplashBinding(),
+    ),
     GetPage(
       name: login,
       page: () => const LoginScreen(),
@@ -51,6 +53,13 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
   ];
+}
+
+class SplashBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Splash screen can be added here
+  }
 }
 
 class LoginBinding extends Bindings {

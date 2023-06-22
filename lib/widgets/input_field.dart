@@ -38,6 +38,7 @@ class InputField extends StatelessWidget {
     double deviceWidth = MediaQuery.of(context).size.width;
     // Set initial value if provided
     return TextFormField(
+      
       controller: controller,
       cursorColor: Colors.black,
       cursorHeight: deviceHeight * 0.027,

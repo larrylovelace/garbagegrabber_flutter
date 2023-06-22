@@ -73,6 +73,16 @@ class _FormFillScreenState extends State<FormFillScreen> {
         await storage.write(
             key: 'accesstoken', value: data['token']['access'].toString());
         controller.isLoadingindicator();
+        // ignore: use_build_context_synchronously
+        CustomSnackBar.show(
+          context,
+          'Success',
+          'Customer registered successfully',
+          const Color.fromARGB(255, 15, 191, 98), // Custom background color
+          Icons.check, // Custom icon
+          const Color.fromARGB(255, 15, 191, 98), // Custom icon color
+        );
+
         Get.offAllNamed(AppRoutes.homescreen);
       } else {
         // ignore: use_build_context_synchronously
@@ -87,7 +97,6 @@ class _FormFillScreenState extends State<FormFillScreen> {
         controller.isLoadingindicator();
       }
     } catch (e) {
-      print(e);
       controller.isLoadingindicator();
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -119,6 +128,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Select your apartment',
                         ),
                         DropDown(
+                            hintText: '    Select your apartment',
                             currentSelectedValue: controller.dropDownValue,
                             selectingCategory: apartmentName,
                             heightofCategory: deviceHeight * 0.56,
@@ -389,6 +399,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                     if (isLastStep) {
                       final isValid = _formKey5.currentState!.validate();
                       if (isValid) {
+                        FocusScope.of(context).unfocus();
                         controller.isLoadingindicator();
                         sendingDetails = {
                           "email": controller.sendemail,
@@ -403,7 +414,6 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           "zipcode": zipcode.text,
                           "visitor_location": ''
                         };
-                        print(sendingDetails);
 
                         await sendfromDetails(sendingDetails);
                       }

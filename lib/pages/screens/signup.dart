@@ -36,12 +36,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var response = await http.post(Uri.parse(uri), body: sendingBody);
 
       if (response.statusCode == 200) {
+        controller.sendcredentials([email.text, password.text]);
         Get.toNamed(AppRoutes.otpscreen, arguments: {'email': email.text});
         controller.isLoadingindicator();
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
         Map extractedvalue = value['errors'];
-        print(extractedvalue);
 
         if (extractedvalue.containsKey('email')) {
           controller.errormailoccur(extractedvalue['email'][0]);

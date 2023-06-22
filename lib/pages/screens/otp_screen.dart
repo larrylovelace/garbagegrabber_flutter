@@ -51,9 +51,6 @@ class _OtpScreenState extends State<OtpScreen> {
             await http.post(Uri.parse(uri), body: {"otp": enteredCode});
 
         if (response.statusCode == 200) {
-          var data = jsonDecode(response.body);
-          print(data);
-
           setState(() {
             isLoading = false;
             CustomSnackBar.show(
@@ -64,7 +61,7 @@ class _OtpScreenState extends State<OtpScreen> {
               Icons.check, // Custom icon
               const Color.fromARGB(255, 15, 191, 98), // Custom icon color
             );
-            Get.offAllNamed(AppRoutes.formfill);
+            Get.toNamed(AppRoutes.formfill);
           });
         }
 

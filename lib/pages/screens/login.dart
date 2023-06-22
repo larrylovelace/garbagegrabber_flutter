@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppColors.primaryColor, // Custom icon color
         );
         controller.isLoadingindicator();
+        Get.offAllNamed(AppRoutes.homescreen);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 
@@ -79,6 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
         controller.isLoadingindicator();
       }
     } catch (e) {
+      print(e);
       controller.isLoadingindicator();
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

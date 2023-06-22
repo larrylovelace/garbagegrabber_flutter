@@ -6,21 +6,24 @@ import 'package:garbage_grabber/utils/colors.dart';
 import '../utils/fonts.dart';
 
 class DropDown extends StatelessWidget {
-  const DropDown({
-    Key? key,
-    required currentSelectedValue,
-    required this.selectingCategory,
-    this.valueCategory,
-    required this.heightofCategory,
-    required this.onSelecting(neWvalue),
-    required this.formvalidation(value),
-  }) : super(key: key);
+  const DropDown(
+      {Key? key,
+      required currentSelectedValue,
+      required this.selectingCategory,
+      this.valueCategory,
+      required this.heightofCategory,
+      required this.onSelecting(neWvalue),
+      required this.formvalidation(value),
+      required this.hintText,
+      rewuied})
+      : super(key: key);
 
   final List<String> selectingCategory;
   final String? valueCategory;
   final double? heightofCategory;
   final Function(String?) onSelecting;
   final Function(String?) formvalidation;
+  final String? hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class DropDown extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(6),
           ),
-          hintText: '    Select your apartment',
+          hintText: hintText,
           hintStyle: AppFonts.poppinsRegular.copyWith(
               fontSize: AppFonts.smallFontSize,
               color: AppColors.iconColor,
