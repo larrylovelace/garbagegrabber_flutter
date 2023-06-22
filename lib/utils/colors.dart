@@ -8,4 +8,5 @@ class AppColors {
   static Color cancelColor = Colors.black87;
   static Color fillColor = Colors.transparent.withOpacity(0.018);
   static Color errorColor = Colors.red;
+  static Color pricecalcontainer = Colors.grey;
 }

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:garbage_grabber/Stripe/stripe_service.dart';
 
 import 'package:garbage_grabber/controllers/routes.dart';
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = Stripekeys.publishableKey;
   runApp(const MyApp());
 }
 

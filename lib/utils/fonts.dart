@@ -24,4 +24,6 @@ class AppFonts {
   static const double largeFontSize = 24.0;
   static const double snackBarfontlarge = 13.0;
   static const double snackBarfontsmall = 12.0;
+  static const double errorDialogHead = 21.0;
+  static const double errorDialogBody = 15.0;
 }

@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:garbage_grabber/utils/colors.dart';
+import 'package:garbage_grabber/utils/fonts.dart';
 import 'package:get/get.dart';
 
-
-import 'package:google_fonts/google_fonts.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../controllers/routes.dart';
@@ -52,99 +52,86 @@ class _NoconnectionState extends State<Noconnection> {
 
   @override
   Widget build(BuildContext context) {
+    double deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
     return AlertDialog(
-      backgroundColor: const Color.fromARGB(255, 255, 252, 252),
+      backgroundColor: AppColors.secondaryColor,
       elevation: 0,
       scrollable: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(6),
-          topRight: Radius.circular(6),
-          bottomLeft: Radius.circular(6),
-          bottomRight: Radius.circular(6),
+          topLeft: Radius.circular(10),
+          topRight: Radius.circular(10),
+          bottomLeft: Radius.circular(10),
+          bottomRight: Radius.circular(10),
         ),
       ),
       title: SingleChildScrollView(
         child: Column(children: [
-          const Icon(
+          Icon(
             Icons.error,
-            color: Colors.red,
+            color: AppColors.errorColor,
             size: 32,
           ),
           const SizedBox(
             height: 10,
           ),
-          Text(
-            'Error',
-            style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.black87,
-                fontWeight: FontWeight.w600),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          Text('Error', style: AppFonts.poppinsBold.copyWith()),
+          SizedBox(height: deviceHeight * 0.01),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "No internet connection",
-                style: GoogleFonts.poppins(
-                    letterSpacing: 0.3,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-              ),
+              Text("No internet connection",
+                  style: AppFonts.poppinsMedium
+                      .copyWith(fontSize: AppFonts.smallFontSize)),
             ],
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          SizedBox(height: deviceHeight * 0.01),
           Column(
             children: [
-              Text(
-                'Please check your internet',
-                style: GoogleFonts.poppins(fontSize: 13, color: Colors.black54),
-              ),
+              Text('Please check your internet',
+                  style: AppFonts.poppinsRegular
+                      .copyWith(fontSize: AppFonts.smallFontSize)),
             ],
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.01,
+            height: deviceHeight * 0.01,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.24,
+                width: deviceWidth * 0.24,
                 child: ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromARGB(255, 15, 191, 98)),
+                          AppColors.primaryColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                       ))),
                   onPressed: () {
                     checkConnectivity();
                   },
-                  child: Text(
-                    'Recheck',
-                    style: GoogleFonts.poppins(),
-                  ),
+                  child: Text('Recheck',
+                      style: AppFonts.poppinsRegular.copyWith()),
                 ),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.24,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.red),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          AppColors.errorColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(10),
                       ))),
                   onPressed: () {
                     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                   },
-                  child: Text(
-                    'Close',
-                    style: GoogleFonts.poppins(),
-                  ),
+                  child:
+                      Text('Close', style: AppFonts.poppinsRegular.copyWith()),
                 ),
               ),
             ],
