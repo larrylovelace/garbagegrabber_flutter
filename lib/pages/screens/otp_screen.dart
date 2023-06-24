@@ -19,9 +19,9 @@ import 'package:http/http.dart ' as http;
 Timer? resendTimer;
 
 class OtpScreen extends StatefulWidget {
-  final String email;
-
-  const OtpScreen({Key? key, required this.email}) : super(key: key);
+  const OtpScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -30,11 +30,12 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
+  String email = Get.arguments['email'];
+
+  String password= Get.arguments['password'];
   var enteredCode = '';
   bool isLoading = false;
   bool isotpInvalid = false;
-
-  String? email;
 
   int countdown = 60;
   bool showResendText = true;
@@ -61,7 +62,8 @@ class _OtpScreenState extends State<OtpScreen> {
               Icons.check, // Custom icon
               const Color.fromARGB(255, 15, 191, 98), // Custom icon color
             );
-            Get.toNamed(AppRoutes.formfill);
+            Get.offNamed(AppRoutes.formfill,
+                arguments: {'email': email, 'password': password});
           });
         }
 
@@ -103,8 +105,6 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void initState() {
     super.initState();
-
-    email = Get.arguments['email'];
 
     // Use the email address argument as needed
   }
@@ -269,7 +269,6 @@ class _OtpScreenState extends State<OtpScreen> {
                                 final snackBar = buildErrorSnackBar(context, e);
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
-                                print(e);
                               }
                             },
                             child: Text(

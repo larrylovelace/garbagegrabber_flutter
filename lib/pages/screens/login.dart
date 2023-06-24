@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppColors.primaryColor, // Custom icon color
         );
         controller.isLoadingindicator();
-        Get.offAllNamed(AppRoutes.homescreen);
+        // Get.offAllNamed(AppRoutes.homescreen);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 
@@ -68,13 +68,20 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (response.statusCode == 403) {
         // ignore: use_build_context_synchronously
         showDialog(
-            context: context, builder: (context) => OtpDialog(email: email));
+            context: context,
+            builder: (context) => OtpDialog(
+                  email: email,
+                  password: password,
+                ));
         controller.isLoadingindicator();
       } else if (response.statusCode == 422) {
-        controller.sendcredentials([email.text, password.text]);
         // ignore: use_build_context_synchronously
         showDialog(
-            context: context, builder: (context) => const FormFillDialog());
+            context: context,
+            builder: (context) => FormFillDialog(
+                  email: email.text,
+                  password: password.text,
+                ));
         controller.isLoadingindicator();
       } else {
         controller.isLoadingindicator();
@@ -253,8 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: AppFonts.poppinsRegular.copyWith()),
                               TextButton(
                                   onPressed: () {
-                                    Get.deleteAll();
-                                    Get.toNamed(AppRoutes.register);
+                                    // Get.delete();
+                                    Get.offNamed(AppRoutes.register);
                                   },
                                   child: Text(
                                     'Sign up',
@@ -281,9 +288,11 @@ class OtpDialog extends StatelessWidget {
   OtpDialog({
     super.key,
     required this.email,
+    required this.password,
   });
 
   final TextEditingController email;
+  final TextEditingController password;
 
   SetupScreenController controller = Get.put(SetupScreenController());
   @override
@@ -396,8 +405,12 @@ class OtpDialog extends StatelessWidget {
                                         });
                                         if (response.statusCode == 200) {
                                           controller.isLoadingindicator();
-                                          Get.offNamed(AppRoutes.otpscreen,
-                                              arguments: {'email': email.text});
+                                          Get.back();
+                                          Get.toNamed(AppRoutes.otpscreen,
+                                              arguments: {
+                                                'email': email.text,
+                                                'password': password.text,
+                                              });
                                         } else {
                                           controller.isLoadingindicator();
                                         }

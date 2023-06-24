@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           seedColor: AppColors.primaryColor,
         ),
       ),
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.login,
       getPages: AppRoutes.routes,
     );
   }

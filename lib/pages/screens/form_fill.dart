@@ -25,6 +25,8 @@ class FormFillScreen extends StatefulWidget {
 }
 
 class _FormFillScreenState extends State<FormFillScreen> {
+  String email = Get.arguments['email'];
+  String key = Get.arguments['password'];
   final storage = const FlutterSecureStorage();
 
   SetupScreenController controller = Get.put(SetupScreenController());
@@ -402,8 +404,8 @@ class _FormFillScreenState extends State<FormFillScreen> {
                         FocusScope.of(context).unfocus();
                         controller.isLoadingindicator();
                         sendingDetails = {
-                          "email": controller.sendemail,
-                          "password": controller.password,
+                          "email": email,
+                          "password": key,
                           "appartment_complex_name": apartmentname.text,
                           "appartment_number": apartmentnumber.text,
                           "unit_number": unitnumber.text,

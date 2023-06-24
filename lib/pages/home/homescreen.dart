@@ -191,18 +191,25 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              Get.bottomSheet(BottomSheet(
+                              Get.bottomSheet(
+                                isScrollControlled: true,
+                                BottomSheet(
+                                  enableDrag: false,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(30),
-                                        topRight: Radius.circular(30)),
+                                      topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
+                                    ),
                                   ),
                                   onClosing: () {},
                                   builder: (context) => ProductDetail(
-                                      image: images[index],
-                                      price: productsdatas[index].price,
-                                      name: productsdatas[index].name,
-                                      plan: productsdatas[index].plan)));
+                                    image: images[index],
+                                    price: productsdatas[index].price,
+                                    name: productsdatas[index].name,
+                                    plan: productsdatas[index].plan,
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
                               margin: EdgeInsets.only(
@@ -348,6 +355,7 @@ class HeaderwithSearch extends StatelessWidget {
                 children: [
                   Text(
                     'Hi $firstname!',
+                    overflow: TextOverflow.ellipsis,
                     style: AppFonts.poppinsBold.copyWith(
                         fontSize: AppFonts.largeFontSize,
                         color: AppColors.planeColor),
@@ -358,6 +366,7 @@ class HeaderwithSearch extends StatelessWidget {
                 children: [
                   Text(
                     formattedDate,
+                    overflow: TextOverflow.ellipsis,
                     style: AppFonts.poppinsRegular
                         .copyWith(color: AppColors.planeColor),
                   )

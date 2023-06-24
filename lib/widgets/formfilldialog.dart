@@ -9,8 +9,11 @@ import '../utils/fonts.dart';
 class FormFillDialog extends StatelessWidget {
   const FormFillDialog({
     super.key,
+    required this.email,
+    required this.password,
   });
-
+  final String email;
+  final String password;
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
@@ -69,7 +72,10 @@ class FormFillDialog extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6)),
                           onPressed: () async {
                             Get.back();
-                            Get.toNamed(AppRoutes.formfill);
+                            Get.toNamed(AppRoutes.formfill, arguments: {
+                              'email': email,
+                              'password': password
+                            });
                           },
                           child: Text('Continue',
                               style: AppFonts.poppinsLightMedium.copyWith(

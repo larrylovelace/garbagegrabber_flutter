@@ -1,7 +1,4 @@
-
 import 'package:flutter/material.dart';
-
-
 
 import 'package:get/get.dart';
 
@@ -10,7 +7,6 @@ import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
 import '../../widgets/calendar_dialog.dart';
 import '../../widgets/dropdown.dart';
-
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({
@@ -141,31 +137,38 @@ class _ProductDetailState extends State<ProductDetail> {
                         children: [
                           Text(
                             widget.name,
+                            overflow: TextOverflow.ellipsis,
                             style:
                                 AppFonts.poppinsMedium.copyWith(fontSize: 20),
                           ),
-                          controller.pricechanged
-                              ? Text(
-                                  '\$${controller.totalprice}',
-                                  style: AppFonts.poppinsMedium.copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontSize: 20),
-                                )
-                              : Text(
-                                  '\$${widget.price}',
-                                  style: AppFonts.poppinsMedium.copyWith(
-                                      color: AppColors.primaryColor,
-                                      fontSize: 20),
-                                )
+                          Flexible(
+                            child: controller.pricechanged
+                                ? Text(
+                                    '\$${controller.totalprice}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppFonts.poppinsMedium.copyWith(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 20),
+                                  )
+                                : Text(
+                                    '\$${widget.price}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppFonts.poppinsMedium.copyWith(
+                                        color: AppColors.primaryColor,
+                                        fontSize: 20),
+                                  ),
+                          ),
                         ],
                       ),
                       Row(
                         children: [
-                          Text(widget.plan,
-                              style: AppFonts.poppinsRegular.copyWith(
-                                  fontSize: 17,
-                                  color:
-                                      AppColors.primaryColor.withOpacity(0.9)))
+                          Flexible(
+                            child: Text(widget.plan,
+                                style: AppFonts.poppinsRegular.copyWith(
+                                    fontSize: 17,
+                                    color: AppColors.primaryColor
+                                        .withOpacity(0.9))),
+                          )
                         ],
                       ),
                       SizedBox(

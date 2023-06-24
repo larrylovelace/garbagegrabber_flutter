@@ -36,8 +36,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var response = await http.post(Uri.parse(uri), body: sendingBody);
 
       if (response.statusCode == 200) {
-        controller.sendcredentials([email.text, password.text]);
-        Get.toNamed(AppRoutes.otpscreen, arguments: {'email': email.text});
+        Get.toNamed(AppRoutes.otpscreen,
+            arguments: {'email': email.text, 'password': password.text});
         controller.isLoadingindicator();
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
@@ -345,7 +345,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 style: AppFonts.poppinsRegular.copyWith()),
                             TextButton(
                                 onPressed: () {
-                                  Get.back();
+                                  Get.offNamed(AppRoutes.login);
                                 },
                                 child: Text('Login',
                                     style: AppFonts.poppinsRegular.copyWith(

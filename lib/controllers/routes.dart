@@ -25,20 +25,24 @@ class AppRoutes {
       name: login,
       page: () => const LoginScreen(),
       binding: LoginBinding(),
-      transition:
-          Transition.fadeIn, // Set a transition animation for login screen
+      transition: Transition.fadeIn,
+      bindings: [
+        OtpScreenBinding()
+      ], // Set a transition animation for login screen
     ),
     GetPage(
       name: register,
       page: () => const RegisterScreen(),
       binding: RegisterBinding(),
       transition: Transition.fadeIn,
+      bindings: [OtpScreenBinding()],
     ),
     GetPage(
       name: otpscreen,
-      page: () => OtpScreen(email: Get.parameters['email'].toString()),
+      page: () => const OtpScreen(),
       binding: OtpScreenBinding(),
       transition: Transition.fadeIn,
+      bindings: [FormFillScreenBinding()],
     ),
     GetPage(
       name: formfill,
