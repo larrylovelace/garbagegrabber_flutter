@@ -50,126 +50,128 @@ class _CalendarDialogState extends State<CalendarDialog> {
     return SizedBox(
       height: deviceHeight * 0.7,
       width: double.infinity,
-      child: Column(
-        children: [
-          TableCalendar(
-            headerStyle: HeaderStyle(
-                titleCentered: false,
-                titleTextStyle: AppFonts.poppinsMedium
-                    .copyWith(fontSize: AppFonts.mediumFontSize)),
-            rowHeight: deviceHeight * 0.07,
-            calendarFormat: _format,
-            weekendDays: const [
-              DateTime.monday,
-              DateTime.wednesday,
-              DateTime.friday
-            ],
-            calendarStyle: CalendarStyle(
-              selectedDecoration: BoxDecoration(
-                  // Set default green color for Monday, Wednesday, and Friday
-                  shape: BoxShape.circle,
-                  color: AppColors.primaryColor),
-              todayDecoration: BoxDecoration(
-                  shape: BoxShape.circle, color: AppColors.iconColor),
-              weekendTextStyle: AppFonts.poppinsRegular,
-              weekendDecoration: BoxDecoration(
-                  // Set default green color for Monday, Wednesday, and Friday
-                  shape: BoxShape.circle,
-                  color: AppColors.primaryColor.withOpacity(0.2)),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            TableCalendar(
+              headerStyle: HeaderStyle(
+                  titleCentered: false,
+                  titleTextStyle: AppFonts.poppinsMedium
+                      .copyWith(fontSize: AppFonts.mediumFontSize)),
+              rowHeight: deviceHeight * 0.07,
+              calendarFormat: _format,
+              weekendDays: const [
+                DateTime.monday,
+                DateTime.wednesday,
+                DateTime.friday
+              ],
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                    // Set default green color for Monday, Wednesday, and Friday
+                    shape: BoxShape.circle,
+                    color: AppColors.primaryColor),
+                todayDecoration: BoxDecoration(
+                    shape: BoxShape.circle, color: AppColors.iconColor),
+                weekendTextStyle: AppFonts.poppinsRegular,
+                weekendDecoration: BoxDecoration(
+                    // Set default green color for Monday, Wednesday, and Friday
+                    shape: BoxShape.circle,
+                    color: AppColors.primaryColor.withOpacity(0.2)),
+              ),
+              availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+              firstDay: DateTime.now(),
+              lastDay: DateTime.utc(2023, 12, 31),
+              focusedDay: today,
+              onDaySelected: onDaySelected,
+              selectedDayPredicate: (day) =>
+                  isSelectable(day) && isSameDay(day, today),
             ),
-            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-            firstDay: DateTime.now(),
-            lastDay: DateTime.utc(2023, 12, 31),
-            focusedDay: today,
-            onDaySelected: onDaySelected,
-            selectedDayPredicate: (day) =>
-                isSelectable(day) && isSameDay(day, today),
-          ),
-          SizedBox(
-            height: deviceHeight * 0.015,
-          ),
-          isSelected
-              ? Column(
-                  children: [
-                    Text(
-                      'Pickup Date',
-                      style: AppFonts.poppinsMedium
-                          .copyWith(fontSize: AppFonts.mediumFontSize),
-                    ),
-                    SizedBox(
-                      height: deviceHeight * 0.01,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.primaryColor),
-                          color: AppColors.planeColor,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(6))),
-                      height: deviceHeight * 0.05,
-                      width: deviceWidth * 0.7,
-                      child: Center(
-                          child: Text(
-                        '$formattedDate',
-                        style: AppFonts.poppinsMedium.copyWith(
-                            fontSize: AppFonts.mediumFontSize,
-                            color: AppColors.primaryColor),
-                      )),
-                    ),
-                    SizedBox(
-                      height: deviceHeight * 0.02,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          height: deviceHeight * 0.05,
-                          width: deviceWidth * 0.4,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
+            SizedBox(
+              height: deviceHeight * 0.015,
+            ),
+            isSelected
+                ? Column(
+                    children: [
+                      Text(
+                        'Pickup Date',
+                        style: AppFonts.poppinsMedium
+                            .copyWith(fontSize: AppFonts.mediumFontSize),
+                      ),
+                      SizedBox(
+                        height: deviceHeight * 0.01,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.primaryColor),
+                            color: AppColors.planeColor,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(6))),
+                        height: deviceHeight * 0.05,
+                        width: deviceWidth * 0.7,
+                        child: Center(
+                            child: Text(
+                          '$formattedDate',
+                          style: AppFonts.poppinsMedium.copyWith(
+                              fontSize: AppFonts.mediumFontSize,
                               color: AppColors.primaryColor),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6)),
-                            onPressed: () {
-                              if (formattedDate != null) {
-                                controller.getdate(formattedDate);
+                        )),
+                      ),
+                      SizedBox(
+                        height: deviceHeight * 0.02,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Container(
+                            height: deviceHeight * 0.05,
+                            width: deviceWidth * 0.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColors.primaryColor),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              onPressed: () {
+                                if (formattedDate != null) {
+                                  controller.getdate(formattedDate);
+                                  Get.back();
+                                }
+                              },
+                              child: Text(
+                                'Submit',
+                                style: AppFonts.poppinsMedium.copyWith(
+                                    fontSize: AppFonts.mediumFontSize,
+                                    color: AppColors.planeColor),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: deviceHeight * 0.05,
+                            width: deviceWidth * 0.4,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColors.secondaryColor.withOpacity(1)),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              onPressed: () {
                                 Get.back();
-                              }
-                            },
-                            child: Text(
-                              'Submit',
-                              style: AppFonts.poppinsMedium.copyWith(
-                                  fontSize: AppFonts.mediumFontSize,
-                                  color: AppColors.planeColor),
+                              },
+                              child: Text(
+                                'Cancel',
+                                style: AppFonts.poppinsMedium.copyWith(
+                                    fontSize: AppFonts.mediumFontSize,
+                                    color: AppColors.cancelColor),
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          height: deviceHeight * 0.05,
-                          width: deviceWidth * 0.4,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              color: AppColors.secondaryColor.withOpacity(1)),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6)),
-                            onPressed: () {
-                              Get.back();
-                            },
-                            child: Text(
-                              'Cancel',
-                              style: AppFonts.poppinsMedium.copyWith(
-                                  fontSize: AppFonts.mediumFontSize,
-                                  color: AppColors.cancelColor),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : const SizedBox(),
-        ],
+                        ],
+                      ),
+                    ],
+                  )
+                : const SizedBox(),
+          ],
+        ),
       ),
     );
   }

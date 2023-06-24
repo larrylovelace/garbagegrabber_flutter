@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
@@ -84,9 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       if (!refreshTokenExpired && !accessTokenExpired) {
         // Tokens are not expired, navigate to the main screen
-        Future.delayed(const Duration(milliseconds: 300), () {
-          Get.offAllNamed(AppRoutes.homescreen);
-        });
+        Get.offAllNamed(AppRoutes.homescreen);
       } else if (!refreshTokenExpired && accessTokenExpired) {
         // Access token is expired, request new access token
         final newAccessToken = await requestNewAccessToken(refreshToken);

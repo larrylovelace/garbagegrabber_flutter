@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:garbage_grabber/models/products.dart';
 import 'package:garbage_grabber/pages/home/product_detail.dart';
 
 import 'package:garbage_grabber/utils/colors.dart';
@@ -10,6 +11,7 @@ import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
 
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import 'package:intl/intl.dart';
 
@@ -37,8 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/Onebag.png',
     'assets/Twobag.png',
   ];
-  var productDatas = [];
-  var profileDetails = {};
 
   Future<void> getProductdetails() async {
     try {
@@ -58,8 +58,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
-          profileDetails = data['profile_details'];
-          productDatas = data['products'];
+          print(data);
+          // Store product details in Hive
+
+          final productsBox = Hive.box('products');
+
+          final products = Products(
+            firstname: data['profile_details']['first_name'],
+            productDatas: List<ProductData>.from(data['products'].map((item) {
+              return ProductData(
+                id: item['id'],
+                name: item['name'],
+                price: item['price'].toDouble(),
+                plan: item['plan'],
+              );
+            })),
+          );
+
+          productsBox.put(
+              'products', products); // Store the products object in the box
           setState(() {});
         } else {
           print('Request failed with status: ${response.statusCode}');
@@ -86,191 +103,207 @@ class _HomeScreenState extends State<HomeScreen> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          elevation: 0,
-          leading: IconButton(
-              splashRadius: 20,
-              onPressed: () {},
-              icon: SvgPicture.asset(
-                'assets/menu.svg',
-              )),
-          actions: [
-            Padding(
-              padding: EdgeInsets.only(right: deviceWidth * 0.02),
-              child: IconButton(
-                  splashRadius: 20,
-                  onPressed: () {},
-                  icon: Image.asset('assets/notification.png',
-                      height: deviceHeight * 0.028,
-                      width: deviceWidth * 0.2,
-                      color: AppColors.planeColor)),
-            ),
-          ]),
-      body: profileDetails.isEmpty && profileDetails.isEmpty
-          ? Center(
-              child: CircularProgressIndicator(
-              color: AppColors.primaryColor,
-            ))
-          : Column(
-              children: <Widget>[
-                HeaderwithSearch(
-                    deviceWidth: deviceWidth,
-                    deviceHeight: deviceHeight,
-                    firstname: profileDetails['first_name']),
-                Container(
-                  padding: EdgeInsets.only(
-                      left: deviceWidth * 0.04, right: deviceWidth * 0.04),
-                  height: deviceHeight * 0.06,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Stack(
+        appBar: AppBar(
+            backgroundColor: AppColors.primaryColor,
+            elevation: 0,
+            leading: IconButton(
+                splashRadius: 20,
+                onPressed: () {},
+                icon: SvgPicture.asset(
+                  'assets/menu.svg',
+                )),
+            actions: [
+              Padding(
+                padding: EdgeInsets.only(right: deviceWidth * 0.02),
+                child: IconButton(
+                    splashRadius: 20,
+                    onPressed: () {},
+                    icon: Image.asset('assets/notification.png',
+                        height: deviceHeight * 0.028,
+                        width: deviceWidth * 0.2,
+                        color: AppColors.planeColor)),
+              ),
+            ]),
+        body: ValueListenableBuilder<Box<dynamic>>(
+            valueListenable: Hive.box('products').listenable(),
+            builder: (context, box, _) {
+              if (box.isEmpty) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  ),
+                );
+              } else {
+                final products = box.get('products') as Products;
+
+                final productsdatas = products.productDatas;
+
+                return Column(
+                  children: <Widget>[
+                    HeaderwithSearch(
+                        deviceWidth: deviceWidth,
+                        deviceHeight: deviceHeight,
+                        firstname: products.firstname),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: deviceWidth * 0.04, right: deviceWidth * 0.04),
+                      height: deviceHeight * 0.06,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Services',
-                            style: AppFonts.poppinsMedium
-                                .copyWith(fontSize: AppFonts.mediumFontSize),
+                          Stack(
+                            children: [
+                              Text(
+                                'Services',
+                                style: AppFonts.poppinsMedium.copyWith(
+                                    fontSize: AppFonts.mediumFontSize),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Container(
+                                    height: deviceHeight * 0.002,
+                                    color: AppColors.primaryColor
+                                        .withOpacity(0.2)),
+                              )
+                            ],
                           ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            child: Container(
-                                height: deviceHeight * 0.002,
-                                color: AppColors.primaryColor.withOpacity(0.2)),
-                          )
+                          MaterialButton(
+                              color: AppColors.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              onPressed: () {},
+                              child: Text('More',
+                                  style: AppFonts.poppinsMedium.copyWith(
+                                      fontSize: AppFonts.mediumFontSize,
+                                      color: AppColors.planeColor)))
                         ],
                       ),
-                      MaterialButton(
-                          color: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          onPressed: () {},
-                          child: Text('More',
-                              style: AppFonts.poppinsMedium.copyWith(
-                                  fontSize: AppFonts.mediumFontSize,
-                                  color: AppColors.planeColor)))
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: productDatas.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 0.8, crossAxisCount: 2),
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          controller.ispriceChange = false;
-                          controller.isdatepicked = false;
-                          showModalBottomSheet(
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30))),
-                              context: context,
-                              builder: (context) => ProductDetail(
-                                  image: images[index],
-                                  price: productDatas[index]['price'],
-                                  name: productDatas[index]['name'],
-                                  plan: productDatas[index]['plan']));
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: deviceWidth * 0.02,
-                              right: deviceWidth * 0.02,
-                              top: deviceHeight * 0.02,
-                              bottom: deviceHeight * 0.02),
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  Image.asset(images[index]),
-                                  Positioned(
-                                    top: 1,
-                                    left: 6,
-                                    child: Container(
-                                      height: 35,
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: AppColors.primaryColor,
-                                            width: 0.5),
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Text(
-                                        '\$${productDatas[index]['price']}',
-                                        style: AppFonts.poppinsMedium.copyWith(
-                                            color: AppColors.primaryColor,
-                                            fontSize: AppFonts.smallFontSize),
-                                      ),
-                                    ),
+                    ),
+                    Expanded(
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: productsdatas.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio: 0.8, crossAxisCount: 2),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Get.bottomSheet(BottomSheet(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30)),
                                   ),
-                                ],
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(
-                                    left: deviceHeight * 0.02,
-                                    top: deviceHeight * 0.04,
-                                    right: deviceHeight * 0.02),
-                                decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(10),
-                                        bottomRight: Radius.circular(10)),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          offset: const Offset(0, 10),
-                                          blurRadius: 50,
-                                          color: AppColors.primaryColor
-                                              .withOpacity(0.23))
-                                    ]),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Flexible(
+                                  onClosing: () {},
+                                  builder: (context) => ProductDetail(
+                                      image: images[index],
+                                      price: productsdatas[index].price,
+                                      name: productsdatas[index].name,
+                                      plan: productsdatas[index].plan)));
+                            },
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  left: deviceWidth * 0.02,
+                                  right: deviceWidth * 0.02,
+                                  top: deviceHeight * 0.02,
+                                  bottom: deviceHeight * 0.02),
+                              child: Column(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      Image.asset(images[index]),
+                                      Positioned(
+                                        top: 1,
+                                        left: 6,
+                                        child: Container(
+                                          height: 35,
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: AppColors.primaryColor,
+                                                width: 0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
                                           child: Text(
-                                            productDatas[index]['name'],
-                                            overflow: TextOverflow.ellipsis,
+                                            productsdatas[index]
+                                                .price
+                                                .toString(),
                                             style: AppFonts.poppinsMedium
                                                 .copyWith(
+                                                    color:
+                                                        AppColors.primaryColor,
                                                     fontSize:
                                                         AppFonts.smallFontSize),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    Row(
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: deviceHeight * 0.02,
+                                        top: deviceHeight * 0.04,
+                                        right: deviceHeight * 0.02),
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              offset: const Offset(0, 10),
+                                              blurRadius: 50,
+                                              color: AppColors.primaryColor
+                                                  .withOpacity(0.23))
+                                        ]),
+                                    child: Column(
                                       children: [
-                                        Text(
-                                          productDatas[index]['plan'],
-                                          overflow: TextOverflow.ellipsis,
-                                          style: AppFonts
-                                              .poppinsLightMediumsnackBar
-                                              .copyWith(
-                                                  color: AppColors.primaryColor
-                                                      .withOpacity(0.9)),
+                                        Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                productsdatas[index].name,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppFonts.poppinsMedium
+                                                    .copyWith(
+                                                        fontSize: AppFonts
+                                                            .smallFontSize),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              productsdatas[index].plan,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: AppFonts
+                                                  .poppinsLightMediumsnackBar
+                                                  .copyWith(
+                                                      color: AppColors
+                                                          .primaryColor
+                                                          .withOpacity(0.9)),
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ],
-            ),
-    );
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                );
+              }
+            }));
   }
 }
 
@@ -301,7 +334,7 @@ class HeaderwithSearch extends StatelessWidget {
               left: deviceWidth * 0.04,
               right: deviceWidth * 0.04,
               bottom: deviceWidth * 0.1),
-          height: deviceHeight * 0.12,
+          height: deviceHeight * 0.14,
           decoration: BoxDecoration(
             color: AppColors.primaryColor,
             borderRadius: const BorderRadius.only(
