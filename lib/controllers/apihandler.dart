@@ -11,4 +11,6 @@ class APIConstants {
   static const String sendfromData = '/api/customer/profile/';
   static const String tokenRefresh = '/api/token/refresh/';
   static const String productdetails = '/api/customer/products/';
+  static const String paymentIntentAPI =
+      'https://api.stripe.com/v1/payment_intents/';
 }

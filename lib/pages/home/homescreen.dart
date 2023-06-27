@@ -191,6 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
+                              controller.isdatepicked = false;
+                              controller.ispriceChange = false;
                               Get.bottomSheet(
                                 isScrollControlled: true,
                                 BottomSheet(

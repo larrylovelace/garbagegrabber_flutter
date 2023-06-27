@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'package:garbage_grabber/controllers/routes.dart';
 import 'package:garbage_grabber/models/products.dart';
+
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:get/get.dart';
 
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+
+import 'stripekeys.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +28,7 @@ void main() async {
 
   // Print the values inside the box
 
-  // Stripe.publishableKey = Stripekeys.publishableKey;
+  Stripe.publishableKey = StripeKeys.publishablekey;
   runApp(const MyApp());
 }
 
@@ -44,7 +48,7 @@ class MyApp extends StatelessWidget {
           seedColor: AppColors.primaryColor,
         ),
       ),
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
     );
   }

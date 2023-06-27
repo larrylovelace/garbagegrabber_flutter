@@ -1,12 +1,20 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:garbage_grabber/controllers/apihandler.dart';
 
 import 'package:get/get.dart';
 
 import '../../controllers/homescreen_controller.dart';
+
+import '../../stripekeys.dart';
 import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
 import '../../widgets/calendar_dialog.dart';
 import '../../widgets/dropdown.dart';
+import 'package:http/http.dart ' as http;
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({
@@ -31,61 +39,88 @@ class _ProductDetailState extends State<ProductDetail> {
   var items = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
   Map<String, dynamic>? paymentIntent;
 
-  // Future<void> makePayment() async {
-  //   try {
-  //     String amount = controller.payingprice ?? '0.0';
-  //     paymentIntent = await createPaymentIntent(amount, 'USD');
+  Future<void> makePayment() async {
+    try {
+      String amount = controller.payingprice ?? '0.0';
+      paymentIntent = await createPaymentIntent(amount, 'USD');
 
-  //     await Stripe.instance.initPaymentSheet(
-  //         paymentSheetParameters: SetupPaymentSheetParameters(
-  //       paymentIntentClientSecret: paymentIntent!["client_secret"],
-  //       style: ThemeMode.system,
-  //       merchantDisplayName: 'Larry',
-  //     ));
+      await Stripe.instance.initPaymentSheet(
+          paymentSheetParameters: SetupPaymentSheetParameters(
+        appearance: PaymentSheetAppearance(
+            shapes: const PaymentSheetShape(borderRadius: 10),
+            colors:
+                PaymentSheetAppearanceColors(primary: AppColors.primaryColor),
+            primaryButton: PaymentSheetPrimaryButtonAppearance(
+                shapes: const PaymentSheetPrimaryButtonShape(blurRadius: 8),
+                colors: PaymentSheetPrimaryButtonTheme(
+                    light: PaymentSheetPrimaryButtonThemeColors(
+                  background: AppColors.primaryColor,
+                  text: AppColors.planeColor,
+                )))),
+        paymentIntentClientSecret: paymentIntent!["client_secret"],
+        style: ThemeMode.system,
+        merchantDisplayName: 'Garbage Grabber',
+      ));
 
-  //     await displayPaymentSheet();
-  //     // ignore: use_build_context_synchronously
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+      await displayPaymentSheet();
 
-  // displayPaymentSheet() async {
-  //   try {
-  //     await Stripe.instance.presentPaymentSheet();
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+      // ignore: use_build_context_synchronously
+    } catch (e) {
+      print(e);
+    }
+  }
 
-  // createPaymentIntent(String amount, String currency) async {
-  //   try {
-  //     double amountDouble = double.parse(amount);
-  //     int amountInCents = (amountDouble * 100).round();
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
 
-  //     Map<String, dynamic> body = {
-  //       "amount": amountInCents.toString(),
-  //       "currency": currency
-  //     };
-  //     print(body);
-  //     var response = await http.post(
-  //       Uri.parse("https://api.stripe.com/v1/payment_intents"),
-  //       headers: {
-  //         "Authorization": "Bearer ${Stripekeys.secretKey}",
-  //         "Content-Type": "application/x-www-form-urlencoded",
-  //       },
-  //       body: body,
-  //     );
+      var payment_intents = await Stripe.instance
+          .retrievePaymentIntent(paymentIntent!["client_secret"]);
 
-  //     if (response.statusCode == 200) {
-  //       print(response.body);
-  //     }
+      var details = payment_intents.toJson();
+      var id = details['id'];
+      await eventdetails(id);
+    } catch (e) {}
+  }
 
-  //     return jsonDecode(response.body);
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      double amountDouble = double.parse(amount);
+      int amountInCents = (amountDouble * 100).round();
+
+      Map<String, dynamic> body = {
+        "amount": amountInCents.toString(),
+        "currency": currency,
+        "receipt_email": 'sarojk20pro@gmail.com',
+      };
+
+      var response = await http.post(
+        Uri.parse("https://api.stripe.com/v1/payment_intents"),
+        headers: {
+          "Authorization": "Bearer ${StripeKeys.secretkey}",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body,
+      );
+      print(response.body);
+      if (response.statusCode == 200) {}
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> eventdetails(String id) async {
+    String uri = APIConstants.paymentIntentAPI + id;
+    var response = await http.get(
+      Uri.parse(uri),
+      headers: {
+        "Authorization": "Bearer ${StripeKeys.secretkey}",
+      },
+    );
+    debugPrint(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +394,7 @@ class _ProductDetailState extends State<ProductDetail> {
                         onPressed: () async {
                           if (controller.isdatepicked == true &&
                               controller.ispriceChange == true) {
-                            // makePayment();
+                            makePayment();
                           } else if (controller.isdatepicked == false &&
                               controller.ispriceChange == false) {
                             // ignore: use_build_context_synchronously

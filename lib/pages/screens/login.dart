@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppColors.primaryColor, // Custom icon color
         );
         controller.isLoadingindicator();
-        // Get.offAllNamed(AppRoutes.homescreen);
+        Get.offAllNamed(AppRoutes.homescreen);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 
