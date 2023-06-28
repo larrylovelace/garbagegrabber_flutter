@@ -66,7 +66,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
     try {
       String uri = APIConstants.baseURI + APIConstants.sendfromData;
       var response = await http.post(Uri.parse(uri), body: sendingDetails);
-
+      print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
@@ -79,7 +79,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
         CustomSnackBar.show(
           context,
           'Success',
-          'Customer registered successfully',
+          'Account created successfully',
           const Color.fromARGB(255, 15, 191, 98), // Custom background color
           Icons.check, // Custom icon
           const Color.fromARGB(255, 15, 191, 98), // Custom icon color
@@ -404,6 +404,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                         FocusScope.of(context).unfocus();
                         controller.isLoadingindicator();
                         sendingDetails = {
+                          "stripe_id": '112',
                           "email": email,
                           "password": key,
                           "appartment_complex_name": apartmentname.text,

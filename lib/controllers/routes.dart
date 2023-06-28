@@ -1,4 +1,5 @@
 import 'package:garbage_grabber/pages/home/homescreen.dart';
+import 'package:garbage_grabber/pages/home/payment_success.dart';
 import 'package:garbage_grabber/pages/screens/login.dart';
 import 'package:garbage_grabber/pages/screens/signup.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ class AppRoutes {
   static const String otpscreen = '/otpscreen';
   static const String formfill = '/formfill';
   static const String homescreen = '/homescreen';
+  static const String paymentsuccess = '/paymentsuccess';
 
   static final List<GetPage> routes = [
     GetPage(
@@ -51,9 +53,15 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: homescreen,
-      page: () => const HomeScreen(),
-      binding: HomeScreenBinding(),
+        name: homescreen,
+        page: () => const HomeScreen(),
+        binding: HomeScreenBinding(),
+        transition: Transition.fadeIn,
+        bindings: [PaymentSuccessScreenBinding()]),
+    GetPage(
+      name: paymentsuccess,
+      page: () => const PaymentSuccess(),
+      binding: PaymentSuccessScreenBinding(),
       transition: Transition.fadeIn,
     ),
   ];
@@ -98,5 +106,12 @@ class HomeScreenBinding extends Bindings {
   @override
   void dependencies() {
     // Dependencies for the Home screen can be added here
+  }
+}
+
+class PaymentSuccessScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Payment Success screen can be added here
   }
 }

@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:garbage_grabber/controllers/apihandler.dart';
+import 'package:garbage_grabber/controllers/routes.dart';
 
 import 'package:get/get.dart';
 
@@ -78,8 +78,18 @@ class _ProductDetailState extends State<ProductDetail> {
           .retrievePaymentIntent(paymentIntent!["client_secret"]);
 
       var details = payment_intents.toJson();
-      var id = details['id'];
-      await eventdetails(id);
+      if (details['status'] == 'Succeeded') {
+        var id = details['id'];
+        Get.offNamed(AppRoutes.paymentsuccess, arguments: {
+          'id': id,
+          'amount': details['amount'] / 100,
+          'created': int.parse(
+            details['created'],
+          ),
+          'currency': details['currency']
+        });
+        // await eventdetails(id);
+      }
     } catch (e) {}
   }
 
@@ -102,8 +112,6 @@ class _ProductDetailState extends State<ProductDetail> {
         },
         body: body,
       );
-      print(response.body);
-      if (response.statusCode == 200) {}
 
       return jsonDecode(response.body);
     } catch (e) {
