@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'package:garbage_grabber/controllers/routes.dart';
@@ -11,10 +12,9 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-import 'stripekeys.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await Hive.initFlutter();
   // Initialize Hive
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
@@ -28,7 +28,7 @@ void main() async {
 
   // Print the values inside the box
 
-  Stripe.publishableKey = StripeKeys.publishablekey;
+  Stripe.publishableKey = dotenv.env['publishablekey']!;
   runApp(const MyApp());
 }
 

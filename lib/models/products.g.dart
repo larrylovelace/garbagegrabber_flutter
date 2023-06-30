@@ -18,17 +18,23 @@ class ProductsAdapter extends TypeAdapter<Products> {
     };
     return Products(
       firstname: fields[0] as String,
-      productDatas: (fields[1] as List).cast<ProductData>(),
+      lastname: fields[1] as String,
+      email: fields[2] as String,
+      productDatas: (fields[3] as List).cast<ProductData>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Products obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.firstname)
       ..writeByte(1)
+      ..write(obj.lastname)
+      ..writeByte(2)
+      ..write(obj.email)
+      ..writeByte(3)
       ..write(obj.productDatas);
   }
 

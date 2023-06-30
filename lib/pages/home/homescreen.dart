@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:garbage_grabber/models/products.dart';
+
 import 'package:garbage_grabber/pages/home/product_detail.dart';
 
 import 'package:garbage_grabber/utils/colors.dart';
@@ -21,6 +22,9 @@ import '../../controllers/routes.dart';
 import '../../controllers/token_manager.dart';
 
 import 'package:http/http.dart ' as http;
+
+import '../../widgets/error_handling.dart';
+import 'drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -41,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   Future<void> getProductdetails() async {
+    await Hive.openBox('products');
     try {
       final refreshToken = await storage.read(key: 'refreshtoken');
 
@@ -58,13 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
-          print(data);
+
           // Store product details in Hive
 
           final productsBox = Hive.box('products');
 
           final products = Products(
             firstname: data['profile_details']['first_name'],
+            lastname: data['profile_details']['last_name'],
+            email: data['profile_details']['email'],
             productDatas: List<ProductData>.from(data['products'].map((item) {
               return ProductData(
                 id: item['id'],
@@ -78,9 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
           productsBox.put(
               'products', products); // Store the products object in the box
           setState(() {});
-        } else {
-          print('Request failed with status: ${response.statusCode}');
-        }
+        } else {}
       } else {
         // Access token is expired or could not be obtained, handle accordingly
         Future.delayed(const Duration(seconds: 3), () {
@@ -88,7 +93,10 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
-      print(e);
+      // ignore: use_build_context_synchronously
+      final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -102,43 +110,54 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-        appBar: AppBar(
-            backgroundColor: AppColors.primaryColor,
-            elevation: 0,
-            leading: IconButton(
-                splashRadius: 20,
-                onPressed: () {},
-                icon: SvgPicture.asset(
-                  'assets/menu.svg',
-                )),
-            actions: [
-              Padding(
-                padding: EdgeInsets.only(right: deviceWidth * 0.02),
-                child: IconButton(
-                    splashRadius: 20,
-                    onPressed: () {},
-                    icon: Image.asset('assets/notification.png',
-                        height: deviceHeight * 0.028,
-                        width: deviceWidth * 0.2,
-                        color: AppColors.planeColor)),
+    return ValueListenableBuilder<Box<dynamic>>(
+        valueListenable: Hive.box('products').listenable(),
+        builder: (context, box, _) {
+          if (box.isEmpty) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
               ),
-            ]),
-        body: ValueListenableBuilder<Box<dynamic>>(
-            valueListenable: Hive.box('products').listenable(),
-            builder: (context, box, _) {
-              if (box.isEmpty) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ),
-                );
-              } else {
-                final products = box.get('products') as Products;
+            );
+          } else {
+            final products = box.get('products') as Products;
+            String firstname = products.firstname;
+            String lastname = products.lastname;
+            String email = products.email;
 
-                final productsdatas = products.productDatas;
+            final productsdatas = products.productDatas;
 
-                return Column(
+            return Scaffold(
+                backgroundColor: AppColors.secondaryColor,
+                drawer: DrawerPage(
+                    firstname: firstname, lastname: lastname, email: email),
+                appBar: AppBar(
+                    toolbarHeight: 40,
+                    backgroundColor: AppColors.primaryColor,
+                    elevation: 0,
+                    leading: Builder(builder: (context) {
+                      return IconButton(
+                          splashRadius: 20,
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          icon: SvgPicture.asset(
+                            'assets/menu.svg',
+                          ));
+                    }),
+                    actions: [
+                      Padding(
+                        padding: EdgeInsets.only(right: deviceWidth * 0.02),
+                        child: IconButton(
+                            splashRadius: 20,
+                            onPressed: () {},
+                            icon: Image.asset('assets/notification.png',
+                                height: deviceHeight * 0.028,
+                                width: deviceWidth * 0.2,
+                                color: AppColors.planeColor)),
+                      ),
+                    ]),
+                body: Column(
                   children: <Widget>[
                     HeaderwithSearch(
                         deviceWidth: deviceWidth,
@@ -147,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       padding: EdgeInsets.only(
                           left: deviceWidth * 0.04, right: deviceWidth * 0.04),
-                      height: deviceHeight * 0.06,
+                      height: deviceHeight * 0.04,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -155,29 +174,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Text(
                                 'Services',
-                                style: AppFonts.poppinsMedium.copyWith(
-                                    fontSize: AppFonts.mediumFontSize),
+                                style: AppFonts.poppinsMedium
+                                    .copyWith(fontSize: 22),
                               ),
-                              Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: Container(
-                                    height: deviceHeight * 0.002,
-                                    color: AppColors.primaryColor
-                                        .withOpacity(0.2)),
-                              )
                             ],
                           ),
-                          MaterialButton(
-                              color: AppColors.primaryColor,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              onPressed: () {},
-                              child: Text('More',
-                                  style: AppFonts.poppinsMedium.copyWith(
-                                      fontSize: AppFonts.mediumFontSize,
-                                      color: AppColors.planeColor)))
                         ],
                       ),
                     ),
@@ -187,122 +188,119 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: productsdatas.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 0.8, crossAxisCount: 2),
+                                childAspectRatio: 0.84, crossAxisCount: 2),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
                               controller.isdatepicked = false;
                               controller.ispriceChange = false;
-                              Get.bottomSheet(
+                              showModalBottomSheet(
+                                backgroundColor: AppColors.secondaryColor,
                                 isScrollControlled: true,
-                                BottomSheet(
-                                  enableDrag: false,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                    ),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
                                   ),
-                                  onClosing: () {},
-                                  builder: (context) => ProductDetail(
-                                    image: images[index],
-                                    price: productsdatas[index].price,
-                                    name: productsdatas[index].name,
-                                    plan: productsdatas[index].plan,
-                                  ),
+                                ),
+                                context: context,
+                                builder: (context) => ProductDetail(
+                                  image: images[index],
+                                  price: productsdatas[index].price,
+                                  name: productsdatas[index].name,
+                                  plan: productsdatas[index].plan,
                                 ),
                               );
                             },
                             child: Container(
                               margin: EdgeInsets.only(
-                                  left: deviceWidth * 0.02,
-                                  right: deviceWidth * 0.02,
+                                  left: deviceWidth * 0.03,
+                                  right: deviceWidth * 0.03,
                                   top: deviceHeight * 0.02,
                                   bottom: deviceHeight * 0.02),
-                              child: Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Image.asset(images[index]),
-                                      Positioned(
-                                        top: 1,
-                                        left: 6,
-                                        child: Container(
-                                          height: 35,
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: AppColors.primaryColor,
-                                                width: 0.5),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Text(
-                                            productsdatas[index]
-                                                .price
-                                                .toString(),
-                                            style: AppFonts.poppinsMedium
-                                                .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontSize:
-                                                        AppFonts.smallFontSize),
+                              child: ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                child: Column(
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Image.asset(
+                                          images[index],
+                                        ),
+                                        Positioned(
+                                          top: 3,
+                                          left: 6,
+                                          child: Container(
+                                            height: 35,
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: AppColors.primaryColor,
+                                                  width: 0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              '\$${productsdatas[index].price.toString()}',
+                                              style: AppFonts.poppinsMedium
+                                                  .copyWith(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      fontSize: AppFonts
+                                                          .smallFontSize),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(
-                                        left: deviceHeight * 0.02,
-                                        top: deviceHeight * 0.04,
-                                        right: deviceHeight * 0.02),
-                                    decoration: BoxDecoration(
+                                      ],
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                          left: deviceHeight * 0.02,
+                                          top: deviceHeight * 0.02,
+                                          right: deviceHeight * 0.02),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.planeColor,
                                         borderRadius: const BorderRadius.only(
                                             bottomLeft: Radius.circular(10),
                                             bottomRight: Radius.circular(10)),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                              offset: const Offset(0, 10),
-                                              blurRadius: 50,
-                                              color: AppColors.primaryColor
-                                                  .withOpacity(0.23))
-                                        ]),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: Text(
-                                                productsdatas[index].name,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: AppFonts.poppinsMedium
-                                                    .copyWith(
-                                                        fontSize: AppFonts
-                                                            .smallFontSize),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  productsdatas[index].name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: AppFonts.poppinsMedium
+                                                      .copyWith(
+                                                          fontSize: AppFonts
+                                                              .smallFontSize),
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              productsdatas[index].plan,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: AppFonts
-                                                  .poppinsLightMediumsnackBar
-                                                  .copyWith(
-                                                      color: AppColors
-                                                          .primaryColor
-                                                          .withOpacity(0.9)),
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                productsdatas[index].plan,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: AppFonts
+                                                    .poppinsLightMediumsnackBar
+                                                    .copyWith(
+                                                        color: AppColors
+                                                            .primaryColor
+                                                            .withOpacity(0.9)),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -310,9 +308,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     )
                   ],
-                );
-              }
-            }));
+                ));
+          }
+        });
   }
 }
 
@@ -335,7 +333,7 @@ class HeaderwithSearch extends StatelessWidget {
 
     return Container(
       width: deviceWidth,
-      height: deviceHeight * 0.15,
+      height: deviceHeight * 0.16,
       margin: EdgeInsets.only(bottom: deviceHeight * 0.03),
       child: Stack(children: [
         Container(
@@ -343,7 +341,7 @@ class HeaderwithSearch extends StatelessWidget {
               left: deviceWidth * 0.04,
               right: deviceWidth * 0.04,
               bottom: deviceWidth * 0.1),
-          height: deviceHeight * 0.14,
+          height: deviceHeight * 0.13,
           decoration: BoxDecoration(
             color: AppColors.primaryColor,
             borderRadius: const BorderRadius.only(
@@ -355,22 +353,26 @@ class HeaderwithSearch extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    'Hi $firstname!',
-                    overflow: TextOverflow.ellipsis,
-                    style: AppFonts.poppinsBold.copyWith(
-                        fontSize: AppFonts.largeFontSize,
-                        color: AppColors.planeColor),
+                  Flexible(
+                    child: Text(
+                      'Hi $firstname!',
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFonts.poppinsBold.copyWith(
+                          fontSize: AppFonts.largeFontSize,
+                          color: AppColors.planeColor),
+                    ),
                   )
                 ],
               ),
               Row(
                 children: [
-                  Text(
-                    formattedDate,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppFonts.poppinsRegular
-                        .copyWith(color: AppColors.planeColor),
+                  Flexible(
+                    child: Text(
+                      formattedDate,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFonts.poppinsRegular
+                          .copyWith(color: AppColors.planeColor),
+                    ),
                   )
                 ],
               ),
@@ -381,34 +383,143 @@ class HeaderwithSearch extends StatelessWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            child: Container(
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               margin: EdgeInsets.symmetric(horizontal: deviceWidth * 0.04),
-              padding: EdgeInsets.symmetric(horizontal: deviceWidth * 0.04),
-              height: deviceHeight * 0.054,
-              decoration: BoxDecoration(
-                  color: AppColors.planeColor,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, 10),
-                      blurRadius: 50,
-                      color: AppColors.primaryColor.withOpacity(0.23),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: deviceWidth * 0.04),
+                height: deviceHeight * 0.09,
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: deviceHeight * 0.015,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: deviceWidth * 0.4,
+                          child: Card(
+                            color: Colors.grey.shade50,
+                            elevation: 0.5,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: MaterialButton(
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              onPressed: () {},
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.payment_outlined,
+                                        size: 20,
+                                        color: AppColors.iconColor,
+                                      ),
+                                      SizedBox(
+                                        width: deviceWidth * 0.01,
+                                      ),
+                                      Text(
+                                        'Transactions',
+                                        style: AppFonts.poppinsLightMedium
+                                            .copyWith(
+                                                color: AppColors.cancelColor),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '\$20',
+                                        style: AppFonts.poppinsBold
+                                            .copyWith(
+                                                fontSize:
+                                                    AppFonts.mediumFontSize)
+                                            .copyWith(
+                                                color: AppColors.primaryColor),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: deviceWidth * 0.4,
+                          child: Card(
+                            color: AppColors.planeColor,
+                            elevation: 0.5,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: MaterialButton(
+                              color: Colors.grey.shade50,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              onPressed: () {},
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month_outlined,
+                                        size: 20,
+                                        color: AppColors.iconColor,
+                                      ),
+                                      SizedBox(
+                                        width: deviceWidth * 0.01,
+                                      ),
+                                      Text(
+                                        'Pickup Date',
+                                        style: AppFonts.poppinsLightMedium
+                                            .copyWith(
+                                                color: AppColors.cancelColor),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          'Jun-23',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppFonts.poppinsMedium
+                                              .copyWith(
+                                                  fontSize:
+                                                      AppFonts.mediumFontSize)
+                                              .copyWith(
+                                                  color: AppColors.iconColor),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     )
-                  ]),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                        decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: AppFonts.poppinsRegular.copyWith(
-                          color: AppColors.primaryColor.withOpacity(0.7)),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    )),
-                  ),
-                  SvgPicture.asset('assets/search.svg')
-                ],
+                  ],
+                ),
               ),
             ))
       ]),

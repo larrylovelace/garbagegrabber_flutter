@@ -1,3 +1,4 @@
+
 import 'package:get/get.dart';
 
 class SetupScreenController extends GetxController {
@@ -57,6 +58,7 @@ class SetupScreenController extends GetxController {
 
   void isLoadingindicator() {
     isLoading = !isLoading;
+
     update();
   }
 

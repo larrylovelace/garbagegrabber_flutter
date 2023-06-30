@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:garbage_grabber/controllers/apihandler.dart';
 import 'package:garbage_grabber/controllers/routes.dart';
@@ -9,12 +10,13 @@ import 'package:get/get.dart';
 
 import '../../controllers/homescreen_controller.dart';
 
-import '../../stripekeys.dart';
 import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
 import '../../widgets/calendar_dialog.dart';
 import '../../widgets/dropdown.dart';
 import 'package:http/http.dart ' as http;
+
+import '../../widgets/error_handling.dart';
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({
@@ -65,19 +67,17 @@ class _ProductDetailState extends State<ProductDetail> {
       await displayPaymentSheet();
 
       // ignore: use_build_context_synchronously
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   displayPaymentSheet() async {
     try {
       await Stripe.instance.presentPaymentSheet();
 
-      var payment_intents = await Stripe.instance
+      var paymentintents = await Stripe.instance
           .retrievePaymentIntent(paymentIntent!["client_secret"]);
 
-      var details = payment_intents.toJson();
+      var details = paymentintents.toJson();
       if (details['status'] == 'Succeeded') {
         var id = details['id'];
         Get.offNamed(AppRoutes.paymentsuccess, arguments: {
@@ -90,7 +90,10 @@ class _ProductDetailState extends State<ProductDetail> {
         });
         // await eventdetails(id);
       }
-    } catch (e) {}
+    } catch (e) {
+      final snackBar = buildErrorSnackBar(context, e);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   createPaymentIntent(String amount, String currency) async {
@@ -102,21 +105,20 @@ class _ProductDetailState extends State<ProductDetail> {
         "amount": amountInCents.toString(),
         "currency": currency,
         "receipt_email": 'sarojk20pro@gmail.com',
+        "customer": 'cus_OB5MG8MIWQ62dA',
       };
 
       var response = await http.post(
         Uri.parse("https://api.stripe.com/v1/payment_intents"),
         headers: {
-          "Authorization": "Bearer ${StripeKeys.secretkey}",
+          "Authorization": "Bearer ${dotenv.env['secretkey']}",
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: body,
       );
-
+      print(response.body);
       return jsonDecode(response.body);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<void> eventdetails(String id) async {
@@ -124,7 +126,7 @@ class _ProductDetailState extends State<ProductDetail> {
     var response = await http.get(
       Uri.parse(uri),
       headers: {
-        "Authorization": "Bearer ${StripeKeys.secretkey}",
+        "Authorization": "Bearer ${dotenv.env['secretkey']}",
       },
     );
     debugPrint(response.body);
@@ -139,7 +141,7 @@ class _ProductDetailState extends State<ProductDetail> {
         return Padding(
           padding: const EdgeInsets.all(30),
           child: SizedBox(
-            height: deviceHeight * 0.87,
+            height: deviceHeight * 0.875,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -155,7 +157,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           BoxShadow(
                               offset: const Offset(0, 10),
                               blurRadius: 40,
-                              color: AppColors.primaryColor.withOpacity(0.3))
+                              color: AppColors.primaryColor.withOpacity(0.1))
                         ]),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(

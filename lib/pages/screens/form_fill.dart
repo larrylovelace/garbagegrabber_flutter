@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/controllers/routes.dart';
 
@@ -62,11 +63,62 @@ class _FormFillScreenState extends State<FormFillScreen> {
   TextEditingController zipcode = TextEditingController();
   Map sendingDetails = {};
 
+  Future<void> createCustomerStripe() async {
+    try {
+      String uri = APIConstants.createCustomerStripe;
+
+      var response = await http.post(Uri.parse(uri), headers: {
+        "Authorization": "Bearer ${dotenv.env['secretkey']}",
+      }, body: {
+        'name': 'Test user',
+        'email': email,
+        'address[city]': city.text,
+        'address[country]': 'US',
+        'address[line1]': streetaddress.text,
+        'address[postal_code]': zipcode.text,
+        'address[state]': state.text,
+        'shipping[name]': 'Pujan Poudel',
+        // 'shipping[phone]': shippingPhoneValue,
+        'shipping[address][city]': city.text,
+        'shipping[address][country]': 'US',
+        'shipping[address][line1]': streetaddress.text,
+        'shipping[address][postal_code]': zipcode.text,
+        'shipping[address][state]': state.text,
+      });
+      print(response.body);
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        sendingDetails = {
+          "stripe_id": data['id'].toString(),
+          "email": email,
+          "password": key,
+          "appartment_complex_name": apartmentname.text,
+          "appartment_number": apartmentnumber.text,
+          "unit_number": unitnumber.text,
+          "floor_number": whatfloornumber.text,
+          "street_address": streetaddress.text,
+          "city": city.text,
+          "state": state.text,
+          "zipcode": zipcode.text,
+          "visitor_location": ''
+        };
+        await sendfromDetails(sendingDetails);
+      } else {
+        controller.isLoadingindicator();
+      }
+    } catch (e) {
+      print(e);
+      controller.isLoadingindicator();
+      final snackBar = buildErrorSnackBar(context, e);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   Future<void> sendfromDetails(sendigdetails) async {
     try {
       String uri = APIConstants.baseURI + APIConstants.sendfromData;
       var response = await http.post(Uri.parse(uri), body: sendingDetails);
-      print(response.body);
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
 
@@ -403,22 +455,8 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       if (isValid) {
                         FocusScope.of(context).unfocus();
                         controller.isLoadingindicator();
-                        sendingDetails = {
-                          "stripe_id": '112',
-                          "email": email,
-                          "password": key,
-                          "appartment_complex_name": apartmentname.text,
-                          "appartment_number": apartmentnumber.text,
-                          "unit_number": unitnumber.text,
-                          "floor_number": whatfloornumber.text,
-                          "street_address": streetaddress.text,
-                          "city": city.text,
-                          "state": state.text,
-                          "zipcode": zipcode.text,
-                          "visitor_location": ''
-                        };
 
-                        await sendfromDetails(sendingDetails);
+                        await createCustomerStripe();
                       }
                       // Handle last step completion
                     } else {
