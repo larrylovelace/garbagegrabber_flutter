@@ -16,6 +16,8 @@ import '../../widgets/formfilldialog.dart';
 import '../../widgets/input_field.dart';
 import 'package:http/http.dart ' as http;
 
+import '../../widgets/loading_dialog.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -42,6 +44,8 @@ class _LoginScreenState extends State<LoginScreen> {
         var data = jsonDecode(response.body);
 
         await storage.write(
+            key: 'stripe_id', value: data['payment_id'].toString());
+        await storage.write(
             key: 'refreshtoken', value: data['token']['refresh'].toString());
         await storage.write(
             key: 'accesstoken', value: data['token']['access'].toString());
@@ -54,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Icons.check, // Custom icon
           AppColors.primaryColor, // Custom icon color
         );
-        controller.isLoadingindicator();
+        Get.back();
         Get.offAllNamed(AppRoutes.homescreen);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
@@ -63,9 +67,22 @@ class _LoginScreenState extends State<LoginScreen> {
           controller.errormailoccur(value['email'][0]);
         } else if (value.containsKey("non_field_errors")) {
           controller.errormailoccur(value['non_field_errors'][0]);
+        } else if (value.containsKey("password")) {
+          // ignore: use_build_context_synchronously
+          CustomSnackBar.show(
+            context,
+            'Error',
+            value['password'][0],
+            AppColors.errorColor, // Custom background color
+            Icons.error_rounded, // Custom icon
+            AppColors.errorColor, // Custom icon color
+          );
         }
-        controller.isLoadingindicator();
+
+        Get.back();
       } else if (response.statusCode == 403) {
+        controller.isLoadingindicator();
+        Get.back();
         // ignore: use_build_context_synchronously
         showDialog(
             context: context,
@@ -73,8 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   email: email,
                   password: password,
                 ));
-        controller.isLoadingindicator();
       } else if (response.statusCode == 422) {
+        Get.back();
         // ignore: use_build_context_synchronously
         showDialog(
             context: context,
@@ -82,13 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   email: email.text,
                   password: password.text,
                 ));
-        controller.isLoadingindicator();
-      } else {
-        controller.isLoadingindicator();
-      }
+      } else {}
     } catch (e) {
-      print(e);
-      controller.isLoadingindicator();
+      Get.back();
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -201,55 +214,34 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       child: Column(
                         children: [
-                          controller.isindicatorLoading
-                              ? Container(
-                                  height: deviceHeight * 0.052,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: AppColors.primaryColor),
-                                  child: Center(
-                                    child: SizedBox(
-                                      height: deviceHeight * 0.03,
-                                      width: deviceWidth * 0.064,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.5,
-                                        color: AppColors.planeColor,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: deviceHeight * 0.052,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: AppColors.primaryColor),
-                                  child: MaterialButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(6)),
-                                      onPressed: () async {
-                                        final isvalid =
-                                            _formKey1.currentState!.validate();
-                                        if (isvalid) {
-                                          FocusScope.of(context).unfocus();
-                                          controller.isLoadingindicator();
-                                          sendingBody = {
-                                            "email": email.text,
-                                            "password": password.text
-                                          };
-                                          await login(sendingBody);
-                                        }
-                                      },
-                                      child: Text('Login',
-                                          style: AppFonts.poppinsMedium
-                                              .copyWith(
-                                                  fontSize:
-                                                      AppFonts.mediumFontSize,
-                                                  color:
-                                                      AppColors.planeColor))),
-                                ),
+                          Container(
+                            height: deviceHeight * 0.052,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColors.primaryColor),
+                            child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6)),
+                                onPressed: () async {
+                                  final isvalid =
+                                      _formKey1.currentState!.validate();
+                                  if (isvalid) {
+                                    FocusScope.of(context).unfocus();
+                                    LoadingDialog.show(context);
+
+                                    sendingBody = {
+                                      "email": email.text,
+                                      "password": password.text
+                                    };
+                                    await login(sendingBody);
+                                  }
+                                },
+                                child: Text('Login',
+                                    style: AppFonts.poppinsMedium.copyWith(
+                                        fontSize: AppFonts.mediumFontSize,
+                                        color: AppColors.planeColor))),
+                          ),
                           SizedBox(
                             height: deviceHeight * 0.01,
                           ),
@@ -366,70 +358,47 @@ class OtpDialog extends StatelessWidget {
                       builder: (controller) {
                         return SizedBox(
                           width: deviceWidth * 0.24,
-                          child: controller.isindicatorLoading
-                              ? Container(
-                                  height: deviceHeight * 0.044,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: AppColors.primaryColor),
-                                  child: Center(
-                                    child: SizedBox(
-                                      height: deviceHeight * 0.028,
-                                      width: deviceWidth * 0.059,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 1.4,
-                                        color: AppColors.planeColor,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: deviceHeight * 0.044,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: AppColors.primaryColor),
-                                  child: MaterialButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6)),
-                                    onPressed: () async {
-                                      controller.isLoadingindicator();
-                                      try {
-                                        String uri = APIConstants.baseURI +
-                                            APIConstants
-                                                .customerEmailVerification;
-                                        var response = await http
-                                            .post(Uri.parse(uri), body: {
-                                          "email": email.text,
+                          child: Container(
+                            height: deviceHeight * 0.044,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColors.primaryColor),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              onPressed: () async {
+                                LoadingDialog.show(context);
+                                try {
+                                  String uri = APIConstants.baseURI +
+                                      APIConstants.customerEmailVerification;
+                                  var response =
+                                      await http.post(Uri.parse(uri), body: {
+                                    "email": email.text,
+                                  });
+                                  if (response.statusCode == 200) {
+                                    Get.back();
+                                    Get.back();
+                                    Get.toNamed(AppRoutes.otpscreen,
+                                        arguments: {
+                                          'email': email.text,
+                                          'password': password.text,
                                         });
-                                        if (response.statusCode == 200) {
-                                          controller.isLoadingindicator();
-                                          Get.back();
-                                          Get.toNamed(AppRoutes.otpscreen,
-                                              arguments: {
-                                                'email': email.text,
-                                                'password': password.text,
-                                              });
-                                        } else {
-                                          controller.isLoadingindicator();
-                                        }
-                                      } catch (e) {
-                                        controller.isLoadingindicator();
-                                        final snackBar =
-                                            buildErrorSnackBar(context, e);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      }
-                                    },
-                                    child: Text('Send',
-                                        style: AppFonts.poppinsLightMedium
-                                            .copyWith(
-                                                color: AppColors.planeColor,
-                                                fontSize: AppFonts
-                                                    .snackBarfontsmall)),
-                                  ),
-                                ),
+                                  } else {}
+                                } catch (e) {
+                                  Get.back();
+                                  final snackBar =
+                                      buildErrorSnackBar(context, e);
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+                              },
+                              child: Text('Send',
+                                  style: AppFonts.poppinsLightMedium.copyWith(
+                                      color: AppColors.planeColor,
+                                      fontSize: AppFonts.snackBarfontsmall)),
+                            ),
+                          ),
                         );
                       },
                     ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:garbage_grabber/controllers/apihandler.dart';
 import 'package:garbage_grabber/controllers/routes.dart';
@@ -10,26 +11,31 @@ import 'package:get/get.dart';
 
 import '../../controllers/homescreen_controller.dart';
 
+import '../../controllers/token_manager.dart';
 import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
 import '../../widgets/calendar_dialog.dart';
 import '../../widgets/dropdown.dart';
 import 'package:http/http.dart ' as http;
 
-import '../../widgets/error_handling.dart';
+import '../../widgets/loading_dialog.dart';
 
 class ProductDetail extends StatefulWidget {
   const ProductDetail({
     Key? key,
     required this.image,
+    required this.id,
     required this.price,
     required this.name,
     required this.plan,
+    required this.email,
   }) : super(key: key);
   final String image;
+  final int id;
   final double price;
   final String name;
   final String plan;
+  final String email;
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -37,9 +43,75 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   HomeScreenController controller = Get.put(HomeScreenController());
-
+  final storage = const FlutterSecureStorage();
   var items = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  int quantity = 1;
   Map<String, dynamic>? paymentIntent;
+  // Future<void> verifyappointment() async {
+  //   try {
+  //     final refreshToken = await storage.read(key: 'refreshtoken');
+
+  //     final tokenManager = TokenManager();
+
+  //     String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
+  //         refreshToken!, APIConstants.tokenRefresh);
+  //     if (accessToken != null) {
+  //       String uri = APIConstants.baseURI + APIConstants.verifyappointment;
+
+  //       var response = await http.post(Uri.parse(uri), headers: {
+  //         'Authorization': 'Bearer $accessToken',
+  //       }, body: {
+  //         "quantity": quantity.toString(),
+  //         "product_id": widget.id.toString(),
+  //         "appointment_date": controller.sendinddate,
+  //         "total_payment": controller.priceindouble.toString()
+  //       });
+
+  //       if (response.statusCode == 200) {
+  //         // await makePayment();
+  //       } else {
+
+  //         Get.back();
+  //         // ignore: use_build_context_synchronously
+  //         showDialog(
+  //             context: context,
+  //             builder: (context) {
+  //               return ProudctValidation(
+  //                 deviceHeight: MediaQuery.of(context).size.height,
+  //                 deviceWidth: MediaQuery.of(context).size.width,
+  //                 headertext: 'Error',
+  //                 errortext: 'Something went wrong',
+  //               );
+  //             });
+  //       }
+  //     } else {
+  //       Get.back();
+  //       // ignore: use_build_context_synchronously
+  //       showDialog(
+  //           context: context,
+  //           builder: (context) {
+  //             return ProudctValidation(
+  //               deviceHeight: MediaQuery.of(context).size.height,
+  //               deviceWidth: MediaQuery.of(context).size.width,
+  //               headertext: 'Error',
+  //               errortext: 'Something went wrong',
+  //             );
+  //           });
+  //     }
+  //   } catch (e) {
+  //     Get.back();
+  //     showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return ProudctValidation(
+  //             deviceHeight: MediaQuery.of(context).size.height,
+  //             deviceWidth: MediaQuery.of(context).size.width,
+  //             headertext: 'Error',
+  //             errortext: 'Something went wrong',
+  //           );
+  //         });
+  //   }
+  // }
 
   Future<void> makePayment() async {
     try {
@@ -67,7 +139,18 @@ class _ProductDetailState extends State<ProductDetail> {
       await displayPaymentSheet();
 
       // ignore: use_build_context_synchronously
-    } catch (e) {}
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return ProudctValidation(
+              deviceHeight: MediaQuery.of(context).size.height,
+              deviceWidth: MediaQuery.of(context).size.width,
+              headertext: 'Error',
+              errortext: 'Something went wrong',
+            );
+          });
+    }
   }
 
   displayPaymentSheet() async {
@@ -91,8 +174,16 @@ class _ProductDetailState extends State<ProductDetail> {
         // await eventdetails(id);
       }
     } catch (e) {
-      final snackBar = buildErrorSnackBar(context, e);
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      showDialog(
+          context: context,
+          builder: (context) {
+            return ProudctValidation(
+              deviceHeight: MediaQuery.of(context).size.height,
+              deviceWidth: MediaQuery.of(context).size.width,
+              headertext: 'Error',
+              errortext: 'Something went wrong',
+            );
+          });
     }
   }
 
@@ -100,12 +191,12 @@ class _ProductDetailState extends State<ProductDetail> {
     try {
       double amountDouble = double.parse(amount);
       int amountInCents = (amountDouble * 100).round();
-
+      final stirpeid = await storage.read(key: 'stripe_id');
       Map<String, dynamic> body = {
         "amount": amountInCents.toString(),
         "currency": currency,
-        "receipt_email": 'sarojk20pro@gmail.com',
-        "customer": 'cus_OB5MG8MIWQ62dA',
+        "receipt_email": widget.email,
+        "customer": stirpeid,
       };
 
       var response = await http.post(
@@ -116,21 +207,49 @@ class _ProductDetailState extends State<ProductDetail> {
         },
         body: body,
       );
-      print(response.body);
+
+      if (response.statusCode == 200) {
+        Get.back();
+      } else {
+        Get.back();
+
+        // ignore: use_build_context_synchronously
+        showDialog(
+            context: context,
+            builder: (context) {
+              return ProudctValidation(
+                deviceHeight: MediaQuery.of(context).size.height,
+                deviceWidth: MediaQuery.of(context).size.width,
+                headertext: 'Error',
+                errortext: 'Something went wrong',
+              );
+            });
+      }
       return jsonDecode(response.body);
-    } catch (e) {}
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return ProudctValidation(
+              deviceHeight: MediaQuery.of(context).size.height,
+              deviceWidth: MediaQuery.of(context).size.width,
+              headertext: 'Error',
+              errortext: 'Something went wrong',
+            );
+          });
+    }
   }
 
-  Future<void> eventdetails(String id) async {
-    String uri = APIConstants.paymentIntentAPI + id;
-    var response = await http.get(
-      Uri.parse(uri),
-      headers: {
-        "Authorization": "Bearer ${dotenv.env['secretkey']}",
-      },
-    );
-    debugPrint(response.body);
-  }
+  // Future<void> eventdetails(String id) async {
+  //   String uri = APIConstants.paymentIntentAPI + id;
+  //   var response = await http.get(
+  //     Uri.parse(uri),
+  //     headers: {
+  //       "Authorization": "Bearer ${dotenv.env['secretkey']}",
+  //     },
+  //   );
+  //   debugPrint(response.body);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -238,6 +357,8 @@ class _ProductDetailState extends State<ProductDetail> {
                             heightofCategory: deviceHeight * 0.3,
                             onSelecting: (value) {
                               int intValue = int.parse(value);
+                              quantity = intValue;
+
                               double pricevalue =
                                   widget.price; // Convert string to int
                               double total = intValue * pricevalue;
@@ -404,6 +525,7 @@ class _ProductDetailState extends State<ProductDetail> {
                         onPressed: () async {
                           if (controller.isdatepicked == true &&
                               controller.ispriceChange == true) {
+                            LoadingDialog.show(context);
                             makePayment();
                           } else if (controller.isdatepicked == false &&
                               controller.ispriceChange == false) {
@@ -414,6 +536,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   return ProudctValidation(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
+                                    headertext: 'Required',
                                     errortext:
                                         'Select quantity and pickup date',
                                   );
@@ -427,6 +550,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   return ProudctValidation(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
+                                    headertext: 'Required',
                                     errortext: 'Select pickup date',
                                   );
                                 });
@@ -439,6 +563,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                   return ProudctValidation(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
+                                    headertext: 'Required',
                                     errortext: 'Select quantity',
                                   );
                                 });
@@ -486,11 +611,13 @@ class ProudctValidation extends StatelessWidget {
     super.key,
     required this.deviceHeight,
     required this.deviceWidth,
+    required this.headertext,
     required this.errortext,
   });
 
   final double deviceHeight;
   final double deviceWidth;
+  final String headertext;
   final String errortext;
 
   @override
@@ -514,7 +641,7 @@ class ProudctValidation extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text('Required',
+                      Text(headertext,
                           style: AppFonts.poppinsMedium.copyWith(
                               color: AppColors.errorColor,
                               fontSize: AppFonts.errorDialogHead)),

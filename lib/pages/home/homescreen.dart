@@ -24,6 +24,7 @@ import '../../controllers/token_manager.dart';
 import 'package:http/http.dart ' as http;
 
 import '../../widgets/error_handling.dart';
+import '../../widgets/error_snackbar.dart';
 import 'drawer.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,6 +37,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   HomeScreenController controller = Get.put(HomeScreenController());
   final storage = const FlutterSecureStorage();
+  String email = '';
+// ignore: prefer_typing_uninitialized_variables
 
   List<String> images = [
     'assets/Onebag.png',
@@ -63,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
+          email = data['profile_details']['email'];
 
           // Store product details in Hive
 
@@ -85,8 +89,30 @@ class _HomeScreenState extends State<HomeScreen> {
           productsBox.put(
               'products', products); // Store the products object in the box
           setState(() {});
-        } else {}
+        } else if (response.statusCode == 401) {
+          await storage.deleteAll();
+
+          // ignore: use_build_context_synchronously
+          CustomSnackBar.show(
+            context,
+            'Error',
+            'Unauthorized',
+            AppColors.errorColor, // Custom background color
+            Icons.error_rounded, // Custom icon
+            AppColors.errorColor, // Custom icon color
+          );
+          Get.offAllNamed(AppRoutes.login);
+        }
       } else {
+        // ignore: use_build_context_synchronously
+        CustomSnackBar.show(
+          context,
+          'Error',
+          'Something went wrong',
+          AppColors.errorColor, // Custom background color
+          Icons.error_rounded, // Custom icon
+          AppColors.errorColor, // Custom icon color
+        );
         // Access token is expired or could not be obtained, handle accordingly
         Future.delayed(const Duration(seconds: 3), () {
           Get.offAllNamed(AppRoutes.login);
@@ -206,9 +232,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context: context,
                                 builder: (context) => ProductDetail(
                                   image: images[index],
+                                  id: productsdatas[index].id,
                                   price: productsdatas[index].price,
                                   name: productsdatas[index].name,
                                   plan: productsdatas[index].plan,
+                                  email: email,
                                 ),
                               );
                             },

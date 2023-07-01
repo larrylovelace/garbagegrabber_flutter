@@ -12,6 +12,8 @@ import '../../widgets/error_handling.dart';
 import '../../widgets/input_field.dart';
 import 'package:http/http.dart ' as http;
 
+import '../../widgets/loading_dialog.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -36,9 +38,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       var response = await http.post(Uri.parse(uri), body: sendingBody);
 
       if (response.statusCode == 200) {
+        Get.back();
         Get.toNamed(AppRoutes.otpscreen,
             arguments: {'email': email.text, 'password': password.text});
-        controller.isLoadingindicator();
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
         Map extractedvalue = value['errors'];
@@ -49,10 +51,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (extractedvalue.containsKey("phone_number")) {
           controller.errorphoneoccur(extractedvalue['phone_number'][0]);
         }
-        controller.isLoadingindicator();
+        Get.back();
       }
     } catch (e) {
-      controller.isLoadingindicator();
+      Get.back();
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -69,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               splashRadius: 20,
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Get.back();
+                Get.offNamed(AppRoutes.login);
               },
               splashColor: Colors.transparent, // Set splashColor to transparent
             ),
@@ -286,55 +288,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     child: Column(
                       children: [
-                        controller.isindicatorLoading
-                            ? Container(
-                                height: deviceHeight * 0.052,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: AppColors.primaryColor),
-                                child: Center(
-                                  child: SizedBox(
-                                    height: deviceHeight * 0.03,
-                                    width: deviceWidth * 0.064,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2.5,
-                                      color: AppColors.planeColor,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                height: deviceHeight * 0.052,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: AppColors.primaryColor),
-                                child: MaterialButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6)),
-                                    onPressed: () async {
-                                      final isvalid =
-                                          _formKey2.currentState!.validate();
-                                      if (isvalid) {
-                                        FocusScope.of(context).unfocus();
-                                        controller.isLoadingindicator();
-                                        sendingBody = {
-                                          "first_name": firstname.text,
-                                          "last_name": lastname.text,
-                                          "phone_number": "+1${phoneNum.text}",
-                                          "email": email.text,
-                                          "password": password.text,
-                                          "confirm_password": password.text,
-                                        };
-                                        await signup(sendingBody);
-                                      }
-                                    },
-                                    child: Text('Sign up',
-                                        style: AppFonts.poppinsMedium.copyWith(
-                                            fontSize: AppFonts.mediumFontSize,
-                                            color: AppColors.planeColor))),
-                              ),
+                        Container(
+                          height: deviceHeight * 0.052,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: AppColors.primaryColor),
+                          child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              onPressed: () async {
+                                final isvalid =
+                                    _formKey2.currentState!.validate();
+                                if (isvalid) {
+                                  FocusScope.of(context).unfocus();
+                                  LoadingDialog.show(context);
+                                  sendingBody = {
+                                    "first_name": firstname.text,
+                                    "last_name": lastname.text,
+                                    "phone_number": "+1${phoneNum.text}",
+                                    "email": email.text,
+                                    "password": password.text,
+                                    "confirm_password": password.text,
+                                  };
+                                  await signup(sendingBody);
+                                }
+                              },
+                              child: Text('Sign up',
+                                  style: AppFonts.poppinsMedium.copyWith(
+                                      fontSize: AppFonts.mediumFontSize,
+                                      color: AppColors.planeColor))),
+                        ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.01,
                         ),

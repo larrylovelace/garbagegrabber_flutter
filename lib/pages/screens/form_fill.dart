@@ -17,6 +17,7 @@ import 'package:http/http.dart ' as http;
 
 import '../../widgets/error_handling.dart';
 import '../../widgets/error_snackbar.dart';
+import '../../widgets/loading_dialog.dart';
 
 class FormFillScreen extends StatefulWidget {
   const FormFillScreen({super.key});
@@ -29,6 +30,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
   String email = Get.arguments['email'];
   String key = Get.arguments['password'];
   final storage = const FlutterSecureStorage();
+  Map accountdetails = {};
 
   SetupScreenController controller = Get.put(SetupScreenController());
 
@@ -61,7 +63,32 @@ class _FormFillScreenState extends State<FormFillScreen> {
   TextEditingController city = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController zipcode = TextEditingController();
+
   Map sendingDetails = {};
+  Future<void> getaccountdetails() async {
+    String uri = APIConstants.baseURI + APIConstants.getaccountdetails;
+    var response = await http.post(Uri.parse(uri), body: {
+      "email": email,
+      "password": key,
+    });
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      accountdetails = data;
+    } else {
+      Get.back();
+      Get.back();
+      // ignore: use_build_context_synchronously
+      CustomSnackBar.show(
+        context,
+        'Error',
+        'Something went wrong',
+        Colors.red, // Custom background color
+        Icons.error_rounded, // Custom icon
+        Colors.red, // Custom icon color
+      );
+    }
+  }
 
   Future<void> createCustomerStripe() async {
     try {
@@ -70,24 +97,20 @@ class _FormFillScreenState extends State<FormFillScreen> {
       var response = await http.post(Uri.parse(uri), headers: {
         "Authorization": "Bearer ${dotenv.env['secretkey']}",
       }, body: {
-        'name': 'Test user',
-        'email': email,
+        'name':
+            '${accountdetails['first_name']} ${accountdetails['last_name']}',
+        'email': accountdetails['email'],
+        'phone': accountdetails['phone_number'],
         'address[city]': city.text,
         'address[country]': 'US',
         'address[line1]': streetaddress.text,
         'address[postal_code]': zipcode.text,
         'address[state]': state.text,
-        'shipping[name]': 'Pujan Poudel',
-        // 'shipping[phone]': shippingPhoneValue,
-        'shipping[address][city]': city.text,
-        'shipping[address][country]': 'US',
-        'shipping[address][line1]': streetaddress.text,
-        'shipping[address][postal_code]': zipcode.text,
-        'shipping[address][state]': state.text,
       });
-      print(response.body);
+
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+        await storage.write(key: 'stripe_id', value: data['id'].toString());
         sendingDetails = {
           "stripe_id": data['id'].toString(),
           "email": email,
@@ -104,11 +127,10 @@ class _FormFillScreenState extends State<FormFillScreen> {
         };
         await sendfromDetails(sendingDetails);
       } else {
-        controller.isLoadingindicator();
+        Get.back();
       }
     } catch (e) {
-      print(e);
-      controller.isLoadingindicator();
+      Get.back();
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -126,19 +148,20 @@ class _FormFillScreenState extends State<FormFillScreen> {
             key: 'refreshtoken', value: data['token']['refresh'].toString());
         await storage.write(
             key: 'accesstoken', value: data['token']['access'].toString());
-        controller.isLoadingindicator();
+
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
           'Success',
-          'Account created successfully',
+          'Welcome to Garbage Grabber',
           const Color.fromARGB(255, 15, 191, 98), // Custom background color
           Icons.check, // Custom icon
           const Color.fromARGB(255, 15, 191, 98), // Custom icon color
         );
-
+        Get.back();
         Get.offAllNamed(AppRoutes.homescreen);
       } else {
+        Get.back();
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
@@ -148,10 +171,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
           Icons.error_rounded, // Custom icon
           Colors.red, // Custom icon color
         );
-        controller.isLoadingindicator();
       }
     } catch (e) {
-      controller.isLoadingindicator();
+      Get.back();
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
@@ -394,6 +416,8 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       validation: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Required ';
+                        } else if (value.length != 5) {
+                          return 'Zipcode is of 5 digits';
                         } else {
                           return null;
                         }
@@ -405,6 +429,13 @@ class _FormFillScreenState extends State<FormFillScreen> {
               );
             })),
       ];
+
+  @override
+  void initState() {
+    getaccountdetails();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -454,8 +485,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       final isValid = _formKey5.currentState!.validate();
                       if (isValid) {
                         FocusScope.of(context).unfocus();
-                        controller.isLoadingindicator();
-
+                        LoadingDialog.show(context);
                         await createCustomerStripe();
                       }
                       // Handle last step completion
@@ -481,44 +511,26 @@ class _FormFillScreenState extends State<FormFillScreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: controller.isindicatorLoading
-                              ? Container(
-                                  height: deviceHeight * 0.05,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: AppColors.primaryColor),
-                                  child: Center(
-                                    child: SizedBox(
-                                      height: deviceHeight * 0.03,
-                                      width: deviceWidth * 0.064,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 1.4,
-                                        color: AppColors.planeColor,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: deviceHeight * 0.05,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(6),
-                                      color: AppColors.primaryColor),
-                                  child: MaterialButton(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6)),
-                                    onPressed: () {
-                                      details.onStepContinue!();
-                                    },
-                                    child: Text(
-                                      'Next',
-                                      style: AppFonts.poppinsMedium.copyWith(
-                                          fontSize: AppFonts.mediumFontSize,
-                                          color: AppColors.planeColor),
-                                    ),
-                                  ),
-                                ),
+                          child: Container(
+                            height: deviceHeight * 0.05,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: AppColors.primaryColor),
+                            child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              onPressed: () {
+                                details.onStepContinue!();
+                              },
+                              child: Text(
+                                'Next',
+                                style: AppFonts.poppinsMedium.copyWith(
+                                    fontSize: AppFonts.mediumFontSize,
+                                    color: AppColors.planeColor),
+                              ),
+                            ),
+                          ),
                         ),
                         if (controller.currentPosition != 0)
                           SizedBox(
