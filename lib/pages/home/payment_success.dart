@@ -20,9 +20,6 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
 
-    // DateTime dateTime =
-    //     DateTime.fromMicrosecondsSinceEpoch(unixTimestamp * 1000);
-
     return Scaffold(
       body: Center(
         child: Column(
@@ -107,7 +104,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () async {
-                        Get.offNamed(AppRoutes.homescreen);
+                        Get.offAllNamed(AppRoutes.homescreen);
                       },
                       child: Text(
                         'OK',

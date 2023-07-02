@@ -76,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             firstname: data['profile_details']['first_name'],
             lastname: data['profile_details']['last_name'],
             email: data['profile_details']['email'],
+            totalpayment: data['profile_details']['total_payment'] ?? 0,
             productDatas: List<ProductData>.from(data['products'].map((item) {
               return ProductData(
                 id: item['id'],
@@ -119,6 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
+      print(e);
       // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
       // ignore: use_build_context_synchronously
@@ -186,9 +188,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 body: Column(
                   children: <Widget>[
                     HeaderwithSearch(
-                        deviceWidth: deviceWidth,
-                        deviceHeight: deviceHeight,
-                        firstname: products.firstname),
+                      deviceWidth: deviceWidth,
+                      deviceHeight: deviceHeight,
+                      firstname: products.firstname,
+                      totalpayment: products.totalpayment.toStringAsFixed(2),
+                    ),
                     Container(
                       padding: EdgeInsets.only(
                           left: deviceWidth * 0.04, right: deviceWidth * 0.04),
@@ -201,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 'Services',
                                 style: AppFonts.poppinsMedium
-                                    .copyWith(fontSize: 22),
+                                    .copyWith(fontSize: AppFonts.largeFontSize),
                               ),
                             ],
                           ),
@@ -216,118 +220,128 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SliverGridDelegateWithFixedCrossAxisCount(
                                 childAspectRatio: 0.84, crossAxisCount: 2),
                         itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              controller.isdatepicked = false;
-                              controller.ispriceChange = false;
-                              showModalBottomSheet(
-                                backgroundColor: AppColors.secondaryColor,
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  ),
-                                ),
-                                context: context,
-                                builder: (context) => ProductDetail(
-                                  image: images[index],
-                                  id: productsdatas[index].id,
-                                  price: productsdatas[index].price,
-                                  name: productsdatas[index].name,
-                                  plan: productsdatas[index].plan,
-                                  email: email,
-                                ),
-                              );
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                  left: deviceWidth * 0.03,
-                                  right: deviceWidth * 0.03,
-                                  top: deviceHeight * 0.02,
-                                  bottom: deviceHeight * 0.02),
-                              child: ClipRRect(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                child: Column(
-                                  children: [
-                                    Stack(
-                                      children: [
-                                        Image.asset(
-                                          images[index],
-                                        ),
-                                        Positioned(
-                                          top: 3,
-                                          left: 6,
-                                          child: Container(
-                                            height: 35,
-                                            padding: const EdgeInsets.all(8),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: AppColors.primaryColor,
-                                                  width: 0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                            child: Text(
-                                              '\$${productsdatas[index].price.toString()}',
-                                              style: AppFonts.poppinsMedium
-                                                  .copyWith(
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                      fontSize: AppFonts
-                                                          .smallFontSize),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                left: deviceWidth * 0.03,
+                                right: deviceWidth * 0.03,
+                                top: deviceHeight * 0.02,
+                                bottom: deviceHeight * 0.02),
+                            child: GestureDetector(
+                              onTap: () {
+                                controller.isdatepicked = false;
+                                controller.ispriceChange = false;
+                                showModalBottomSheet(
+                                  backgroundColor: AppColors.secondaryColor,
+                                  isScrollControlled: true,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                          left: deviceHeight * 0.02,
-                                          top: deviceHeight * 0.02,
-                                          right: deviceHeight * 0.02),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.planeColor,
-                                        borderRadius: const BorderRadius.only(
-                                            bottomLeft: Radius.circular(10),
-                                            bottomRight: Radius.circular(10)),
-                                      ),
-                                      child: Column(
+                                  ),
+                                  context: context,
+                                  builder: (context) => ProductDetail(
+                                    image: images[index],
+                                    id: productsdatas[index].id,
+                                    price: productsdatas[index].price,
+                                    name: productsdatas[index].name,
+                                    plan: productsdatas[index].plan,
+                                    email: email,
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                elevation: 0.5,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  child: Column(
+                                    children: [
+                                      Stack(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  productsdatas[index].name,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: AppFonts.poppinsMedium
-                                                      .copyWith(
-                                                          fontSize: AppFonts
-                                                              .smallFontSize),
-                                                ),
-                                              ),
-                                            ],
+                                          Image.asset(
+                                            images[index],
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                productsdatas[index].plan,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: AppFonts
-                                                    .poppinsLightMediumsnackBar
+                                          Positioned(
+                                            top: 3,
+                                            left: 6,
+                                            child: Container(
+                                              height: 35,
+                                              padding: const EdgeInsets.all(8),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    width: 0.5),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                '\$${productsdatas[index].price.toString()}',
+                                                style: AppFonts.poppinsMedium
                                                     .copyWith(
                                                         color: AppColors
-                                                            .primaryColor
-                                                            .withOpacity(0.9)),
-                                              )
-                                            ],
-                                          )
+                                                            .primaryColor,
+                                                        fontSize: AppFonts
+                                                            .smallFontSize),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    )
-                                  ],
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                            left: deviceHeight * 0.02,
+                                            top: deviceHeight * 0.02,
+                                            right: deviceHeight * 0.02),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.planeColor,
+                                          borderRadius: const BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10)),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    productsdatas[index].name,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: AppFonts
+                                                        .poppinsMedium
+                                                        .copyWith(
+                                                            fontSize: AppFonts
+                                                                .smallFontSize),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  productsdatas[index].plan,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: AppFonts
+                                                      .poppinsLightMediumsnackBar
+                                                      .copyWith(
+                                                          color: AppColors
+                                                              .primaryColor
+                                                              .withOpacity(
+                                                                  0.9)),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -348,11 +362,13 @@ class HeaderwithSearch extends StatelessWidget {
     required this.deviceWidth,
     required this.deviceHeight,
     required this.firstname,
+    required this.totalpayment,
   });
 
   final double deviceWidth;
   final double deviceHeight;
   final String firstname;
+  final String totalpayment;
 
   @override
   Widget build(BuildContext context) {
@@ -412,7 +428,7 @@ class HeaderwithSearch extends StatelessWidget {
             left: 0,
             right: 0,
             child: Card(
-              elevation: 0,
+              elevation: 0.5,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -433,9 +449,9 @@ class HeaderwithSearch extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: deviceWidth * 0.4,
+                          width: deviceWidth * 0.41,
                           child: Card(
-                            color: Colors.grey.shade50,
+                            color: AppColors.planeColor,
                             elevation: 0.5,
                             shape: const RoundedRectangleBorder(
                                 borderRadius:
@@ -444,7 +460,9 @@ class HeaderwithSearch extends StatelessWidget {
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10))),
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.toNamed(AppRoutes.transactions);
+                              },
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -461,23 +479,26 @@ class HeaderwithSearch extends StatelessWidget {
                                       ),
                                       Text(
                                         'Transactions',
-                                        style: AppFonts.poppinsLightMedium
-                                            .copyWith(
-                                                color: AppColors.cancelColor),
+                                        style: AppFonts.poppinsMedium.copyWith(
+                                            color: AppColors.cancelColor),
                                       ),
                                     ],
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        '\$20',
-                                        style: AppFonts.poppinsBold
-                                            .copyWith(
-                                                fontSize:
-                                                    AppFonts.mediumFontSize)
-                                            .copyWith(
-                                                color: AppColors.primaryColor),
+                                      Flexible(
+                                        child: Text(
+                                          '\$$totalpayment',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppFonts.poppinsBold
+                                              .copyWith(
+                                                  fontSize:
+                                                      AppFonts.mediumFontSize)
+                                              .copyWith(
+                                                  color:
+                                                      AppColors.primaryColor),
+                                        ),
                                       ),
                                     ],
                                   )
@@ -487,7 +508,7 @@ class HeaderwithSearch extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: deviceWidth * 0.4,
+                          width: deviceWidth * 0.41,
                           child: Card(
                             color: AppColors.planeColor,
                             elevation: 0.5,
@@ -495,7 +516,6 @@ class HeaderwithSearch extends StatelessWidget {
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             child: MaterialButton(
-                              color: Colors.grey.shade50,
                               shape: const RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(10))),
@@ -516,9 +536,8 @@ class HeaderwithSearch extends StatelessWidget {
                                       ),
                                       Text(
                                         'Pickup Date',
-                                        style: AppFonts.poppinsLightMedium
-                                            .copyWith(
-                                                color: AppColors.cancelColor),
+                                        style: AppFonts.poppinsMedium.copyWith(
+                                            color: AppColors.cancelColor),
                                       ),
                                     ],
                                   ),

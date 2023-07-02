@@ -13,6 +13,7 @@ class LoadingDialog {
         return WillPopScope(
           onWillPop: () async => false,
           child: AlertDialog(
+            backgroundColor: AppColors.secondaryColor,
             content: Row(
               mainAxisSize: MainAxisSize.min,
               children: [

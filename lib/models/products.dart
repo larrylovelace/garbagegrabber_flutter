@@ -10,14 +10,17 @@ class Products extends HiveObject {
   final String lastname;
   @HiveField(2)
   final String email;
-
   @HiveField(3)
+  final double totalpayment;
+
+  @HiveField(4)
   final List<ProductData> productDatas;
 
   Products({
     required this.firstname,
     required this.lastname,
     required this.email,
+    required this.totalpayment,
     required this.productDatas,
   });
 }

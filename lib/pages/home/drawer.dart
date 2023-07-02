@@ -34,7 +34,7 @@ class _DrawerPageState extends State<DrawerPage> {
       child: Drawer(
         backgroundColor: AppColors.secondaryColor,
         elevation: 0,
-        width: deviceWidth * 0.55,
+        width: deviceWidth * 0.52,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(20),
@@ -45,7 +45,7 @@ class _DrawerPageState extends State<DrawerPage> {
               Container(
                 height: deviceHeight * 0.2,
                 width: deviceWidth,
-                decoration: BoxDecoration(color: AppColors.secondaryColor),
+                decoration: BoxDecoration(color: AppColors.planeColor),
                 child: Padding(
                   padding: EdgeInsets.only(left: deviceWidth * 0.05),
                   child: Column(
@@ -94,6 +94,7 @@ class _DrawerPageState extends State<DrawerPage> {
                         child: Text(
                           widget.email,
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                           style: AppFonts.poppinsRegular
                               .copyWith(fontSize: AppFonts.smallFontSize),
                         ),
@@ -110,11 +111,14 @@ class _DrawerPageState extends State<DrawerPage> {
                   title: 'Profile',
                   icon: Icons.person_2_outlined),
               DrawerTitleCards(
-                  onPress: () {},
+                  onPress: () {
+                    Get.back();
+                    Get.toNamed(AppRoutes.transactions);
+                  },
                   logout: false,
                   deviceWidth: deviceWidth,
                   deviceHeight: deviceHeight,
-                  title: 'Payments',
+                  title: 'Transactions',
                   icon: Icons.payment_outlined),
               DrawerTitleCards(
                   onPress: () {},

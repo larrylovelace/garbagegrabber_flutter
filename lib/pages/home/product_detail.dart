@@ -47,71 +47,43 @@ class _ProductDetailState extends State<ProductDetail> {
   var items = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
   int quantity = 1;
   Map<String, dynamic>? paymentIntent;
-  // Future<void> verifyappointment() async {
-  //   try {
-  //     final refreshToken = await storage.read(key: 'refreshtoken');
+  Map sendingpaymentdata = {};
+  Future<void> verifyappointment() async {
+    try {
+      final refreshToken = await storage.read(key: 'refreshtoken');
 
-  //     final tokenManager = TokenManager();
+      final tokenManager = TokenManager();
 
-  //     String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
-  //         refreshToken!, APIConstants.tokenRefresh);
-  //     if (accessToken != null) {
-  //       String uri = APIConstants.baseURI + APIConstants.verifyappointment;
+      String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
+          refreshToken!, APIConstants.tokenRefresh);
+      if (accessToken != null) {
+        String uri = APIConstants.baseURI + APIConstants.verifyappointment;
 
-  //       var response = await http.post(Uri.parse(uri), headers: {
-  //         'Authorization': 'Bearer $accessToken',
-  //       }, body: {
-  //         "quantity": quantity.toString(),
-  //         "product_id": widget.id.toString(),
-  //         "appointment_date": controller.sendinddate,
-  //         "total_payment": controller.priceindouble.toString()
-  //       });
-
-  //       if (response.statusCode == 200) {
-  //         // await makePayment();
-  //       } else {
-
-  //         Get.back();
-  //         // ignore: use_build_context_synchronously
-  //         showDialog(
-  //             context: context,
-  //             builder: (context) {
-  //               return ProudctValidation(
-  //                 deviceHeight: MediaQuery.of(context).size.height,
-  //                 deviceWidth: MediaQuery.of(context).size.width,
-  //                 headertext: 'Error',
-  //                 errortext: 'Something went wrong',
-  //               );
-  //             });
-  //       }
-  //     } else {
-  //       Get.back();
-  //       // ignore: use_build_context_synchronously
-  //       showDialog(
-  //           context: context,
-  //           builder: (context) {
-  //             return ProudctValidation(
-  //               deviceHeight: MediaQuery.of(context).size.height,
-  //               deviceWidth: MediaQuery.of(context).size.width,
-  //               headertext: 'Error',
-  //               errortext: 'Something went wrong',
-  //             );
-  //           });
-  //     }
-  //   } catch (e) {
-  //     Get.back();
-  //     showDialog(
-  //         context: context,
-  //         builder: (context) {
-  //           return ProudctValidation(
-  //             deviceHeight: MediaQuery.of(context).size.height,
-  //             deviceWidth: MediaQuery.of(context).size.width,
-  //             headertext: 'Error',
-  //             errortext: 'Something went wrong',
-  //           );
-  //         });
-  //   }
-  // }
+        var response = await http.post(Uri.parse(uri), headers: {
+          'Authorization': 'Bearer $accessToken',
+        }, body: {
+          "quantity": quantity.toString(),
+          "product_id": widget.id.toString(),
+          "appointment_date": controller.sendinddate,
+          "total_payment": controller.priceindouble.toString()
+        });
+    
+        if (response.statusCode == 200) {
+          await makePayment();
+        } else {
+          Get.back();
+          showErrorDialog();
+        }
+      } else {
+        Get.back();
+        // ignore: use_build_context_synchronously
+        showErrorDialog();
+      }
+    } catch (e) {
+      Get.back();
+      showErrorDialog();
+    }
+  }
 
   Future<void> makePayment() async {
     try {
@@ -139,52 +111,7 @@ class _ProductDetailState extends State<ProductDetail> {
       await displayPaymentSheet();
 
       // ignore: use_build_context_synchronously
-    } catch (e) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return ProudctValidation(
-              deviceHeight: MediaQuery.of(context).size.height,
-              deviceWidth: MediaQuery.of(context).size.width,
-              headertext: 'Error',
-              errortext: 'Something went wrong',
-            );
-          });
-    }
-  }
-
-  displayPaymentSheet() async {
-    try {
-      await Stripe.instance.presentPaymentSheet();
-
-      var paymentintents = await Stripe.instance
-          .retrievePaymentIntent(paymentIntent!["client_secret"]);
-
-      var details = paymentintents.toJson();
-      if (details['status'] == 'Succeeded') {
-        var id = details['id'];
-        Get.offNamed(AppRoutes.paymentsuccess, arguments: {
-          'id': id,
-          'amount': details['amount'] / 100,
-          'created': int.parse(
-            details['created'],
-          ),
-          'currency': details['currency']
-        });
-        // await eventdetails(id);
-      }
-    } catch (e) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return ProudctValidation(
-              deviceHeight: MediaQuery.of(context).size.height,
-              deviceWidth: MediaQuery.of(context).size.width,
-              headertext: 'Error',
-              errortext: 'Something went wrong',
-            );
-          });
-    }
+    } catch (e) {}
   }
 
   createPaymentIntent(String amount, String currency) async {
@@ -212,32 +139,97 @@ class _ProductDetailState extends State<ProductDetail> {
         Get.back();
       } else {
         Get.back();
-
-        // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) {
-              return ProudctValidation(
-                deviceHeight: MediaQuery.of(context).size.height,
-                deviceWidth: MediaQuery.of(context).size.width,
-                headertext: 'Error',
-                errortext: 'Something went wrong',
-              );
-            });
+        showErrorDialog();
       }
       return jsonDecode(response.body);
     } catch (e) {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return ProudctValidation(
-              deviceHeight: MediaQuery.of(context).size.height,
-              deviceWidth: MediaQuery.of(context).size.width,
-              headertext: 'Error',
-              errortext: 'Something went wrong',
-            );
-          });
+      showErrorDialog();
     }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      await Stripe.instance.presentPaymentSheet();
+
+      var paymentintents = await Stripe.instance
+          .retrievePaymentIntent(paymentIntent!["client_secret"]);
+
+      var details = paymentintents.toJson();
+      ;
+      if (details['status'] == 'Succeeded') {
+        var id = details['id'];
+        int unixTimestamp = int.parse(details['created']);
+        DateTime dateTime =
+            DateTime.fromMicrosecondsSinceEpoch(unixTimestamp * 1000);
+        String formattedDateTime =
+            dateTime.toIso8601String().replaceAll(" ", "T");
+
+        Get.offNamed(AppRoutes.paymentsuccess, arguments: {
+          'id': id,
+          'amount': details['amount'] / 100,
+          'created': int.parse(
+            details['created'],
+          ),
+          'currency': details['currency']
+        });
+        sendingpaymentdata = {
+          "quantity": quantity.toString(),
+          "product_id": widget.id.toString(),
+          "appointment_date": controller.sendinddate,
+          "total_payment": (details['amount'] / 100).toString(),
+          "transaction_id": id,
+          "currency": details['currency'].toString(),
+          "payment_at": formattedDateTime
+        };
+
+        await savepaymentdetails(sendingpaymentdata);
+      }
+    } catch (e) {}
+  }
+
+  Future<void> savepaymentdetails(sendingpaymentdata) async {
+    try {
+      final refreshToken = await storage.read(key: 'refreshtoken');
+
+      final tokenManager = TokenManager();
+
+      String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
+          refreshToken!, APIConstants.tokenRefresh);
+      if (accessToken != null) {
+        String uri = APIConstants.baseURI + APIConstants.registerappointment;
+
+        var response = await http.post(Uri.parse(uri),
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+            },
+            body: sendingpaymentdata);
+        print(response.body);
+
+        if (response.statusCode == 200) {}
+      } else {
+        Get.back();
+
+        showErrorDialog();
+      }
+    } catch (e) {
+      print(e);
+      Get.back();
+      showErrorDialog();
+    }
+  }
+
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ProudctValidation(
+          deviceHeight: MediaQuery.of(context).size.height,
+          deviceWidth: MediaQuery.of(context).size.width,
+          headertext: 'Error',
+          errortext: 'Something went wrong',
+        );
+      },
+    );
   }
 
   // Future<void> eventdetails(String id) async {
@@ -526,7 +518,7 @@ class _ProductDetailState extends State<ProductDetail> {
                           if (controller.isdatepicked == true &&
                               controller.ispriceChange == true) {
                             LoadingDialog.show(context);
-                            makePayment();
+                            verifyappointment();
                           } else if (controller.isdatepicked == false &&
                               controller.ispriceChange == false) {
                             // ignore: use_build_context_synchronously
