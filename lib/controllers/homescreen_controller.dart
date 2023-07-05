@@ -22,8 +22,9 @@ class HomeScreenController extends GetxController {
 
   void quantitycaclculation(value) {
     price = double.parse(value); // Parse value to double
-    pricewithvat = (8.5 / 100) * price + price;
-    payingprice = pricewithvat.toStringAsFixed(2);
+    pricewithvat = ((8.5 / 100) * price + price);
+    double roundedPrice = (pricewithvat * 100).ceilToDouble() / 100;
+    payingprice = roundedPrice.toStringAsFixed(2);
     priceindouble = double.parse(payingprice!);
 
     ispriceChange = true;

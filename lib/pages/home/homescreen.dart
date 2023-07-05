@@ -38,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeScreenController controller = Get.put(HomeScreenController());
   final storage = const FlutterSecureStorage();
   String email = '';
-// ignore: prefer_typing_uninitialized_variables
 
   List<String> images = [
     'assets/Onebag.png',
@@ -48,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   Future<void> getProductdetails() async {
-    await Hive.openBox('products');
     try {
       final refreshToken = await storage.read(key: 'refreshtoken');
 
@@ -87,10 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
             })),
           );
 
-          productsBox.put(
-              'products', products); // Store the products object in the box
-          setState(() {});
+          productsBox.put('products', products);
+
+          // Store the products object in the box
         } else if (response.statusCode == 401) {
+          var box = Hive.box('products');
+          await box.clear();
           await storage.deleteAll();
 
           // ignore: use_build_context_synchronously
@@ -120,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
-      print(e);
       // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
       // ignore: use_build_context_synchronously
@@ -129,8 +128,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void initState() {
-    getProductdetails();
     super.initState();
   }
 
@@ -138,13 +141,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
+    getProductdetails();
     return ValueListenableBuilder<Box<dynamic>>(
         valueListenable: Hive.box('products').listenable(),
         builder: (context, box, _) {
           if (box.isEmpty) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryColor,
+            return Scaffold(
+              backgroundColor: AppColors.secondaryColor,
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryColor,
+                ),
               ),
             );
           } else {
@@ -546,7 +553,7 @@ class HeaderwithSearch extends StatelessWidget {
                                     children: [
                                       Flexible(
                                         child: Text(
-                                          'Jun-23',
+                                          'July-05',
                                           overflow: TextOverflow.ellipsis,
                                           style: AppFonts.poppinsMedium
                                               .copyWith(

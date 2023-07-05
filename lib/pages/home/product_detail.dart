@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import '../../controllers/homescreen_controller.dart';
 
 import '../../controllers/token_manager.dart';
+
 import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
 import '../../widgets/calendar_dialog.dart';
@@ -67,7 +68,7 @@ class _ProductDetailState extends State<ProductDetail> {
           "appointment_date": controller.sendinddate,
           "total_payment": controller.priceindouble.toString()
         });
-    
+
         if (response.statusCode == 200) {
           await makePayment();
         } else {
@@ -122,7 +123,7 @@ class _ProductDetailState extends State<ProductDetail> {
       Map<String, dynamic> body = {
         "amount": amountInCents.toString(),
         "currency": currency,
-        "receipt_email": widget.email,
+        // "receipt_email": widget.email,
         "customer": stirpeid,
       };
 
@@ -155,7 +156,7 @@ class _ProductDetailState extends State<ProductDetail> {
           .retrievePaymentIntent(paymentIntent!["client_secret"]);
 
       var details = paymentintents.toJson();
-      ;
+      
       if (details['status'] == 'Succeeded') {
         var id = details['id'];
         int unixTimestamp = int.parse(details['created']);
@@ -163,6 +164,7 @@ class _ProductDetailState extends State<ProductDetail> {
             DateTime.fromMicrosecondsSinceEpoch(unixTimestamp * 1000);
         String formattedDateTime =
             dateTime.toIso8601String().replaceAll(" ", "T");
+        // double totalpayment = details['amount'] / 100;
 
         Get.offNamed(AppRoutes.paymentsuccess, arguments: {
           'id': id,
@@ -203,7 +205,6 @@ class _ProductDetailState extends State<ProductDetail> {
               'Authorization': 'Bearer $accessToken',
             },
             body: sendingpaymentdata);
-        print(response.body);
 
         if (response.statusCode == 200) {}
       } else {
@@ -212,7 +213,6 @@ class _ProductDetailState extends State<ProductDetail> {
         showErrorDialog();
       }
     } catch (e) {
-      print(e);
       Get.back();
       showErrorDialog();
     }
@@ -232,6 +232,24 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
+  // void updateTotalPayment(double newPayment) async {
+  //   await Hive.close();
+  //   final box = await Hive.openBox<Products>('products');
+  //   final products = box.get('products');
+
+  //   if (products != null) {
+  //     final double currentPayment = products.totalpayment;
+  //     final double updatedPayment = currentPayment + newPayment;
+
+  //     // Update the total payment field
+  //     products.totalpayment = updatedPayment;
+  //     print(updatedPayment);
+
+  //     // Save the updated Products object back to Hive
+  //     await products.save();
+  //     await Hive.close();
+  //   }
+  // }
   // Future<void> eventdetails(String id) async {
   //   String uri = APIConstants.paymentIntentAPI + id;
   //   var response = await http.get(

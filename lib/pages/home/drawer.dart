@@ -4,6 +4,7 @@ import 'package:garbage_grabber/controllers/routes.dart';
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 
 import '../../widgets/error_snackbar.dart';
 
@@ -136,6 +137,8 @@ class _DrawerPageState extends State<DrawerPage> {
                   icon: Icons.settings_outlined),
               DrawerTitleCards(
                   onPress: () async {
+                    var box = Hive.box('products');
+                    await box.clear();
                     await storage.deleteAll();
 
                     // ignore: use_build_context_synchronously

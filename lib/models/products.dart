@@ -11,7 +11,7 @@ class Products extends HiveObject {
   @HiveField(2)
   final String email;
   @HiveField(3)
-  final double totalpayment;
+  double totalpayment;
 
   @HiveField(4)
   final List<ProductData> productDatas;

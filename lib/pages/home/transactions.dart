@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/pages/home/product_detail.dart';
@@ -23,6 +24,7 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  ScrollController scrollController = ScrollController();
   final storage = const FlutterSecureStorage();
   List paymentdetails = [];
   double totaltransaction = 0;
@@ -152,7 +154,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     const BorderRadius.all(Radius.circular(10)),
                                 color: AppColors.secondaryColor),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
                                   width: deviceWidth * 0.45,
@@ -175,7 +177,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                               width: deviceWidth * 0.02,
                                             ),
                                             Text(
-                                              'Transactions',
+                                              'Total',
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
                                               style: AppFonts.poppinsMedium
@@ -225,7 +227,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                               width: deviceWidth * 0.02,
                                             ),
                                             Text(
-                                              'Recently',
+                                              'Recent',
                                               overflow: TextOverflow.ellipsis,
                                               maxLines: 2,
                                               style: AppFonts.poppinsMedium
@@ -259,214 +261,116 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                         ),
                         Expanded(
-                          child: ListView.builder(
-                              itemCount: paymentdetails.length,
-                              itemBuilder: (context, index) {
-                                String backendDateTime =
-                                    paymentdetails[index]['payment_at'];
-
-                                // Parse the date and time string
-                                DateTime dateTime =
-                                    DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                                        .parse(backendDateTime);
-
-                                // Format the parsed DateTime object
-                                String formattedDateTime =
-                                    DateFormat('MMM d y, hh:mm a')
-                                        .format(dateTime);
-                                // Output: Jul 2, 2023 7:25 PM
-                                return SizedBox(
-                                  height: deviceheight * 0.13,
-                                  child: Card(
-                                      margin: EdgeInsets.only(
-                                          top: deviceheight * 0.02,
-                                          left: deviceWidth * 0.02,
-                                          right: deviceWidth * 0.02),
-                                      elevation: 0.5,
-                                      color: AppColors.planeColor,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      child: ListTile(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10))),
-                                        onTap: () {},
-                                        title: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            paymentdetails[index]
-                                                        ['product_id'] ==
-                                                    1
-                                                ? Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        '1 Standard Bag',
-                                                        style: AppFonts
-                                                            .poppinsMedium
-                                                            .copyWith(
-                                                                fontSize: 15),
-                                                      ),
-                                                      Text(
-                                                        'One time',
-                                                        style: AppFonts
-                                                            .poppinsRegular
-                                                            .copyWith(
-                                                                color: AppColors
-                                                                    .primaryColor,
-                                                                fontSize: AppFonts
-                                                                    .smallFontSize),
-                                                      )
-                                                    ],
-                                                  )
-                                                : paymentdetails[index]
-                                                            ['product_id'] ==
-                                                        2
-                                                    ? Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            '2 Standard Bags',
-                                                            style: AppFonts
-                                                                .poppinsMedium
-                                                                .copyWith(
-                                                                    fontSize:
-                                                                        AppFonts
-                                                                            .smallFontSize),
-                                                          ),
-                                                          Text(
-                                                            'One time',
-                                                            style: AppFonts
-                                                                .poppinsRegular
-                                                                .copyWith(
-                                                                    color: AppColors
-                                                                        .primaryColor,
-                                                                    fontSize:
-                                                                        AppFonts
-                                                                            .smallFontSize),
-                                                          )
-                                                        ],
-                                                      )
-                                                    : paymentdetails[index][
-                                                                'product_id'] ==
-                                                            3
-                                                        ? Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                '1 Standard Bag',
-                                                                style: AppFonts
-                                                                    .poppinsMedium
-                                                                    .copyWith(
-                                                                        fontSize:
-                                                                            AppFonts.smallFontSize),
-                                                              ),
-                                                              Text(
-                                                                'Monthly',
-                                                                style: AppFonts
-                                                                    .poppinsRegular
-                                                                    .copyWith(
-                                                                        color: AppColors
-                                                                            .primaryColor,
-                                                                        fontSize:
-                                                                            AppFonts.smallFontSize),
-                                                              )
-                                                            ],
-                                                          )
-                                                        : Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                '2 Standard Bags',
-                                                                style: AppFonts
-                                                                    .poppinsMedium
-                                                                    .copyWith(
-                                                                        fontSize:
-                                                                            AppFonts.smallFontSize),
-                                                              ),
-                                                              Text(
-                                                                'Monthly',
-                                                                style: AppFonts
-                                                                    .poppinsRegular
-                                                                    .copyWith(
-                                                                        color: AppColors
-                                                                            .primaryColor,
-                                                                        fontSize:
-                                                                            AppFonts.smallFontSize),
-                                                              )
-                                                            ],
-                                                          ),
-                                            SizedBox(
-                                              height: deviceheight * 0.015,
-                                            ),
-                                            Text(
+                          child: CupertinoScrollbar(
+                            thumbVisibility: true,
+                            radius: const Radius.circular(10),
+                            controller: scrollController,
+                            child: ListView.builder(
+                                itemCount: paymentdetails.length,
+                                itemBuilder: (context, index) {
+                                  final formattedDateTime = _formatDateTime(
+                                      paymentdetails[index]['payment_at']);
+                                  return SizedBox(
+                                      height: deviceheight * 0.13,
+                                      child: Card(
+                                          margin: EdgeInsets.only(
+                                              top: deviceheight * 0.02,
+                                              left: deviceWidth * 0.05,
+                                              right: deviceWidth * 0.05),
+                                          elevation: 0.5,
+                                          color: AppColors.planeColor,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          child: buildPaymentListTile(
+                                              paymentdetails[index]
+                                                  ['product_id'],
                                               formattedDateTime,
-                                              style: AppFonts.poppinsRegular
-                                                  .copyWith(
-                                                      fontSize: AppFonts
-                                                          .snackBarfontsmall,
-                                                      color:
-                                                          AppColors.iconColor),
-                                            )
-                                          ],
-                                        ),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '\$ ${paymentdetails[index]['total_payment']}',
-                                              style: AppFonts.poppinsMedium
-                                                  .copyWith(
-                                                      fontSize: AppFonts
-                                                          .smallFontSize),
-                                            ),
-                                            SizedBox(
-                                              width: deviceWidth * 0.02,
-                                            ),
-                                            CircleAvatar(
-                                              radius: 9,
-                                              backgroundColor:
-                                                  AppColors.primaryColor,
-                                              child: Icon(
-                                                Icons.check,
-                                                color: AppColors.planeColor,
-                                                size: 15,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )),
-                                );
-                              }),
+                                              paymentdetails[index]
+                                                  ['total_payment'],
+                                              deviceheight,
+                                              deviceWidth)));
+                                }),
+                          ),
                         ),
                       ],
                     )),
     );
   }
+}
+
+Widget buildPaymentListTile(int productId, String formattedDateTime,
+    double totalPayment, double deviceHeight, double deviceWidth) {
+  String title;
+  String subtitle;
+
+  if (productId == 1) {
+    title = '1 Standard Bag';
+    subtitle = 'One time';
+  } else if (productId == 2) {
+    title = '2 Standard Bags';
+    subtitle = 'One time';
+  } else if (productId == 3) {
+    title = '1 Standard Bag';
+    subtitle = 'Monthly';
+  } else {
+    title = '2 Standard Bags';
+    subtitle = 'Monthly';
+  }
+
+  return ListTile(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    onTap: () {},
+    title: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppFonts.poppinsMedium.copyWith(fontSize: 15),
+        ),
+        Text(
+          subtitle,
+          style: AppFonts.poppinsRegular.copyWith(
+            color: AppColors.primaryColor,
+            fontSize: AppFonts.smallFontSize,
+          ),
+        ),
+        SizedBox(height: deviceHeight * 0.015),
+        Text(
+          formattedDateTime,
+          style: AppFonts.poppinsRegular.copyWith(
+            fontSize: AppFonts.snackBarfontsmall,
+            color: AppColors.iconColor,
+          ),
+        ),
+      ],
+    ),
+    trailing: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          '\$ $totalPayment',
+          style:
+              AppFonts.poppinsMedium.copyWith(fontSize: AppFonts.smallFontSize),
+        ),
+        SizedBox(width: deviceWidth * 0.02),
+        CircleAvatar(
+          radius: 9,
+          backgroundColor: AppColors.primaryColor,
+          child: Icon(
+            Icons.check,
+            color: AppColors.planeColor,
+            size: 15,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+String _formatDateTime(String backendDateTime) {
+  final dateTime = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(backendDateTime);
+  return DateFormat('MMM d y, hh:mm a').format(dateTime);
 }

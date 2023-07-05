@@ -1,4 +1,4 @@
-package com.example.garbage_grabber;
+package com.garbagegrabber.app;
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
