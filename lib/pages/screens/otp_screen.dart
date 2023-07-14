@@ -96,7 +96,7 @@ class _OtpScreenState extends State<OtpScreen> {
         });
         final snackBar = buildErrorSnackBar(context, e);
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        print(e);
+        
       }
       // Trigger verification process here
     }

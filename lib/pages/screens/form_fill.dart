@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,6 +16,7 @@ import '../../controllers/apihandler.dart';
 import '../../controllers/setup_controller.dart';
 import 'package:http/http.dart ' as http;
 
+import '../../models/addressdetails.dart';
 import '../../widgets/error_handling.dart';
 import '../../widgets/error_snackbar.dart';
 import '../../widgets/loading_dialog.dart';
@@ -27,11 +29,15 @@ class FormFillScreen extends StatefulWidget {
 }
 
 class _FormFillScreenState extends State<FormFillScreen> {
+  ScrollController scrollController = ScrollController();
+  List<Map<String, dynamic>> searchResults = [];
+  List<String> descriptions = [];
+  List<String> placeid = [];
+  String placeno = '';
   String email = Get.arguments['email'];
   String key = Get.arguments['password'];
   final storage = const FlutterSecureStorage();
   Map accountdetails = {};
-
   SetupScreenController controller = Get.put(SetupScreenController());
 
   final GlobalKey<FormState> _formKey4 = GlobalKey<FormState>();
@@ -63,6 +69,8 @@ class _FormFillScreenState extends State<FormFillScreen> {
   TextEditingController city = TextEditingController();
   TextEditingController state = TextEditingController();
   TextEditingController zipcode = TextEditingController();
+  TextEditingController latitude = TextEditingController();
+  TextEditingController longitude = TextEditingController();
 
   Map sendingDetails = {};
   Future<void> getaccountdetails() async {
@@ -123,8 +131,11 @@ class _FormFillScreenState extends State<FormFillScreen> {
           "city": city.text,
           "state": state.text,
           "zipcode": zipcode.text,
-          "visitor_location": ''
+          "lattitude": latitude.text,
+          "longitude": longitude.text,
+          "place_id": placeno,
         };
+
         await sendfromDetails(sendingDetails);
       } else {
         Get.back();
@@ -159,7 +170,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
           const Color.fromARGB(255, 15, 191, 98), // Custom icon color
         );
         Get.back();
-        Get.offAllNamed(AppRoutes.homescreen);
+        Get.offAllNamed(AppRoutes.mainscreen);
       } else {
         Get.back();
         // ignore: use_build_context_synchronously
@@ -177,6 +188,209 @@ class _FormFillScreenState extends State<FormFillScreen> {
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+  }
+
+  Future<void> placeAutoComplete(String query) async {
+    Uri uri =
+        Uri.https('maps.googleapis.com', 'maps/api/place/autocomplete/json', {
+      "input": query,
+      "components": "country:us",
+      "types": "establishment",
+      "key": "${dotenv.env['placeskey']}",
+    });
+    String? response = await fetchUrl(uri);
+    if (response != null) {
+      final data = jsonDecode(response);
+
+      final predictions = data['predictions'];
+
+      setState(() {
+        descriptions = predictions
+            .map<String>((prediction) => prediction['description'] as String)
+            .toList();
+
+        placeid = predictions
+            .map<String>((prediction) => prediction['place_id'] as String)
+            .toList();
+      });
+
+      // ignore: use_build_context_synchronously
+      showModalBottomSheet(
+          enableDrag: true,
+          isDismissible: false,
+          backgroundColor: AppColors.secondaryColor,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          context: context,
+          builder: (context) {
+            double deviceHeight = MediaQuery.of(context).size.height;
+            double deviceWidth = MediaQuery.of(context).size.width;
+            return descriptions.isNotEmpty
+                ? SizedBox(
+                    height: deviceHeight * 0.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: deviceHeight * 0.02,
+                        ),
+                        Text(
+                          'Select one from the following',
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          style: AppFonts.poppinsMedium
+                              .copyWith(fontSize: AppFonts.mediumFontSize),
+                        ),
+                        SizedBox(
+                          height: deviceHeight * 0.02,
+                        ),
+                        Expanded(
+                          child: CupertinoScrollbar(
+                            thumbVisibility: true,
+                            radius: const Radius.circular(10),
+                            controller: scrollController,
+                            child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: descriptions.length,
+                                itemBuilder: (context, index) {
+                                  return Card(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                    margin: EdgeInsets.only(
+                                      top: deviceHeight * 0.015,
+                                      bottom: deviceHeight * 0.015,
+                                      left: deviceWidth * 0.06,
+                                      right: deviceWidth * 0.06,
+                                    ),
+                                    child: ListTile(
+                                        onTap: () {
+                                          LoadingDialog.show(context);
+                                          placeno = placeid[index];
+                                          fetchGeocodingData(placeno);
+                                        },
+                                        contentPadding: EdgeInsets.only(
+                                            left: deviceWidth * 0.01),
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        title: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on_outlined,
+                                              color: AppColors.iconColor,
+                                            ),
+                                            SizedBox(
+                                              width: deviceWidth * 0.02,
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                descriptions[index],
+                                                style: AppFonts.poppinsRegular
+                                                    .copyWith(
+                                                        letterSpacing: 0.2,
+                                                        fontSize: AppFonts
+                                                            .smallFontSize),
+                                              ),
+                                            ),
+                                          ],
+                                        )),
+                                  );
+                                }),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox(
+                    height: deviceHeight * 0.1,
+                    child: Center(
+                      child: Text(
+                        'Aparmtent  not found',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.poppinsLightMedium
+                            .copyWith(fontSize: AppFonts.mediumFontSize),
+                      ),
+                    ),
+                  );
+          });
+    }
+  }
+
+  Future<String?> fetchUrl(Uri uri, {Map<String, String>? headers}) async {
+    try {
+      final response = await http.get(uri, headers: headers);
+      if (response.statusCode == 200) {
+        Get.back();
+        return response.body;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  void fetchGeocodingData(String placeid) async {
+    final String apiKey = '${dotenv.env['geocodingkey']}';
+    String placeId = placeid;
+
+    final Uri uri = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?place_id=$placeId&key=$apiKey');
+
+    final response = await http.get(uri);
+    try {
+      if (response.statusCode == 200) {
+        Get.back();
+        Get.back();
+        _formKey4.currentState!.save(); // Save the form data
+        controller.onStepContinue();
+        final data = json.decode(response.body);
+        final storeData = StoreData.fromJson(data);
+
+        // Call parseAddressComponents() after getting the response
+        final parsedComponents =
+            parseAddressComponents(storeData.formattedAddress);
+
+        streetaddress.text = parsedComponents['streetAddress'] ?? '';
+        city.text = parsedComponents['city'] ?? '';
+        state.text = parsedComponents['state'] ?? '';
+        zipcode.text = parsedComponents['zipCode'] ?? '';
+        latitude.text = storeData.latitude.toString();
+        longitude.text = storeData.longitude.toString();
+      } else {
+        debugPrint('Request failed with status: ${response.statusCode}');
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Map<String, String> parseAddressComponents(String address) {
+    final RegExp regex = RegExp(r'^(.*?),\s*(.*?),\s*(.*?)\s+(\d{5}),.*$');
+    final RegExpMatch? match = regex.firstMatch(address);
+
+    if (match != null) {
+      String? streetAddress = match.group(1)?.trim();
+      String? city = match.group(2)?.trim();
+      String? state = match.group(3)?.trim();
+      String? zipCode = match.group(4)?.trim();
+
+      return {
+        'streetAddress': streetAddress ?? '',
+        'city': city ?? '',
+        'state': state ?? '',
+        'zipCode': zipCode ?? '',
+      };
+    }
+
+    // Return an empty map if the address doesn't match the expected format
+    return {};
   }
 
   List<Step> getSteps() => [
@@ -234,6 +448,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                                     text: 'Apartment name',
                                   ),
                                   InputField(
+                                    readonly: false,
                                     controller: apartmentname,
                                     isPrefix: false,
                                     errorText: null,
@@ -259,6 +474,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Apartment number',
                         ),
                         InputField(
+                          readonly: false,
                           controller: apartmentnumber,
                           isPrefix: false,
                           errorText: null,
@@ -281,6 +497,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'Unit number',
                         ),
                         InputField(
+                          readonly: false,
                           controller: unitnumber,
                           isPrefix: false,
                           errorText: null,
@@ -303,6 +520,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                           text: 'What floor',
                         ),
                         InputField(
+                          readonly: false,
                           controller: whatfloornumber,
                           isPrefix: false,
                           errorText: null,
@@ -342,6 +560,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'Street address',
                     ),
                     InputField(
+                      readonly: true,
                       controller: streetaddress,
                       isPrefix: false,
                       errorText: null,
@@ -364,6 +583,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'City',
                     ),
                     InputField(
+                      readonly: true,
                       controller: city,
                       isPrefix: false,
                       errorText: null,
@@ -386,6 +606,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'State',
                     ),
                     InputField(
+                      readonly: true,
                       controller: state,
                       isPrefix: false,
                       errorText: null,
@@ -408,6 +629,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                       text: 'Zip code',
                     ),
                     InputField(
+                      readonly: true,
                       controller: zipcode,
                       isPrefix: false,
                       errorText: null,
@@ -484,14 +706,16 @@ class _FormFillScreenState extends State<FormFillScreen> {
                     if (isLastStep) {
                       final isValid = _formKey5.currentState!.validate();
                       if (isValid) {
+                        // ignore: use_build_context_synchronously
                         FocusScope.of(context).unfocus();
+                        // ignore: use_build_context_synchronously
                         LoadingDialog.show(context);
                         await createCustomerStripe();
                       }
                       // Handle last step completion
                     } else {
-                      _formKey4.currentState!.save(); // Save the form data
-                      controller.onStepContinue();
+                      LoadingDialog.show(context);
+                      await placeAutoComplete(apartmentname.text);
                     }
                   }
                 },

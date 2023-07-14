@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppColors.primaryColor, // Custom icon color
         );
         Get.back();
-        Get.offAllNamed(AppRoutes.homescreen);
+        Get.offAllNamed(AppRoutes.mainscreen);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 
@@ -147,6 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       children: [
                         InputField(
+                          readonly: false,
                           isPrefix: true,
                           prefixIcon: const Icon(Icons.email_outlined),
                           errorText: controller.errormail
@@ -171,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: deviceHeight * 0.02,
                         ),
                         InputField(
+                          readonly: false,
                           isPrefix: true,
                           prefixIcon: const Icon(Icons.lock_outlined),
                           errorText: null,
@@ -384,7 +386,9 @@ class OtpDialog extends StatelessWidget {
                                           'email': email.text,
                                           'password': password.text,
                                         });
-                                  } else {}
+                                  } else {
+                                    Get.back();
+                                  }
                                 } catch (e) {
                                   Get.back();
                                   final snackBar =

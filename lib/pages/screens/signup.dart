@@ -119,6 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Expanded(
                                 child: InputField(
+                                  readonly: false,
                               isPrefix: true,
                               prefixIcon: const Icon(Icons.person_2_outlined),
                               keywordType: TextInputType.name,
@@ -145,6 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             Expanded(
                                 child: InputField(
+                                    readonly: false,
                               isPrefix: true,
                               prefixIcon: const Icon(Icons.person_2_outlined),
                               keywordType: TextInputType.name,
@@ -172,6 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: deviceHeight * 0.02,
                         ),
                         InputField(
+                            readonly: false,
                           isPrefix: true,
                           prefixIcon: const Icon(Icons.local_phone_outlined),
                           errorText: controller.phonenumerror
@@ -195,6 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: deviceHeight * 0.02,
                         ),
                         InputField(
+                            readonly: false,
                             isPrefix: true,
                             prefixIcon: const Icon(Icons.email_outlined),
                             errorText: controller.errormail
@@ -220,6 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Column(
                           children: [
                             InputField(
+                                readonly: false,
                                 isPrefix: true,
                                 prefixIcon: const Icon(Icons.lock_outlined),
                                 errorText: null,
@@ -243,6 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               height: deviceHeight * 0.02,
                             ),
                             InputField(
+                                readonly: false,
                               isPrefix: true,
                               prefixIcon: const Icon(Icons.lock_outlined),
                               errorText: null,

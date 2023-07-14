@@ -1,5 +1,7 @@
 import 'package:garbage_grabber/pages/home/homescreen.dart';
+import 'package:garbage_grabber/pages/home/mainscreen.dart';
 import 'package:garbage_grabber/pages/home/payment_success.dart';
+import 'package:garbage_grabber/pages/home/pickups/pickups.dart';
 import 'package:garbage_grabber/pages/home/transactions.dart';
 import 'package:garbage_grabber/pages/screens/login.dart';
 import 'package:garbage_grabber/pages/screens/signup.dart';
@@ -15,9 +17,11 @@ class AppRoutes {
   static const String register = '/register';
   static const String otpscreen = '/otpscreen';
   static const String formfill = '/formfill';
+  static const String mainscreen = '/mainscreen';
   static const String homescreen = '/homescreen';
   static const String paymentsuccess = '/paymentsuccess';
   static const String transactions = '/transactions';
+  static const String pickups = '/pickups';
 
   static final List<GetPage> routes = [
     GetPage(
@@ -55,6 +59,12 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
+      name: mainscreen,
+      page: () => const MainScreen(),
+      binding: MainScreenBinding(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
         name: homescreen,
         page: () => const HomeScreen(),
         binding: HomeScreenBinding(),
@@ -70,6 +80,12 @@ class AppRoutes {
       name: transactions,
       page: () => const TransactionScreen(),
       binding: TransactionScreenBinding(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: pickups,
+      page: () => const PickUpsShcedule(),
+      binding: PickUpScreenBinding(),
       transition: Transition.fadeIn,
     ),
   ];
@@ -110,6 +126,13 @@ class FormFillScreenBinding extends Bindings {
   }
 }
 
+class MainScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Main screen can be added here
+  }
+}
+
 class HomeScreenBinding extends Bindings {
   @override
   void dependencies() {
@@ -128,5 +151,12 @@ class TransactionScreenBinding extends Bindings {
   @override
   void dependencies() {
     // Dependencies for the Transaction screen can be added here
+  }
+}
+
+class PickUpScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the PickUp screen can be added here
   }
 }

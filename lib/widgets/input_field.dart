@@ -17,6 +17,7 @@ class InputField extends StatelessWidget {
     this.prefixIcon,
     this.onFieldSubmitted,
     this.focusNode,
+    required this.readonly,
   }) : super(key: key);
 
   final String? errorText;
@@ -28,6 +29,7 @@ class InputField extends StatelessWidget {
   final bool isPrefix;
   final Widget? suffix;
   final Widget? prefixIcon;
+  final bool readonly;
 
   final void Function(String)? onFieldSubmitted;
   final FocusNode? focusNode;
@@ -38,7 +40,7 @@ class InputField extends StatelessWidget {
     double deviceWidth = MediaQuery.of(context).size.width;
     // Set initial value if provided
     return TextFormField(
-      
+      readOnly: readonly,
       controller: controller,
       cursorColor: Colors.black,
       cursorHeight: deviceHeight * 0.027,

@@ -11,16 +11,19 @@ class Products extends HiveObject {
   @HiveField(2)
   final String email;
   @HiveField(3)
-  double totalpayment;
-
+  final String phonenumber;
   @HiveField(4)
+  final String qrcodeno;
+
+  @HiveField(5)
   final List<ProductData> productDatas;
 
   Products({
     required this.firstname,
     required this.lastname,
     required this.email,
-    required this.totalpayment,
+    required this.phonenumber,
+    required this.qrcodeno,
     required this.productDatas,
   });
 }

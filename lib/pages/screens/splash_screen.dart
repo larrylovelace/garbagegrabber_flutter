@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       if (!refreshTokenExpired && !accessTokenExpired) {
         // Tokens are not expired, navigate to the main screen
-        Get.offAllNamed(AppRoutes.homescreen);
+        Get.offAllNamed(AppRoutes.mainscreen);
       } else if (!refreshTokenExpired && accessTokenExpired) {
         // Access token is expired, request new access token
         final newAccessToken = await requestNewAccessToken(refreshToken);
@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
 
           // Tokens are updated, navigate to the main screen
           Future.delayed(const Duration(milliseconds: 300), () {
-            Get.offAllNamed(AppRoutes.homescreen);
+            Get.offAllNamed(AppRoutes.mainscreen);
           });
         } else {
           // Failed to get a new access token, navigate to the login screen
@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen>
       final int expirationTimestamp = decodedToken['exp'];
       final DateTime expirationDate =
           DateTime.fromMillisecondsSinceEpoch(expirationTimestamp * 1000);
-      print(expirationDate);
+      debugPrint(expirationDate.toString());
 
       final DateTime currentDate = DateTime.now();
 
@@ -156,7 +156,6 @@ class _SplashScreenState extends State<SplashScreen>
         return null;
       }
     } catch (e) {
-   
       return null;
     }
   }

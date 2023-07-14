@@ -65,7 +65,7 @@ class _ProductDetailState extends State<ProductDetail> {
         }, body: {
           "quantity": quantity.toString(),
           "product_id": widget.id.toString(),
-          "appointment_date": controller.sendinddate,
+          "appointment_date_start": controller.sendinddate,
           "total_payment": controller.priceindouble.toString()
         });
 
@@ -112,7 +112,9 @@ class _ProductDetailState extends State<ProductDetail> {
       await displayPaymentSheet();
 
       // ignore: use_build_context_synchronously
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   createPaymentIntent(String amount, String currency) async {
@@ -156,7 +158,7 @@ class _ProductDetailState extends State<ProductDetail> {
           .retrievePaymentIntent(paymentIntent!["client_secret"]);
 
       var details = paymentintents.toJson();
-      
+
       if (details['status'] == 'Succeeded') {
         var id = details['id'];
         int unixTimestamp = int.parse(details['created']);
@@ -177,7 +179,7 @@ class _ProductDetailState extends State<ProductDetail> {
         sendingpaymentdata = {
           "quantity": quantity.toString(),
           "product_id": widget.id.toString(),
-          "appointment_date": controller.sendinddate,
+          "appointment_date_start": controller.sendinddate,
           "total_payment": (details['amount'] / 100).toString(),
           "transaction_id": id,
           "currency": details['currency'].toString(),
@@ -186,7 +188,9 @@ class _ProductDetailState extends State<ProductDetail> {
 
         await savepaymentdetails(sendingpaymentdata);
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   Future<void> savepaymentdetails(sendingpaymentdata) async {
@@ -313,7 +317,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             widget.name,
                             overflow: TextOverflow.ellipsis,
                             style:
-                                AppFonts.poppinsMedium.copyWith(fontSize: 20),
+                                AppFonts.poppinsRegular.copyWith(fontSize: 20),
                           ),
                           Flexible(
                             child: controller.pricechanged
@@ -338,7 +342,7 @@ class _ProductDetailState extends State<ProductDetail> {
                         children: [
                           Flexible(
                             child: Text(widget.plan,
-                                style: AppFonts.poppinsRegular.copyWith(
+                                style: AppFonts.poppinsMedium.copyWith(
                                     fontSize: 17,
                                     color: AppColors.primaryColor
                                         .withOpacity(0.9))),

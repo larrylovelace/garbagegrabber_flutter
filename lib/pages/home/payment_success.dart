@@ -104,7 +104,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                       onPressed: () async {
-                        Get.offAllNamed(AppRoutes.homescreen);
+                        Get.offAllNamed(AppRoutes.mainscreen);
                       },
                       child: Text(
                         'OK',

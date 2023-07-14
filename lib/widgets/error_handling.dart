@@ -24,7 +24,7 @@ SnackBar buildErrorSnackBar(BuildContext context, dynamic error) {
   return SnackBar(
     elevation: 0,
     duration: const Duration(seconds: 2),
-    behavior: SnackBarBehavior.fixed,
+    behavior: SnackBarBehavior.floating,
     content: Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
