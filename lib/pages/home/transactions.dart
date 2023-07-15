@@ -49,7 +49,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
         });
-       
+
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
           if (data['grand_total'] == null) {
@@ -147,7 +147,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         children: [
                           SizedBox(
                             width: deviceWidth * 0.45,
-                            height: deviceheight * 0.08,
+                            height: deviceheight * 0.09,
                             child: Card(
                               elevation: 0.1,
                               shape: const RoundedRectangleBorder(
@@ -193,7 +193,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           ),
                           SizedBox(
                             width: deviceWidth * 0.45,
-                            height: deviceheight * 0.08,
+                            height: deviceheight * 0.09,
                             child: Card(
                               elevation: 0.1,
                               shape: const RoundedRectangleBorder(

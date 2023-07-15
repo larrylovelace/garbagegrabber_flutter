@@ -1,36 +1,11 @@
-class HomeScreenData {
-  final CustomerDetails customerDetails;
-  final List<AllProducts> allProducts;
-  final String upcomingPickupDate;
-
-  HomeScreenData({
-    required this.customerDetails,
-    required this.allProducts,
-    required this.upcomingPickupDate,
-  });
-
-  factory HomeScreenData.fromJson(Map<String, dynamic> json) {
-    final customerData = json['customer_data'];
-    final allProductsData = json['all_products'];
-
-    return HomeScreenData(
-      customerDetails: CustomerDetails.fromJson(customerData),
-      allProducts: List<AllProducts>.from(
-        allProductsData.map((product) => AllProducts.fromJson(product)),
-      ),
-      upcomingPickupDate: json['upcoming_pickup_date'],
-    );
-  }
-}
-
-class CustomerDetails {
+class CustomerData {
   final String email;
   final String firstName;
   final String lastName;
   final String phoneNumber;
   final String qrCodeIdentifier;
 
-  CustomerDetails({
+  CustomerData({
     required this.email,
     required this.firstName,
     required this.lastName,
@@ -38,8 +13,8 @@ class CustomerDetails {
     required this.qrCodeIdentifier,
   });
 
-  factory CustomerDetails.fromJson(Map<String, dynamic> json) {
-    return CustomerDetails(
+  factory CustomerData.fromJson(Map<String, dynamic> json) {
+    return CustomerData(
       email: json['email'],
       firstName: json['first_name'],
       lastName: json['last_name'],
@@ -49,25 +24,54 @@ class CustomerDetails {
   }
 }
 
-class AllProducts {
+class Product {
   final int id;
   final String name;
   final double price;
   final String plan;
 
-  AllProducts({
+  Product({
     required this.id,
     required this.name,
     required this.price,
     required this.plan,
   });
 
-  factory AllProducts.fromJson(Map<String, dynamic> json) {
-    return AllProducts(
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
       id: json['id'],
       name: json['name'],
       price: json['price'].toDouble(),
       plan: json['plan'],
+    );
+  }
+}
+
+class HomeScreenData {
+  final CustomerData customerData;
+  final List<Product> allProducts;
+  final String upcomingPickupDate;
+
+  HomeScreenData({
+    required this.customerData,
+    required this.allProducts,
+    required this.upcomingPickupDate,
+  });
+
+  factory HomeScreenData.fromJson(Map<String, dynamic> json) {
+    final customerDataJson = json['customer_data'] as Map<String, dynamic>;
+    final allProductsJson = json['all_products'] as List<dynamic>;
+
+    final customerData = CustomerData.fromJson(customerDataJson);
+
+    final allProducts = allProductsJson.map((productJson) {
+      return Product.fromJson(productJson as Map<String, dynamic>);
+    }).toList();
+
+    return HomeScreenData(
+      customerData: customerData,
+      allProducts: allProducts,
+      upcomingPickupDate: json['upcoming_pickup_date'],
     );
   }
 }

@@ -48,7 +48,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
         });
-        debugPrint(response.body.toString(), wrapWidth: 200);
+
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
 
@@ -59,6 +59,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
         // Handle the case when accessToken is null
       }
     } catch (e) {
+    
       // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
       // ignore: use_build_context_synchronously
