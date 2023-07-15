@@ -41,15 +41,27 @@ class DateConverter {
   }
 
   int remainingdays(String pickupDate) {
-    String upcomingPickupStr = pickupDate;
-
     DateTime today = DateTime.now();
-    DateTime upcomingPickup = DateTime.parse(upcomingPickupStr);
+    DateTime upcomingPickup = DateTime.parse(pickupDate);
 
-    Duration difference = upcomingPickup.difference(today);
+    DateTime todayDate = DateTime(today.year, today.month, today.day);
+    DateTime upcomingPickupDate = DateTime(
+      upcomingPickup.year,
+      upcomingPickup.month,
+      upcomingPickup.day,
+    );
+
+    Duration difference = upcomingPickupDate.difference(todayDate);
     int remainingDays = difference.inDays;
 
-  
     return remainingDays;
+  }
+
+  int differencepickupdays(String startDateString, String endDateString) {
+    DateTime startDate = DateTime.parse(startDateString);
+    DateTime endDate = DateTime.parse(endDateString);
+
+    int differenceInDays = endDate.difference(startDate).inDays;
+    return differenceInDays;
   }
 }

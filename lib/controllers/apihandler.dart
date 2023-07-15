@@ -13,8 +13,9 @@ class APIConstants {
   static const String getaccountdetails = '/api/customer/fetch_accountdetails/';
   static const String customerprofile = '/api/customer/customer_profile/';
   static const String productdetails = '/api/customer/products/';
-  static const String hompagedata='/api/customer/homepage_data';
+  static const String hompagedata = '/api/customer/homepage_data';
   static const String pickups = '/api/customer/pickups/';
+  static const String transactions = '/api/customer/transactions';
   static const String verifyappointment = '/api/customer/verify_appointment/';
   static const String registerappointment = '/api/customer/appointments/';
   static const String createCustomerStripe =

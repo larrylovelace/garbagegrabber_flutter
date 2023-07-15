@@ -1,7 +1,7 @@
 import 'package:garbage_grabber/pages/home/homescreen.dart';
 import 'package:garbage_grabber/pages/home/mainscreen.dart';
 import 'package:garbage_grabber/pages/home/payment_success.dart';
-import 'package:garbage_grabber/pages/home/pickups/pickups.dart';
+import 'package:garbage_grabber/pages/home/pickups/appointments.dart';
 import 'package:garbage_grabber/pages/home/transactions.dart';
 import 'package:garbage_grabber/pages/screens/login.dart';
 import 'package:garbage_grabber/pages/screens/signup.dart';

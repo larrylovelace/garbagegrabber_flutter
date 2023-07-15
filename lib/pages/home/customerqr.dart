@@ -1,19 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
-import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 
-import 'package:http/http.dart ' as http;
-
-import '../../controllers/apihandler.dart';
-import '../../controllers/token_manager.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-
-import '../../models/customers.dart';
-import '../../widgets/error_handling.dart';
 
 class QRprofile extends StatefulWidget {
   const QRprofile({super.key});
@@ -23,42 +14,8 @@ class QRprofile extends StatefulWidget {
 }
 
 class _QRprofileState extends State<QRprofile> {
-  UserData? userData; // Declare userData in the state
-  Future<void> customerprofile() async {
-    const storage = FlutterSecureStorage();
-    try {
-      final refreshToken = await storage.read(key: 'refreshtoken');
-
-      final tokenManager = TokenManager();
-
-      String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
-          refreshToken!, APIConstants.tokenRefresh);
-
-      if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.customerprofile;
-
-        var response = await http.get(Uri.parse(uri), headers: {
-          'Authorization': 'Bearer $accessToken',
-        });
-
-        if (response.statusCode == 200) {
-          var data = jsonDecode(response.body);
-          userData = UserData.fromJson(data);
-          setState(() {});
-        }
-      }
-    } catch (e) {
-      Get.back();
-      // ignore: use_build_context_synchronously
-      final snackBar = buildErrorSnackBar(context, e);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
-
   @override
   void initState() {
-    customerprofile();
     super.initState();
   }
 
@@ -66,7 +23,9 @@ class _QRprofileState extends State<QRprofile> {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    return userData != null
+    var box = Hive.box('products');
+    var products = box.get('products');
+    return products != null
         ? SizedBox(
             height: deviceHeight * 0.55,
             child: Padding(
@@ -95,7 +54,7 @@ class _QRprofileState extends State<QRprofile> {
                       height: deviceHeight * 0.015,
                     ),
                     QrImageView(
-                      data: userData!.qrCodeIdentifier,
+                      data: products!.qrcodeno,
                       version: QrVersions.auto,
                       size: deviceWidth * 0.6,
                     ),
@@ -103,12 +62,12 @@ class _QRprofileState extends State<QRprofile> {
                       height: deviceHeight * 0.015,
                     ),
                     Text(
-                      "${userData!.firstName} ${userData!.lastName}",
+                      "${products!.firstname} ${products!.lastname}",
                       style: AppFonts.poppinsBold
                           .copyWith(fontSize: AppFonts.largeFontSize),
                     ),
                     Text(
-                      userData!.email,
+                      products!.email,
                       style: AppFonts.poppinsRegular.copyWith(),
                     ),
                   ],

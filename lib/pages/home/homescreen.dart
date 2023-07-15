@@ -2,10 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:garbage_grabber/models/homepagemodel.dart';
+import 'package:garbage_grabber/models/homescreendata.dart';
 
 import 'package:garbage_grabber/models/products.dart';
-import 'package:garbage_grabber/models/upcomingpickups.dart';
 
 import 'package:garbage_grabber/pages/home/product_detail.dart';
 
@@ -16,20 +15,16 @@ import 'package:garbage_grabber/utils/fonts.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 
-// import 'package:intl/intl.dart';
-
+import 'package:percent_indicator/percent_indicator.dart';
 import '../../controllers/apihandler.dart';
 import '../../controllers/homescreen_controller.dart';
 import '../../controllers/routes.dart';
 import '../../controllers/token_manager.dart';
-
 import 'package:http/http.dart ' as http;
-
-import '../../models/customers.dart';
-import '../../models/datetime.dart';
+import '../../controllers/datetime.dart';
+import '../../models/currentappointment.dart';
 import '../../widgets/error_handling.dart';
 import '../../widgets/error_snackbar.dart';
-import 'drawer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,16 +37,19 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeScreenController controller = Get.put(HomeScreenController());
   final storage = const FlutterSecureStorage();
   String email = '';
-  CustomerData? incomingdata;
+  late HomeScreenData homescreendata;
+  CurrentAppointment? currentAppointment;
   DateConverter dateConverter = DateConverter();
 
+  String remainingdays = '';
+  String pickupmonth = '';
+  String pickupdate = '';
   List<String> images = [
     'assets/Onebag.png',
     'assets/Onebag.png',
     'assets/Onebag.png',
     'assets/Onebag.png',
   ];
-  UserData? userData; // Declare userData in the state
 
   Future<void> getHomeScreeData() async {
     try {
@@ -69,36 +67,46 @@ class _HomeScreenState extends State<HomeScreen> {
           'Authorization': 'Bearer $accessToken',
         });
 
-        // debugPrint(response.body.toString());
-
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
-          incomingdata = CustomerData.fromJson(data);
+          homescreendata = HomeScreenData.fromJson(data);
+          currentAppointment =
+              CurrentAppointment.fromJson(data['current_appointment']);
 
-          email = incomingdata!.customerData!.email!;
+          email = homescreendata.customerDetails.email;
+          remainingdays = dateConverter
+              .remainingdays(homescreendata.upcomingPickupDate)
+              .toString();
+          pickupmonth =
+              dateConverter.getMonthFromDate(homescreendata.upcomingPickupDate);
+          pickupdate = dateConverter
+              .getDayFromDate(homescreendata.upcomingPickupDate)
+              .toString();
 
           // Store product details in Hive
-
           final productsBox = Hive.box('products');
 
           final products = Products(
-            firstname: incomingdata!.customerData!.firstName!,
-            lastname: incomingdata!.customerData!.lastName!,
-            email: incomingdata!.customerData!.email!,
-            phonenumber: incomingdata!.customerData!.phoneNumber!,
-            qrcodeno: incomingdata!.customerData!.qrCodeIdentifier!,
-            productDatas:
-                List<ProductData>.from(incomingdata!.allProducts!.map((item) {
-              return ProductData(
-                id: item.id!,
-                name: item.name!,
-                price: item.price!.toDouble(),
-                plan: item.plan!,
-              );
-            })),
+            firstname: homescreendata.customerDetails.firstName,
+            lastname: homescreendata.customerDetails.lastName,
+            email: homescreendata.customerDetails.email,
+            phonenumber: homescreendata.customerDetails.phoneNumber,
+            qrcodeno: homescreendata.customerDetails.qrCodeIdentifier,
+            productDatas: List<ProductData>.from(
+              homescreendata.allProducts.map((item) {
+                return ProductData(
+                  id: item.id,
+                  name: item.name,
+                  price: item.price,
+                  plan: item.plan,
+                );
+              }),
+            ),
           );
 
           productsBox.put('products', products);
+
+          // Store the products object in the box
 
           // Store the products object in the box
         } else if (response.statusCode == 401) {
@@ -133,12 +141,26 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     } catch (e) {
-      print(e);
       // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+  }
+
+  int countPickupDatesAfterCurrentDate(List<Pickup> pickups) {
+    DateTime currentDate = DateTime.now();
+    int count = 0;
+
+    for (Pickup pickup in pickups) {
+      DateTime pickupDate = DateTime.parse(pickup.pickupDate);
+
+      if (pickupDate.isAfter(currentDate)) {
+        count++;
+      }
+    }
+
+    return count;
   }
 
   @override
@@ -173,17 +195,11 @@ class _HomeScreenState extends State<HomeScreen> {
           } else {
             final products = box.get('products') as Products;
             String firstname = products.firstname;
-            String lastname = products.lastname;
-            String email = products.email;
 
             final productsdatas = products.productDatas;
-            // final remainingdays =
-            //     dateConverter.remainingdays(comingpickups!.upcomingPickup);
 
             return Scaffold(
               backgroundColor: AppColors.secondaryColor,
-              drawer: DrawerPage(
-                  firstname: firstname, lastname: lastname, email: email),
               appBar: AppBar(
                   backgroundColor: AppColors.primaryColor,
                   elevation: 0,
@@ -209,97 +225,263 @@ class _HomeScreenState extends State<HomeScreen> {
                 slivers: [
                   SliverList(
                     delegate: SliverChildListDelegate([
-                      Row(
-                        children: [
+                      Container(
+                        width: deviceWidth,
+                        height: deviceHeight * 0.2,
+                        margin: EdgeInsets.only(bottom: deviceHeight * 0.03),
+                        child: Stack(children: [
                           Container(
-                            margin: EdgeInsets.only(
-                                top: deviceHeight * 0.02,
-                                left: deviceWidth * 0.03),
-                            height: deviceHeight * 0.22,
-                            width: deviceWidth * 0.42,
+                            padding: EdgeInsets.only(
+                                left: deviceWidth * 0.04,
+                                right: deviceWidth * 0.04,
+                                bottom: deviceWidth * 0.1),
+                            height: deviceHeight * 0.11,
                             decoration: BoxDecoration(
-                              color: AppColors.planeColor,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(10),
+                              color: AppColors.primaryColor,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(30),
+                                bottomRight: Radius.circular(30),
                               ),
                             ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: deviceWidth * 0.04,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'Remainig Days',
-                                        style: AppFonts
-                                            .poppinsLightMediumsnackBar
-                                            .copyWith(
-                                          fontSize: AppFonts.smallFontSize,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: deviceHeight * 0.01,
-                                ),
-                                // CircularPercentIndicator(
-                                //   radius: 50.0,
-                                //   lineWidth: 8,
-                                //   percent: 1 / remainingdays,
-                                //   center: Column(
-                                //     mainAxisAlignment: MainAxisAlignment.center,
-                                //     children: [
-                                //       Text(
-                                //         remainingdays.toString(),
-                                //         style: AppFonts.poppinsBold.copyWith(
-                                //           fontSize: AppFonts.largeFontSize,
-                                //         ),
-                                //       ),
-                                //       Text(
-                                //         'Days',
-                                //         style: AppFonts.poppinsRegular.copyWith(
-                                //           fontSize: AppFonts.smallFontSize,
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                //   progressColor: Colors.orangeAccent,
-                                // ),
-                                SizedBox(
-                                  height: deviceHeight * 0.015,
-                                ),
-                                Container(
-                                  height: deviceHeight * 0.04,
-                                  width: deviceWidth,
-                                  margin: EdgeInsets.only(
-                                    left: deviceWidth * 0.04,
-                                    right: deviceWidth * 0.04,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(6),
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  child: MaterialButton(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    onPressed: () async {},
-                                    child: Text(
-                                      'View',
-                                      style: AppFonts.poppinsMedium.copyWith(
-                                        fontSize: AppFonts.mediumFontSize,
-                                        color: AppColors.planeColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ],
+                          Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Card(
+                                elevation: 0.5,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: deviceWidth * 0.04),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: deviceWidth * 0.04),
+                                  height: deviceHeight * 0.2,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.planeColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: currentAppointment == null
+                                      ? Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.primaryColor,
+                                          ),
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        currentAppointment!
+                                                            .product.name,
+                                                        style: AppFonts
+                                                            .poppinsLightMediumsnackBar
+                                                            .copyWith(
+                                                          fontSize: AppFonts
+                                                              .smallFontSize,
+                                                        )),
+                                                    Text(
+                                                        currentAppointment!
+                                                            .product.plan,
+                                                        style: AppFonts
+                                                            .poppinsMedium
+                                                            .copyWith(
+                                                          fontSize: AppFonts
+                                                              .smallFontSize,
+                                                          color: AppColors
+                                                              .primaryColor
+                                                              .withOpacity(0.9),
+                                                        )),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: deviceWidth * 0.1,
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    CircularPercentIndicator(
+                                                      radius: 35,
+                                                      percent: 1 /
+                                                          int.parse(
+                                                              remainingdays),
+                                                      animation: true,
+                                                      progressColor: AppColors
+                                                          .appointmentscolor,
+                                                      center: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            remainingdays,
+                                                            style: AppFonts
+                                                                .poppinsBold
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        AppFonts
+                                                                            .mediumFontSize),
+                                                          ),
+                                                          Text(
+                                                            'Days left',
+                                                            style: AppFonts
+                                                                .poppinsRegular
+                                                                .copyWith(
+                                                                    fontSize:
+                                                                        10),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: deviceWidth * 0.1,
+                                                ),
+                                                Builder(builder: (context) {
+                                                  final totalPickupDays =
+                                                      currentAppointment!
+                                                          .pickups.length;
+                                                  int remainingPickupDays =
+                                                      countPickupDatesAfterCurrentDate(
+                                                          currentAppointment!
+                                                              .pickups);
+                                                  double percent =
+                                                      ((totalPickupDays -
+                                                                  remainingPickupDays) /
+                                                              totalPickupDays) *
+                                                          100;
+
+                                                  return Column(
+                                                    children: [
+                                                      CircularPercentIndicator(
+                                                        radius: 35,
+                                                        percent: percent / 100,
+                                                        animation: true,
+                                                        progressColor: AppColors
+                                                            .appointmentscolor,
+                                                        center: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              remainingPickupDays
+                                                                  .toString(),
+                                                              style: AppFonts
+                                                                  .poppinsBold
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          AppFonts
+                                                                              .mediumFontSize),
+                                                            ),
+                                                            Text(
+                                                              'Pickups left',
+                                                              style: AppFonts
+                                                                  .poppinsRegular
+                                                                  .copyWith(
+                                                                      fontSize:
+                                                                          8),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  );
+                                                })
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: deviceHeight * 0.01,
+                                            ),
+                                            Text('Pickup Dates',
+                                                style: AppFonts.poppinsMedium
+                                                    .copyWith()),
+                                            SizedBox(
+                                              height: deviceHeight * 0.01,
+                                            ),
+                                            SizedBox(
+                                              height: deviceHeight * 0.065,
+                                              child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  itemCount: currentAppointment!
+                                                      .pickups.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    final month = dateConverter
+                                                        .getMonthFromDate(
+                                                            currentAppointment!
+                                                                .pickups[index]
+                                                                .pickupDate);
+                                                    final date = dateConverter
+                                                        .getDayFromDate(
+                                                            currentAppointment!
+                                                                .pickups[index]
+                                                                .pickupDate);
+
+                                                    return Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: deviceWidth *
+                                                              0.02,
+                                                          right: deviceWidth *
+                                                              0.02,
+                                                          bottom: deviceWidth *
+                                                              0.02),
+                                                      width: deviceWidth * 0.14,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                      .all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          10)),
+                                                          border: Border.all(
+                                                            color: AppColors
+                                                                .appointmentscolor,
+                                                            width: 1,
+                                                          )),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(month,
+                                                              style: AppFonts
+                                                                  .poppinsLightMediumsnackBar
+                                                                  .copyWith(
+                                                                fontSize: AppFonts
+                                                                    .smallFontSize,
+                                                              )),
+                                                          Text(
+                                                            date.toString(),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: AppFonts
+                                                                .poppinsBold
+                                                                .copyWith(),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                              ))
+                        ]),
                       ),
                       SizedBox(
                         height: deviceHeight * 0.015,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:garbage_grabber/models/payments.dart';
 import 'package:garbage_grabber/pages/home/product_detail.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -25,12 +26,14 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
+  PaymentData? paymentdetails;
   ScrollController scrollController = ScrollController();
   final storage = const FlutterSecureStorage();
-  List paymentdetails = [];
+
   double totaltransaction = 0;
   double recenttransaction = 0;
   bool dataempty = false;
+  bool nopayments = false;
   Future<void> getTransactiondetails() async {
     try {
       final refreshToken = await storage.read(key: 'refreshtoken');
@@ -41,26 +44,22 @@ class _TransactionScreenState extends State<TransactionScreen> {
           refreshToken!, APIConstants.tokenRefresh);
 
       if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.registerappointment;
+        String uri = APIConstants.baseURI + APIConstants.transactions;
 
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
         });
-
+       
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
-
-          if (data['data'].isEmpty) {
+          if (data['grand_total'] == null) {
             setState(() {
-              dataempty = true;
+              nopayments = true;
             });
           } else {
-            paymentdetails = data['data'];
-            totaltransaction = data['grand_total'] ?? 0;
-            recenttransaction = data['data'][0]['total_payment'] ?? 0;
+            paymentdetails = PaymentData.fromJson(data);
+            setState(() {});
           }
-
-          setState(() {});
         } else {
           Get.back();
           showErrorDialog();
@@ -116,201 +115,175 @@ class _TransactionScreenState extends State<TransactionScreen> {
         elevation: 0.2,
         backgroundColor: AppColors.primaryColor,
       ),
-      body: Center(
-          child: paymentdetails.isEmpty && dataempty == false
-              ? CircularProgressIndicator(
-                  color: AppColors.primaryColor,
+      body: paymentdetails == null && nopayments == false
+          ? Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            )
+          // ignore: unnecessary_null_comparison
+          : paymentdetails == null && nopayments == true
+              ? Center(
+                  child: Text(
+                    'No previous transactions found',
+                    style: AppFonts.poppinsRegular,
+                  ),
                 )
-              : paymentdetails.isEmpty && dataempty == true
-                  ? Text(
-                      'You have not made any transactions.',
-                      style: AppFonts.poppinsLightMedium.copyWith(),
-                    )
-                  : Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: deviceheight * 0.01,
-                              left: deviceWidth * 0.04,
-                              right: deviceWidth * 0.04),
-                          height: deviceheight * 0.12,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              color: AppColors.secondaryColor),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: deviceWidth * 0.45,
-                                height: deviceheight * 0.08,
-                                child: Card(
-                                  elevation: 0.1,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Column(
+              : Center(
+                  child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                          top: deviceheight * 0.01,
+                          left: deviceWidth * 0.04,
+                          right: deviceWidth * 0.04),
+                      height: deviceheight * 0.12,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          color: AppColors.secondaryColor),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: deviceWidth * 0.45,
+                            height: deviceheight * 0.08,
+                            child: Card(
+                              elevation: 0.1,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            UniconsLine.bill,
-                                            color: AppColors.iconColor,
-                                          ),
-                                          SizedBox(
-                                            width: deviceWidth * 0.02,
-                                          ),
-                                          Text(
-                                            'Total',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: AppFonts.poppinsRegular
-                                                .copyWith(
-                                                    fontSize: AppFonts
-                                                        .mediumFontSize),
-                                          )
-                                        ],
+                                      Icon(
+                                        UniconsLine.bill,
+                                        color: AppColors.iconColor,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '\$${totaltransaction.toStringAsFixed(2)}',
-                                            style: AppFonts.poppinsBold
-                                                .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontSize: AppFonts
-                                                        .mediumFontSize),
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        width: deviceWidth * 0.02,
+                                      ),
+                                      Text(
+                                        'Total',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: AppFonts.poppinsRegular.copyWith(
+                                            fontSize: AppFonts.mediumFontSize),
                                       )
                                     ],
                                   ),
-                                ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '\$${paymentdetails!.grandTotal.toStringAsFixed(2)}',
+                                        style: AppFonts.poppinsBold.copyWith(
+                                            color: AppColors.primaryColor,
+                                            fontSize: AppFonts.mediumFontSize),
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
-                              SizedBox(
-                                width: deviceWidth * 0.45,
-                                height: deviceheight * 0.08,
-                                child: Card(
-                                  elevation: 0.1,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: Column(
+                            ),
+                          ),
+                          SizedBox(
+                            width: deviceWidth * 0.45,
+                            height: deviceheight * 0.08,
+                            child: Card(
+                              elevation: 0.1,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.today_outlined,
-                                            color: AppColors.iconColor,
-                                          ),
-                                          SizedBox(
-                                            width: deviceWidth * 0.02,
-                                          ),
-                                          Text(
-                                            'Recent',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: AppFonts.poppinsRegular
-                                                .copyWith(
-                                                    fontSize: AppFonts
-                                                        .mediumFontSize),
-                                          )
-                                        ],
+                                      Icon(
+                                        Icons.today_outlined,
+                                        color: AppColors.iconColor,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '\$$recenttransaction',
-                                            style: AppFonts.poppinsBold
-                                                .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontSize: AppFonts
-                                                        .mediumFontSize),
-                                          ),
-                                        ],
+                                      SizedBox(
+                                        width: deviceWidth * 0.02,
+                                      ),
+                                      Text(
+                                        'Recent',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: AppFonts.poppinsRegular.copyWith(
+                                            fontSize: AppFonts.mediumFontSize),
                                       )
                                     ],
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: CupertinoScrollbar(
-                            thumbVisibility: true,
-                            radius: const Radius.circular(10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        '\$${paymentdetails!.data[0].totalPayment}',
+                                        style: AppFonts.poppinsBold.copyWith(
+                                            color: AppColors.primaryColor,
+                                            fontSize: AppFonts.mediumFontSize),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: CupertinoScrollbar(
+                        thumbVisibility: true,
+                        radius: const Radius.circular(10),
+                        controller: scrollController,
+                        child: ListView.builder(
                             controller: scrollController,
-                            child: ListView.builder(
-                                controller: scrollController,
-                                itemCount: paymentdetails.length,
-                                itemBuilder: (context, index) {
-                                  final formattedDateTime = _formatDateTime(
-                                      paymentdetails[index]['payment_at']);
-                                  return SizedBox(
-                                      height: deviceheight * 0.13,
-                                      child: Card(
-                                          margin: EdgeInsets.only(
-                                              top: deviceheight * 0.02,
-                                              left: deviceWidth * 0.05,
-                                              right: deviceWidth * 0.05),
-                                          elevation: 0.5,
-                                          color: AppColors.planeColor,
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          child: buildPaymentListTile(
-                                              paymentdetails[index]
-                                                  ['product_id'],
-                                              formattedDateTime,
-                                              paymentdetails[index]
-                                                  ['total_payment'],
-                                              deviceheight,
-                                              deviceWidth)));
-                                }),
-                          ),
-                        ),
-                      ],
-                    )),
+                            itemCount: paymentdetails!.data.length,
+                            itemBuilder: (context, index) {
+                              final formattedDateTime = _formatDateTime(
+                                  paymentdetails!.data[index].paymentAt);
+                              return SizedBox(
+                                  height: deviceheight * 0.13,
+                                  child: Card(
+                                      margin: EdgeInsets.only(
+                                          top: deviceheight * 0.02,
+                                          left: deviceWidth * 0.05,
+                                          right: deviceWidth * 0.05),
+                                      elevation: 0.5,
+                                      color: AppColors.planeColor,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: buildPaymentListTile(
+                                          formattedDateTime,
+                                          paymentdetails!
+                                              .data[index].totalPayment,
+                                          paymentdetails!
+                                              .data[index].product.name,
+                                          paymentdetails!
+                                              .data[index].product.plan,
+                                          deviceheight,
+                                          deviceWidth)));
+                            }),
+                      ),
+                    ),
+                  ],
+                )),
     );
   }
 }
 
-Widget buildPaymentListTile(int productId, String formattedDateTime,
-    double totalPayment, double deviceHeight, double deviceWidth) {
-  String title;
-  String subtitle;
-
-  if (productId == 1) {
-    title = 'Standard Bag';
-    subtitle = 'One time';
-  } else if (productId == 2) {
-    title = 'Standard Bags';
-    subtitle = 'One time';
-  } else if (productId == 3) {
-    title = 'Standard Bag';
-    subtitle = 'Monthly';
-  } else {
-    title = 'Standard Bags';
-    subtitle = 'Monthly';
-  }
-
+Widget buildPaymentListTile(String formattedDateTime, double totalPayment,
+    String title, String subtitle, double deviceHeight, double deviceWidth) {
   return ListTile(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     onTap: () {},

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_grabber/pages/home/customerqr.dart';
 import 'package:garbage_grabber/pages/home/homescreen.dart';
-import 'package:garbage_grabber/pages/home/pickups/pickups.dart';
+import 'package:garbage_grabber/pages/home/pickups/appointments.dart';
 import 'package:garbage_grabber/pages/home/transactions.dart';
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';

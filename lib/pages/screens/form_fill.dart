@@ -16,7 +16,7 @@ import '../../controllers/apihandler.dart';
 import '../../controllers/setup_controller.dart';
 import 'package:http/http.dart ' as http;
 
-import '../../models/addressdetails.dart';
+import '../../models/address.dart';
 import '../../widgets/error_handling.dart';
 import '../../widgets/error_snackbar.dart';
 import '../../widgets/loading_dialog.dart';
