@@ -53,6 +53,8 @@ class _MainScreenState extends State<MainScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     MaterialButton(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onPressed: () {
                         controller.changeIndex(0);
                       },
@@ -74,6 +76,8 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                     MaterialButton(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onPressed: () {
                         controller.changeIndex(1);
                       },
@@ -96,6 +100,8 @@ class _MainScreenState extends State<MainScreen> {
                       width: deviceWidth * 0.06,
                     ),
                     MaterialButton(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onPressed: () {
                         controller.changeIndex(2);
                       },
@@ -115,6 +121,8 @@ class _MainScreenState extends State<MainScreen> {
                       ),
                     ),
                     MaterialButton(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onPressed: () {
                         controller.changeIndex(3);
                       },
