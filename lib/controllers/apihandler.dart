@@ -1,5 +1,5 @@
 class APIConstants {
-  static const String baseURI = 'http://192.168.0.102:8000/';
+  static const String baseURI = 'https://garbagegrabberdocker-cir5g5yodq-uc.a.run.app';
   // static const String baseURI = 'https://garbagegrabber.azurewebsites.net/';
 
   static const String customerlogin = '/api/customer/login/';

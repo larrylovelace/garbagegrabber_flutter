@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_grabber/pages/home/customerqr.dart';
 import 'package:garbage_grabber/pages/home/homescreen.dart';
-import 'package:garbage_grabber/pages/home/pickups/appointments.dart';
+import 'package:garbage_grabber/pages/home/appointments/appointments.dart';
 import 'package:garbage_grabber/pages/home/transactions.dart';
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
@@ -21,23 +21,31 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     double deviceheight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        if (Get.find<MainScreenController>().currentIndex != 0) {
+          Get.find<MainScreenController>().changeIndex(0);
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppColors.primaryColor,
           onPressed: () {
             showModalBottomSheet(
-                backgroundColor: AppColors.secondaryColor,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
+              backgroundColor: AppColors.secondaryColor,
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
-                context: context,
-                builder: (context) => const QRprofile());
-
+              ),
+              context: context,
+              builder: (context) => const QRprofile(),
+            );
             // Add your logic for the FAB button here
           },
           child: const Icon(UniconsLine.qrcode_scan),
@@ -49,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
             builder: (controller) {
               return SizedBox(
                 height: deviceheight * 0.07,
+                width: deviceWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -71,7 +80,7 @@ class _MainScreenState extends State<MainScreen> {
                             'Home',
                             style:
                                 AppFonts.poppinsRegular.copyWith(fontSize: 12),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -90,9 +99,11 @@ class _MainScreenState extends State<MainScreen> {
                                 ? AppColors.primaryColor
                                 : AppColors.iconColor,
                           ),
-                          Text('Pickups',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 12))
+                          Text(
+                            'Pickups',
+                            style:
+                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
+                          ),
                         ],
                       ),
                     ),
@@ -114,9 +125,11 @@ class _MainScreenState extends State<MainScreen> {
                                 ? AppColors.primaryColor
                                 : AppColors.iconColor,
                           ),
-                          Text('Payments',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 12))
+                          Text(
+                            'Payments',
+                            style:
+                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
+                          ),
                         ],
                       ),
                     ),
@@ -135,12 +148,14 @@ class _MainScreenState extends State<MainScreen> {
                                 ? AppColors.primaryColor
                                 : AppColors.iconColor,
                           ),
-                          Text('Settings',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 12))
+                          Text(
+                            'Settings',
+                            style:
+                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               );
@@ -149,29 +164,24 @@ class _MainScreenState extends State<MainScreen> {
         ),
         body: GetBuilder<MainScreenController>(
           builder: (controller) {
-            return controller.toName(controller.currentIndex);
+            return IndexedStack(
+              index: controller.currentIndex,
+              children: const [
+                HomeScreen(),
+                PickUpsShcedule(),
+                TransactionScreen(),
+                SizedBox(),
+              ],
+            );
           },
-        ));
+        ),
+      ),
+    );
   }
 }
 
 class MainScreenController extends GetxController {
   var currentIndex = 0;
-
-  Widget toName(int index) {
-    switch (index) {
-      case 0:
-        return const HomeScreen();
-      case 1:
-        return const PickUpsShcedule();
-      case 2:
-        return const TransactionScreen();
-      case 3:
-        return const SizedBox();
-      default:
-        return Container();
-    }
-  }
 
   void changeIndex(int index) {
     currentIndex = index;

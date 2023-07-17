@@ -8,11 +8,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart ' as http;
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../../controllers/apihandler.dart';
 import '../../controllers/routes.dart';
-import '../../widgets/noconnection.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -46,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.repeat(reverse: true);
 
     // Simulate a delay of 3 seconds
-    checkConnectivity();
+    checkTokens();
   }
 
   @override
@@ -55,22 +53,22 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
-  void checkConnectivity() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
-      // No internet connection
-      setState(() {
-        showCircularIndicator = false;
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) => const Noconnection());
-      });
-    } else {
-      // Internet connection available, check tokens
-      checkTokens();
-    }
-  }
+  // void checkConnectivity() async {
+  //   final connectivityResult = await Connectivity().checkConnectivity();
+  //   if (connectivityResult == ConnectivityResult.none) {
+  //     // No internet connection
+  //     setState(() {
+  //       showCircularIndicator = false;
+  //       showDialog(
+  //           barrierDismissible: false,
+  //           context: context,
+  //           builder: (BuildContext context) => const Noconnection());
+  //     });
+  //   } else {
+  //     // Internet connection available, check tokens
+
+  //   }
+  // }
 
   void checkTokens() async {
     // Check if the tokens are present in the storage

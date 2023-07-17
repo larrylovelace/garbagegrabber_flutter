@@ -71,6 +71,9 @@ class _ProductDetailState extends State<ProductDetail> {
 
         if (response.statusCode == 200) {
           await makePayment();
+        } else if (response.statusCode == 400) {
+          Get.back();
+          lateappointment();
         } else {
           Get.back();
           showErrorDialog();
@@ -231,6 +234,20 @@ class _ProductDetailState extends State<ProductDetail> {
           deviceWidth: MediaQuery.of(context).size.width,
           headertext: 'Error',
           errortext: 'Something went wrong',
+        );
+      },
+    );
+  }
+
+  void lateappointment() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return ProudctValidation(
+          deviceHeight: MediaQuery.of(context).size.height,
+          deviceWidth: MediaQuery.of(context).size.width,
+          headertext: 'Error',
+          errortext: "Appointments for today can't be scheduled after 6 a.m.",
         );
       },
     );
@@ -678,6 +695,7 @@ class ProudctValidation extends StatelessWidget {
                   Flexible(
                     child: Text(errortext,
                         overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                         style: AppFonts.poppinsRegular
                             .copyWith(fontSize: AppFonts.errorDialogBody)),
                   ),
