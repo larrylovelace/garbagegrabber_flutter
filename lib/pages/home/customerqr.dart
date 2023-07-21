@@ -23,8 +23,8 @@ class _QRprofileState extends State<QRprofile> {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    var box = Hive.box('products');
-    var products = box.get('products');
+    var box = Hive.box('homedata');
+    var products = box.get('homedata');
     return products != null
         ? SizedBox(
             height: deviceHeight * 0.55,

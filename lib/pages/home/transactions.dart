@@ -1,22 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:garbage_grabber/models/payments.dart';
-import 'package:garbage_grabber/pages/home/product_detail.dart';
+import 'package:garbage_grabber/controllers/page%20controllers/payments.dart';
 import 'package:get/get.dart';
+
 import 'package:intl/intl.dart';
 import 'package:unicons/unicons.dart';
 
-import '../../controllers/api_cache.dart';
-import '../../controllers/apihandler.dart';
-import '../../controllers/token_manager.dart';
 import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
-
-import 'package:http/http.dart ' as http;
-
-import '../../widgets/error_handling.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
@@ -26,76 +17,13 @@ class TransactionScreen extends StatefulWidget {
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
-  PaymentData? paymentdetails;
+  PaymentPageController paymentspagecontroller =
+      Get.find<PaymentPageController>();
   ScrollController scrollController = ScrollController();
   final storage = const FlutterSecureStorage();
 
-  double totaltransaction = 0;
-  double recenttransaction = 0;
-  bool dataempty = false;
-  bool nopayments = false;
-  Future<void> getTransactiondetails() async {
-    try {
-      final refreshToken = await storage.read(key: 'refreshtoken');
-
-      final tokenManager = TokenManager();
-
-      String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
-          refreshToken!, APIConstants.tokenRefresh);
-
-      if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.transactions;
-
-        var response = await http.get(Uri.parse(uri), headers: {
-          'Authorization': 'Bearer $accessToken',
-        });
-
-        if (response.statusCode == 200) {
-          var data = jsonDecode(response.body);
-          if (data['grand_total'] == null) {
-            setState(() {
-              nopayments = true;
-            });
-          } else {
-            paymentdetails = PaymentData.fromJson(data);
-            setState(() {});
-          }
-        } else {
-          Get.back();
-          showErrorDialog();
-        }
-      }
-    } catch (e) {
-      debugPrint(e.toString());
-      Get.back();
-      final snackBar = buildErrorSnackBar(context, e);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
-
-  void showErrorDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return ProudctValidation(
-          deviceHeight: MediaQuery.of(context).size.height,
-          deviceWidth: MediaQuery.of(context).size.width,
-          headertext: 'Error',
-          errortext: 'Something went wrong',
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
-    const cacheKey = 'page_2';
-    if (ApiCache.apiCache.containsKey(cacheKey)) {
-      paymentdetails = ApiCache.apiCache[cacheKey];
-    } else {
-      getTransactiondetails();
-    }
     super.initState();
   }
 
@@ -120,142 +48,158 @@ class _TransactionScreenState extends State<TransactionScreen> {
           elevation: 0,
           backgroundColor: AppColors.primaryColor,
         ),
-        body: RefreshIndicator(
-          color: AppColors.primaryColor,
-          onRefresh: () {
-            setState(() {
-              paymentdetails = null;
-            });
-            return getTransactiondetails();
-          },
-          child: paymentdetails == null && nopayments == false
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ),
-                )
-              // ignore: unnecessary_null_comparison
-              : paymentdetails == null && nopayments == true
+        body: GetBuilder<PaymentPageController>(
+          builder: (paymentspagecontroller) {
+            return RefreshIndicator(
+              color: AppColors.primaryColor,
+              onRefresh: () {
+                paymentspagecontroller.paymentdetails = null;
+
+                return paymentspagecontroller.getTransactiondetails(context);
+              },
+              child: paymentspagecontroller.paymentdetails == null &&
+                      paymentspagecontroller.nopayments == false
                   ? Center(
-                      child: Text(
-                        'No previous transactions found',
-                        style: AppFonts.poppinsRegular,
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
                       ),
                     )
-                  : CustomScrollView(
-                      slivers: [
-                        SliverAppBar.medium(
-                          backgroundColor: AppColors.primaryColor,
-                          flexibleSpace: Container(
-                            margin: EdgeInsets.only(
-                                top: deviceheight * 0.01,
-                                left: deviceWidth * 0.04,
-                                right: deviceWidth * 0.04),
-                            height: deviceheight * 0.1,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(10)),
-                                color: AppColors.secondaryColor),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: unnecessary_null_comparison
+                  : paymentspagecontroller.paymentdetails == null &&
+                          paymentspagecontroller.nopayments == true
+                      ? Center(
+                          child: Text(
+                            'No previous transactions found',
+                            style: AppFonts.poppinsRegular,
+                          ),
+                        )
+                      : CustomScrollView(
+                          slivers: [
+                            SliverAppBar.medium(
+                              backgroundColor: AppColors.primaryColor,
+                              flexibleSpace: Container(
+                                margin: EdgeInsets.only(
+                                    top: deviceheight * 0.01,
+                                    left: deviceWidth * 0.04,
+                                    right: deviceWidth * 0.04),
+                                height: deviceheight * 0.1,
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    color: AppColors.secondaryColor),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
-                                    Row(
+                                    Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          UniconsLine.bill,
-                                          color: AppColors.iconColor,
-                                        ),
-                                        SizedBox(
-                                          width: deviceWidth * 0.02,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              UniconsLine.bill,
+                                              color: AppColors.iconColor,
+                                            ),
+                                            SizedBox(
+                                              width: deviceWidth * 0.02,
+                                            ),
+                                            Text(
+                                              'Total',
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: AppFonts.poppinsRegular
+                                                  .copyWith(
+                                                      fontSize: AppFonts
+                                                          .mediumFontSize),
+                                            )
+                                          ],
                                         ),
                                         Text(
-                                          'Total',
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: AppFonts.poppinsRegular
-                                              .copyWith(
-                                                  fontSize:
-                                                      AppFonts.mediumFontSize),
+                                          '\$${paymentspagecontroller.paymentdetails!.grandTotal.toStringAsFixed(2)}',
+                                          style: AppFonts.poppinsBold.copyWith(
+                                              color: AppColors.primaryColor,
+                                              fontSize:
+                                                  AppFonts.mediumFontSize),
                                         )
                                       ],
                                     ),
-                                    Text(
-                                      '\$${paymentdetails!.grandTotal.toStringAsFixed(2)}',
-                                      style: AppFonts.poppinsBold.copyWith(
-                                          color: AppColors.primaryColor,
-                                          fontSize: AppFonts.mediumFontSize),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.today_outlined,
+                                              color: AppColors.iconColor,
+                                            ),
+                                            SizedBox(
+                                              width: deviceWidth * 0.02,
+                                            ),
+                                            Text(
+                                              'Recent',
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: AppFonts.poppinsRegular
+                                                  .copyWith(
+                                                      fontSize: AppFonts
+                                                          .mediumFontSize),
+                                            )
+                                          ],
+                                        ),
+                                        Text(
+                                          '\$${paymentspagecontroller.paymentdetails!.data[0].totalPayment}',
+                                          style: AppFonts.poppinsBold.copyWith(
+                                              color: AppColors.primaryColor,
+                                              fontSize:
+                                                  AppFonts.mediumFontSize),
+                                        )
+                                      ],
                                     )
                                   ],
                                 ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.today_outlined,
-                                          color: AppColors.iconColor,
-                                        ),
-                                        SizedBox(
-                                          width: deviceWidth * 0.02,
-                                        ),
-                                        Text(
-                                          'Recent',
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                          style: AppFonts.poppinsRegular
-                                              .copyWith(
-                                                  fontSize:
-                                                      AppFonts.mediumFontSize),
-                                        )
-                                      ],
-                                    ),
-                                    Text(
-                                      '\$${paymentdetails!.data[0].totalPayment}',
-                                      style: AppFonts.poppinsBold.copyWith(
-                                          color: AppColors.primaryColor,
-                                          fontSize: AppFonts.mediumFontSize),
-                                    )
-                                  ],
-                                )
-                              ],
+                              ),
                             ),
-                          ),
+                            SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                    (context, index) {
+                              final formattedDateTime = _formatDateTime(
+                                  paymentspagecontroller
+                                      .paymentdetails!.data[index].paymentAt);
+                              return SizedBox(
+                                  height: deviceheight * 0.13,
+                                  child: Card(
+                                      margin: EdgeInsets.only(
+                                          top: deviceheight * 0.02,
+                                          left: deviceWidth * 0.04,
+                                          right: deviceWidth * 0.04),
+                                      elevation: 0.5,
+                                      color: AppColors.planeColor,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      child: buildPaymentListTile(
+                                          formattedDateTime,
+                                          paymentspagecontroller.paymentdetails!
+                                              .data[index].totalPayment,
+                                          paymentspagecontroller.paymentdetails!
+                                              .data[index].product.name,
+                                          paymentspagecontroller.paymentdetails!
+                                              .data[index].product.plan,
+                                          deviceheight,
+                                          deviceWidth)));
+                            },
+                                    childCount: paymentspagecontroller
+                                        .paymentdetails!.data.length))
+                          ],
                         ),
-                        SliverList(
-                            delegate:
-                                SliverChildBuilderDelegate((context, index) {
-                          final formattedDateTime = _formatDateTime(
-                              paymentdetails!.data[index].paymentAt);
-                          return SizedBox(
-                              height: deviceheight * 0.13,
-                              child: Card(
-                                  margin: EdgeInsets.only(
-                                      top: deviceheight * 0.02,
-                                      left: deviceWidth * 0.04,
-                                      right: deviceWidth * 0.04),
-                                  elevation: 0.5,
-                                  color: AppColors.planeColor,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10))),
-                                  child: buildPaymentListTile(
-                                      formattedDateTime,
-                                      paymentdetails!.data[index].totalPayment,
-                                      paymentdetails!.data[index].product.name,
-                                      paymentdetails!.data[index].product.plan,
-                                      deviceheight,
-                                      deviceWidth)));
-                        }, childCount: paymentdetails!.data.length))
-                      ],
-                    ),
+            );
+          },
         ));
   }
 }

@@ -26,7 +26,7 @@ void main() async {
   Hive.registerAdapter(ProductsAdapter());
   Hive.registerAdapter(ProductDataAdapter());
   // Open Hive box
-  await Hive.openBox('products');
+  await Hive.openBox('homedata');
 
   // Print the values inside the box
 

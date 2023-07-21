@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_grabber/controllers/page%20controllers/pickups.dart';
+import 'package:garbage_grabber/pages/home/pickups/pickups.dart';
 import 'package:garbage_grabber/pages/home/customerqr.dart';
 import 'package:garbage_grabber/pages/home/homescreen.dart';
-import 'package:garbage_grabber/pages/home/appointments/appointments.dart';
+
 import 'package:garbage_grabber/pages/home/transactions.dart';
 import 'package:garbage_grabber/utils/colors.dart';
 import 'package:garbage_grabber/utils/fonts.dart';
 import 'package:get/get.dart';
 import 'package:unicons/unicons.dart';
+
+import '../../controllers/page controllers/homescreen.dart';
+import '../../controllers/page controllers/payments.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -17,6 +22,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final HomePageController homePageController = Get.put(HomePageController());
+
+  @override
+  void initState() {
+    super.initState();
+    // Call getHomeScreeData() only once during initialization
+    homePageController.loadData(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     double deviceheight = MediaQuery.of(context).size.height;
@@ -35,17 +49,17 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: AppColors.primaryColor,
           onPressed: () {
             showModalBottomSheet(
-              backgroundColor: AppColors.secondaryColor,
-              isScrollControlled: true,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+                backgroundColor: AppColors.secondaryColor,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
                 ),
-              ),
-              context: context,
-              builder: (context) => const QRprofile(),
-            );
+                context: context,
+                builder: (context) => const QRprofile());
+
             // Add your logic for the FAB button here
           },
           child: const Icon(UniconsLine.qrcode_scan),
@@ -57,7 +71,6 @@ class _MainScreenState extends State<MainScreen> {
             builder: (controller) {
               return SizedBox(
                 height: deviceheight * 0.07,
-                width: deviceWidth,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -80,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                             'Home',
                             style:
                                 AppFonts.poppinsRegular.copyWith(fontSize: 12),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -99,11 +112,9 @@ class _MainScreenState extends State<MainScreen> {
                                 ? AppColors.primaryColor
                                 : AppColors.iconColor,
                           ),
-                          Text(
-                            'Pickups',
-                            style:
-                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
-                          ),
+                          Text('Pickups',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: 12))
                         ],
                       ),
                     ),
@@ -125,11 +136,9 @@ class _MainScreenState extends State<MainScreen> {
                                 ? AppColors.primaryColor
                                 : AppColors.iconColor,
                           ),
-                          Text(
-                            'Payments',
-                            style:
-                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
-                          ),
+                          Text('Payments',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: 12))
                         ],
                       ),
                     ),
@@ -148,14 +157,12 @@ class _MainScreenState extends State<MainScreen> {
                                 ? AppColors.primaryColor
                                 : AppColors.iconColor,
                           ),
-                          Text(
-                            'Settings',
-                            style:
-                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
-                          ),
+                          Text('Settings',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: 12))
                         ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               );
@@ -164,15 +171,13 @@ class _MainScreenState extends State<MainScreen> {
         ),
         body: GetBuilder<MainScreenController>(
           builder: (controller) {
-            return IndexedStack(
-              index: controller.currentIndex,
-              children: const [
-                HomeScreen(),
-                PickUpsShcedule(),
-                TransactionScreen(),
-                SizedBox(),
-              ],
-            );
+            // Get the current page widget based on the current index
+            Widget currentPage = controller.getPage(controller.currentIndex);
+
+            // Fetch data for the current page if it has not been fetched yet
+            controller.fetchDataForPage(context, controller.currentIndex);
+
+            return currentPage;
           },
         ),
       ),
@@ -181,10 +186,54 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class MainScreenController extends GetxController {
+  final PickupPageController pickupPageController =
+      Get.put(PickupPageController());
+  final PaymentPageController paymentPageController =
+      Get.put(PaymentPageController());
   var currentIndex = 0;
+
+  // List of pages
+  final List<Widget> pages = [
+    const HomeScreen(),
+    const PickUpsShcedule(),
+    const TransactionScreen(),
+    const SizedBox(),
+  ];
+
+  // List to keep track of whether data has been fetched for each page
+  final List<bool> hasDataFetched = List.filled(4, false);
 
   void changeIndex(int index) {
     currentIndex = index;
     update();
+  }
+
+  // Method to get the page widget based on the index
+  Widget getPage(int index) {
+    return pages[index];
+  }
+
+  // Method to fetch data for a specific page
+  void fetchDataForPage(BuildContext context, index) {
+    if (!hasDataFetched[index]) {
+      // Fetch data for the page based on the index
+      // For example:
+      // if (index == 0) {
+      //   // Fetch data for HomeScreen
+      //   // homeData = await ApiService.fetchHomeData();
+      // }
+      if (index == 1) {
+        pickupPageController.pickupschedule(context);
+        // Fetch data for PickUpsShcedule
+      } else if (index == 2) {
+        // Fetch data for TransactionScreen
+        paymentPageController.getTransactiondetails(context);
+      }
+
+      // Mark the page as data fetched
+      hasDataFetched[index] = true;
+
+      // Update the UI to rebuild the page with the fetched data
+    }
   }
 }
