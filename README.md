@@ -1,16 +1,4 @@
 # garbage_grabber
 
 A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+A Flutter app for the customers, developed specially to manage their waste. Once they sign up and fill out their apartment and address details, they can take advantage of the service being offered by Garbage Grabber. They can select a specific service, take the appointment data, and pay for the service through their card, which is exclusively handled through Stripe. The customer can see the appointment details and the specific pickup dates inside the appointment.
