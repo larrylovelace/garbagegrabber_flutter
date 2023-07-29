@@ -3,15 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-import 'package:garbage_grabber/controllers/routes.dart';
-import 'package:garbage_grabber/models/products.dart';
-import 'package:garbage_grabber/pages/home/mainscreen.dart';
+import 'package:garbage_grabber/src/data/controllers/routes.dart';
+import 'package:garbage_grabber/src/models/products.dart';
 
-import 'package:garbage_grabber/utils/colors.dart';
+
+import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:get/get.dart';
 
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+
+import 'src/ui/screens/home/mainscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,9 +43,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // transparent status bar
-    ));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+        statusBarColor: AppColors.primaryColor,
+        systemNavigationBarColor: AppColors.planeColor // transparent status bar
+        ));
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
