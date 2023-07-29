@@ -1,5 +1,5 @@
 class AppointmentData {
-  final List<Appointment> activeAppointments;
+  late final List<Appointment> activeAppointments;
   final List<Appointment> inactiveAppointments;
 
   AppointmentData({

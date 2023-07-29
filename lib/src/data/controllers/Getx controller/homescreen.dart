@@ -9,10 +9,10 @@ import '../../../models/currentappointment.dart';
 import '../../../models/homescreendata.dart';
 import '../../../models/products.dart';
 import '../../../utils/colors.dart';
-import '../apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../datetime.dart';
 import '../routes.dart';
-import '../token_manager.dart';
+import '../../../services/token_manager.dart';
 import 'package:http/http.dart' as http;
 
 class HomePageController extends GetxController {

@@ -30,6 +30,13 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: AppColors.planeColor,
+        appBar: AppBar(
+          toolbarHeight: deviceHeight * 0.01,
+          backgroundColor: AppColors.planeColor,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -114,9 +121,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         onPressed: () async {
-                          mainScreenController.hasDataFetched[1] = false;
-                          mainScreenController.hasDataFetched[2] = false;
-
+                          mainScreenController.resetController();
                           Get.offAllNamed(AppRoutes.mainscreen);
                         },
                         child: Text(

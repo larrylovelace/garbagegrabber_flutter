@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 import 'package:http/http.dart ' as http;
 
-import '../../../data/controllers/apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../../../data/controllers/setup_controller.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
@@ -18,8 +18,6 @@ import '../../../widgets/error_snackbar.dart';
 import '../../../widgets/formfilldialog.dart';
 import '../../../widgets/input_field.dart';
 import '../../../widgets/loading_dialog.dart';
-
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -62,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppColors.primaryColor, // Custom icon color
         );
         Get.back();
+
         Get.offAllNamed(AppRoutes.mainscreen);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
@@ -116,6 +115,11 @@ class _LoginScreenState extends State<LoginScreen> {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColors.planeColor,
+      appBar: AppBar(
+        toolbarHeight: 20,
+        backgroundColor: AppColors.planeColor,
+        elevation: 0,
+      ),
       body: Center(
         child: GestureDetector(
           onTapCancel: () {},

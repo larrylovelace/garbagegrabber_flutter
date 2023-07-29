@@ -10,9 +10,9 @@ import '../../../models/payments.dart';
 import '../../../utils/colors.dart';
 import '../../../widgets/error_handling.dart';
 import '../../../widgets/error_snackbar.dart';
-import '../apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../routes.dart';
-import '../token_manager.dart';
+import '../../../services/token_manager.dart';
 
 class PaymentPageController extends GetxController {
   final storage = const FlutterSecureStorage();

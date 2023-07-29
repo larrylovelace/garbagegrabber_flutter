@@ -6,7 +6,6 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 import 'package:garbage_grabber/src/models/products.dart';
 
-
 import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:get/get.dart';
 
@@ -44,9 +43,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light,
-        statusBarColor: AppColors.primaryColor,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: AppColors.planeColor // transparent status bar
         ));
     return GetMaterialApp(

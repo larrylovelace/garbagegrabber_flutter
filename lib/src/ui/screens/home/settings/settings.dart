@@ -1,0 +1,176 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:garbage_grabber/src/ui/screens/home/mainscreen.dart';
+import 'package:garbage_grabber/src/utils/fonts.dart';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import '../../../../data/controllers/routes.dart';
+import '../../../../utils/colors.dart';
+import '../../../../widgets/error_snackbar.dart';
+import '../../../../widgets/profile_menu_card.dart';
+
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  final storage = const FlutterSecureStorage();
+  @override
+  Widget build(BuildContext context) {
+    double deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
+    var box = Hive.box('homedata');
+    var products = box.get('homedata');
+    return Scaffold(
+        backgroundColor: AppColors.secondaryColor,
+        appBar: AppBar(
+          title: Row(
+            children: [
+              Text(
+                'Settings',
+                style: AppFonts.poppinsMedium
+                    .copyWith(fontSize: 22, color: AppColors.planeColor),
+              ),
+            ],
+          ),
+          elevation: 0,
+          backgroundColor: AppColors.primaryColor,
+        ),
+        body: products == null
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryColor,
+                ),
+              )
+            : CustomScrollView(
+                slivers: [
+                  SliverAppBar.medium(
+                      backgroundColor: AppColors.primaryColor,
+                      flexibleSpace: Container(
+                        margin: EdgeInsets.only(
+                            top: deviceHeight * 0.01,
+                            left: deviceWidth * 0.04,
+                            right: deviceWidth * 0.04),
+                        height: deviceHeight * 0.1,
+                        padding: EdgeInsets.only(left: deviceWidth * 0.05),
+                        decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
+                            color: AppColors.secondaryColor),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              products.firstname + ' ' + products.lastname,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style:
+                                  AppFonts.poppinsMedium.copyWith(fontSize: 22),
+                            ),
+                            SizedBox(
+                              height: deviceHeight * 0.01,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  products.email,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppFonts.poppinsRegular.copyWith(
+                                      fontSize: AppFonts.smallFontSize),
+                                ),
+                                SizedBox(
+                                  width: deviceWidth * 0.02,
+                                ),
+                                Icon(
+                                  Icons.verified,
+                                  color: AppColors.primaryColor,
+                                  size: 20,
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      )),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      RawMaterialButton(
+                          padding: EdgeInsets.only(
+                              bottom: deviceHeight * 0.02,
+                              top: deviceHeight * 0.02),
+                          fillColor: AppColors.planeColor,
+                          elevation: 0,
+                          onPressed: () {},
+                          child: Column(
+                            children: [
+                              ProfileMenu(
+                                  title: 'Profile Details',
+                                  deviceWidth: deviceWidth,
+                                  icon: LineAwesomeIcons.user,
+                                  onPress: (() {
+                                    Get.toNamed(AppRoutes.profiledetails);
+                                  })),
+                              ProfileMenu(
+                                  title: 'Address Details',
+                                  deviceWidth: deviceWidth,
+                                  icon: Icons.location_on_outlined,
+                                  onPress: (() {})),
+                              ProfileMenu(
+                                  title: 'Disputes',
+                                  deviceWidth: deviceWidth,
+                                  icon: Icons.support_agent_outlined,
+                                  onPress: (() {})),
+                              SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
+                              const Divider(),
+                              SizedBox(
+                                height: deviceHeight * 0.005,
+                              ),
+                              ProfileMenu(
+                                  title: 'Privacy Policy',
+                                  deviceWidth: deviceWidth,
+                                  icon: LineAwesomeIcons.user_shield,
+                                  onPress: (() {})),
+                              ProfileMenu(
+                                  title: 'About Us',
+                                  icon: LineAwesomeIcons.info,
+                                  deviceWidth: deviceWidth,
+                                  onPress: (() {})),
+                              ProfileMenu(
+                                  title: 'Log Out',
+                                  icon: LineAwesomeIcons.alternate_sign_out,
+                                  deviceWidth: deviceWidth,
+                                  textColor: AppColors.errorColor,
+                                  endIcon: false,
+                                  onPress: (() async {
+                                    await box.clear();
+                                    await storage.deleteAll();
+                                    Get.find<MainScreenController>()
+                                        .resetController();
+                                    Get.offAllNamed(AppRoutes.login);
+
+                                    // ignore: use_build_context_synchronously
+                                    CustomSnackBar.show(
+                                      context,
+                                      'Success',
+                                      'Logged out',
+                                      AppColors
+                                          .errorColor, // Custom background color
+                                      Icons.check, // Custom icon
+                                      AppColors.errorColor, // Custom icon color
+                                    );
+                                  }))
+                            ],
+                          )),
+                    ]),
+                  ),
+                ],
+              ));
+  }
+}

@@ -8,11 +8,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart ' as http;
-import '../../../data/controllers/apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../../../data/controllers/routes.dart';
 import '../../../utils/colors.dart';
-
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -54,23 +52,6 @@ class _SplashScreenState extends State<SplashScreen>
     _animationController.dispose();
     super.dispose();
   }
-
-  // void checkConnectivity() async {
-  //   final connectivityResult = await Connectivity().checkConnectivity();
-  //   if (connectivityResult == ConnectivityResult.none) {
-  //     // No internet connection
-  //     setState(() {
-  //       showCircularIndicator = false;
-  //       showDialog(
-  //           barrierDismissible: false,
-  //           context: context,
-  //           builder: (BuildContext context) => const Noconnection());
-  //     });
-  //   } else {
-  //     // Internet connection available, check tokens
-
-  //   }
-  // }
 
   void checkTokens() async {
     // Check if the tokens are present in the storage
@@ -165,6 +146,13 @@ class _SplashScreenState extends State<SplashScreen>
     double deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: AppColors.planeColor,
+      appBar: AppBar(
+        toolbarHeight: deviceHeight * 0.01,
+        backgroundColor: AppColors.planeColor,
+        automaticallyImplyLeading: false,
+        elevation: 0,
+      ),
       body: showCircularIndicator
           ? Center(
               child: Column(

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/ui/screens/home/transactions.dart';
-
+import 'package:garbage_grabber/src/ui/screens/home/settings/settings.dart';
+import 'package:garbage_grabber/src/ui/screens/home/payments.dart';
 
 import 'package:get/get.dart';
 import 'package:unicons/unicons.dart';
 
-
 import '../../../data/controllers/Getx controller/homescreen.dart';
 import '../../../data/controllers/Getx controller/payments.dart';
 import '../../../data/controllers/Getx controller/pickups.dart';
+import '../../../models/appointments.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import 'appointments/pickups.dart';
@@ -51,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: AppColors.primaryColor,
           onPressed: () {
             showModalBottomSheet(
-                backgroundColor: AppColors.secondaryColor,
+                backgroundColor: AppColors.planeColor,
                 isScrollControlled: true,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -172,6 +172,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         body: GetBuilder<MainScreenController>(
+        
           builder: (controller) {
             // Get the current page widget based on the current index
             Widget currentPage = controller.getPage(controller.currentIndex);
@@ -199,11 +200,17 @@ class MainScreenController extends GetxController {
     const HomeScreen(),
     const PickUpsShcedule(),
     const TransactionScreen(),
-    const SizedBox(),
+    const Settings()
   ];
 
   // List to keep track of whether data has been fetched for each page
-  final List<bool> hasDataFetched = List.filled(4, false);
+  List<bool> hasDataFetched = List.filled(4, false);
+  void resetController() {
+    //reseting the controller
+    currentIndex = 0;
+    hasDataFetched = List.filled(4, false);
+    update();
+  }
 
   void changeIndex(int index) {
     currentIndex = index;
@@ -218,16 +225,13 @@ class MainScreenController extends GetxController {
   // Method to fetch data for a specific page
   void fetchDataForPage(BuildContext context, index) {
     if (!hasDataFetched[index]) {
-      // Fetch data for the page based on the index
-      // For example:
-      // if (index == 0) {
-      //   // Fetch data for HomeScreen
-      //   // homeData = await ApiService.fetchHomeData();
-      // }
       if (index == 1) {
+        pickupPageController.appointmentData =
+            AppointmentData(activeAppointments: [], inactiveAppointments: []);
         pickupPageController.pickupschedule(context);
         // Fetch data for PickUpsShcedule
       } else if (index == 2) {
+        paymentPageController.paymentdetails = null;
         // Fetch data for TransactionScreen
         paymentPageController.getTransactiondetails(context);
       }

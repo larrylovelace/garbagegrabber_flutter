@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   static Color primaryColor = const Color.fromARGB(255, 57, 172, 82);
   static Color secondaryColor = const Color.fromARGB(254, 247, 247, 247);
+  static Color secondaryColorBlack = Colors.black;
   static Color planeColor = Colors.white;
   static Color iconColor = Colors.black38;
   static Color cancelColor = Colors.black87;
@@ -10,4 +11,6 @@ class AppColors {
   static Color errorColor = Colors.red;
   static Color pricecalcontainer = Colors.grey;
   static Color appointmentscolor = const Color.fromARGB(206, 0, 202, 152);
+  static Color profileMenuIcon =
+      const Color.fromARGB(255, 185, 178, 178).withOpacity(0.1);
 }

@@ -9,11 +9,11 @@ import '../../../models/appointments.dart';
 import '../../../utils/colors.dart';
 import '../../../widgets/error_handling.dart';
 import '../../../widgets/error_snackbar.dart';
-import '../apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../datetime.dart';
 import '../datetimehandler.dart';
 import '../routes.dart';
-import '../token_manager.dart';
+import '../../../services/token_manager.dart';
 import 'package:http/http.dart ' as http;
 
 class PickupPageController extends GetxController {
@@ -41,7 +41,7 @@ class PickupPageController extends GetxController {
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
         });
-        print(response.body);
+  
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
 

@@ -13,7 +13,7 @@ import 'package:get/get.dart';
 
 import 'package:http/http.dart ' as http;
 
-import '../../../data/controllers/apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../../../data/controllers/setup_controller.dart';
 import '../../../models/address.dart';
 import '../../../utils/colors.dart';

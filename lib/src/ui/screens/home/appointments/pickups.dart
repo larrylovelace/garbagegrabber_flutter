@@ -4,9 +4,6 @@ import 'package:garbage_grabber/src/data/controllers/Getx%20controller/pickups.d
 import 'package:garbage_grabber/src/data/controllers/datetimehandler.dart';
 import 'package:get/get.dart';
 
-
-
-
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../../utils/colors.dart';
@@ -41,14 +38,17 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: AppColors.primaryColor,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Appointments',
-            style:
-                AppFonts.poppinsBold.copyWith(fontSize: AppFonts.largeFontSize),
+          title: Row(
+            children: [
+              Text(
+                'Appointments',
+                style: AppFonts.poppinsMedium
+                    .copyWith(fontSize: 22, color: AppColors.planeColor),
+              ),
+            ],
           ),
+          elevation: 0,
+          backgroundColor: AppColors.primaryColor,
         ),
         body: GetBuilder<PickupPageController>(
           builder: (pickupscontroller) {
@@ -429,10 +429,10 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                             return Container(
                                                               width:
                                                                   deviceWidth *
-                                                                      0.15,
+                                                                      0.14,
                                                               height:
                                                                   deviceHeight *
-                                                                      0.12,
+                                                                      0.14,
                                                               margin: EdgeInsets.only(
                                                                   left:
                                                                       deviceWidth *
@@ -448,26 +448,23 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                                       .center,
                                                               decoration:
                                                                   BoxDecoration(
-                                                                color: isCurrentDate
-                                                                    ? Colors
-                                                                        .blue
-                                                                    : AppColors
-                                                                        .planeColor,
+                                                                color: AppColors
+                                                                    .planeColor,
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
                                                                             15),
                                                                 border:
                                                                     Border.all(
-                                                                  color: isCurrentDate
-                                                                      ? Colors
-                                                                          .blue
-                                                                      : AppColors
-                                                                          .appointmentscolor,
+                                                                  color: AppColors
+                                                                      .appointmentscolor,
                                                                   width: 1,
                                                                 ),
                                                               ),
                                                               child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
                                                                 children: [
                                                                   Text(
                                                                       dates[index]

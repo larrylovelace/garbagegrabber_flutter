@@ -1,17 +1,13 @@
-
+import 'package:garbage_grabber/src/ui/screens/home/settings/pages/profile_details.dart';
 import 'package:get/get.dart';
-
-import '../../ui/screens/home/appointments/pickups.dart';
 import '../../ui/screens/home/homescreen.dart';
 import '../../ui/screens/home/mainscreen.dart';
 import '../../ui/screens/home/payment_success.dart';
-import '../../ui/screens/home/transactions.dart';
 import '../../ui/screens/start/form_fill.dart';
 import '../../ui/screens/start/login.dart';
 import '../../ui/screens/start/otp_screen.dart';
 import '../../ui/screens/start/signup.dart';
 import '../../ui/screens/start/splash_screen.dart';
-
 
 class AppRoutes {
   static const String splash = '/';
@@ -22,8 +18,7 @@ class AppRoutes {
   static const String mainscreen = '/mainscreen';
   static const String homescreen = '/homescreen';
   static const String paymentsuccess = '/paymentsuccess';
-  static const String transactions = '/transactions';
-  static const String pickups = '/pickups';
+  static const String profiledetails = '/profiledetails';
 
   static final List<GetPage> routes = [
     GetPage(
@@ -79,15 +74,9 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: transactions,
-      page: () => const TransactionScreen(),
-      binding: TransactionScreenBinding(),
-      transition: Transition.fadeIn,
-    ),
-    GetPage(
-        name: pickups,
-        page: () => const PickUpsShcedule(),
-        binding: PickUpScreenBinding(),
+        name: profiledetails,
+        page: () => const ProfileDetis(),
+        binding: ProfileDetailsScreenBinding(),
         transition: Transition.fadeIn),
   ];
 }
@@ -148,16 +137,9 @@ class PaymentSuccessScreenBinding extends Bindings {
   }
 }
 
-class TransactionScreenBinding extends Bindings {
+class ProfileDetailsScreenBinding extends Bindings {
   @override
   void dependencies() {
-    // Dependencies for the Transaction screen can be added here
-  }
-}
-
-class PickUpScreenBinding extends Bindings {
-  @override
-  void dependencies() {
-    // Dependencies for the PickUp screen can be added here
+    // Dependencies for the Profile Details screen can be added here
   }
 }

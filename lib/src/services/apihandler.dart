@@ -1,6 +1,5 @@
 class APIConstants {
-  // static const String baseURI =
-  //     'https://garbagegrabberdocker-cir5g5yodq-uc.a.run.app';
+
   static const String baseURI = 'https://garbagegrabberdocker-cir5g5yodq-uc.a.run.app';
 
   static const String customerlogin = '/api/account/customer/login/';

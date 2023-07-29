@@ -45,8 +45,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
               ),
             ],
           ),
-          centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,
           backgroundColor: AppColors.primaryColor,
         ),

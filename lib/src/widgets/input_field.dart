@@ -16,8 +16,6 @@ class InputField extends StatelessWidget {
     required this.isPrefix,
     this.suffix,
     this.prefixIcon,
-    this.onFieldSubmitted,
-    this.focusNode,
     required this.readonly,
   }) : super(key: key);
 
@@ -32,9 +30,6 @@ class InputField extends StatelessWidget {
   final Widget? prefixIcon;
   final bool readonly;
 
-  final void Function(String)? onFieldSubmitted;
-  final FocusNode? focusNode;
-
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
@@ -43,15 +38,13 @@ class InputField extends StatelessWidget {
     return TextFormField(
       readOnly: readonly,
       controller: controller,
-      cursorColor: Colors.black,
+      cursorColor: AppColors.secondaryColorBlack,
       cursorHeight: deviceHeight * 0.027,
       style: AppFonts.poppinsRegular.copyWith(),
       autovalidateMode: AutovalidateMode.onUserInteraction,
       keyboardType: keywordType,
       obscureText: obscureText,
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: onFieldSubmitted,
-      focusNode: focusNode,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         prefixIconColor: AppColors.iconColor,

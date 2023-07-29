@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 
 import 'package:http/http.dart ' as http;
 
-import '../../../data/controllers/apihandler.dart';
+import '../../../services/apihandler.dart';
 import '../../../data/controllers/routes.dart';
 import '../../../data/controllers/setup_controller.dart';
 import '../../../utils/colors.dart';
