@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/data/controllers/Getx%20controller/pickups.dart';
+import 'package:garbage_grabber/src/data/controllers/home/pickups.dart';
 
 import 'package:garbage_grabber/src/data/controllers/datetimehandler.dart';
 import 'package:get/get.dart';
@@ -37,6 +37,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
     double deviceHeight = MediaQuery.of(context).size.width;
 
     return Scaffold(
+        backgroundColor: AppColors.planeColor,
         appBar: AppBar(
           title: Row(
             children: [
@@ -57,9 +58,8 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                 return [
                   SliverAppBar(
                     backgroundColor: AppColors.primaryColor,
-                    pinned: true,
-                    floating: true,
-                    snap: true,
+                    pinned: false,
+                    floating: false,
                     toolbarHeight: deviceHeight * 0.05,
                     bottom: TabBar(
                       controller: _tabController,
@@ -160,6 +160,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                       // ...
                                       // Build the active payments list item
                                       return Card(
+                                          color: AppColors.planeColor,
                                           elevation: 1,
                                           shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
@@ -372,7 +373,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                               ),
                                               subtitle: Padding(
                                                 padding: EdgeInsets.only(
-                                                    left: deviceWidth * 0.03),
+                                                    left: deviceWidth * 0.02),
                                                 child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,

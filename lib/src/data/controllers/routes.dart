@@ -1,8 +1,8 @@
-import 'package:garbage_grabber/src/ui/screens/home/settings/pages/profile_details.dart';
+import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/profile_details.dart';
 import 'package:get/get.dart';
-import '../../ui/screens/home/homescreen.dart';
-import '../../ui/screens/home/mainscreen.dart';
-import '../../ui/screens/home/payment_success.dart';
+import '../../ui/screens/home/home screen/homescreen.dart';
+import '../../ui/screens/home/screenhandler.dart';
+import '../../ui/screens/home/payments/payment_success.dart';
 import '../../ui/screens/start/form_fill.dart';
 import '../../ui/screens/start/login.dart';
 import '../../ui/screens/start/otp_screen.dart';
@@ -15,7 +15,7 @@ class AppRoutes {
   static const String register = '/register';
   static const String otpscreen = '/otpscreen';
   static const String formfill = '/formfill';
-  static const String mainscreen = '/mainscreen';
+  static const String screenhandler= '/screenhandler';
   static const String homescreen = '/homescreen';
   static const String paymentsuccess = '/paymentsuccess';
   static const String profiledetails = '/profiledetails';
@@ -56,7 +56,7 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: mainscreen,
+      name: screenhandler,
       page: () => const MainScreen(),
       binding: MainScreenBinding(),
       transition: Transition.fadeIn,

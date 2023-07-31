@@ -83,8 +83,4 @@ class SetupScreenController extends GetxController {
     });
   }
 
-  // void sendcredentials(value) {
-  //   email = value[0];
-  //   password = value[1];
-  // }
 }

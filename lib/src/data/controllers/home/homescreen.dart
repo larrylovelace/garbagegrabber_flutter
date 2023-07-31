@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 
-import '../../../models/currentappointment.dart';
-import '../../../models/homescreendata.dart';
-import '../../../models/products.dart';
+import '../../models/currentappointment.dart';
+import '../../models/homescreendata.dart';
+import '../../models/products.dart';
 import '../../../utils/colors.dart';
 import '../../../services/apihandler.dart';
 import '../datetime.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/data/controllers/homescreen_controller.dart';
+import 'package:garbage_grabber/src/data/controllers/home/homescreen_controller.dart';
 
 import 'package:get/get.dart';
 

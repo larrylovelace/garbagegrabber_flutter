@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
         Get.back();
 
-        Get.offAllNamed(AppRoutes.mainscreen);
+        Get.offAllNamed(AppRoutes.screenhandler);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 

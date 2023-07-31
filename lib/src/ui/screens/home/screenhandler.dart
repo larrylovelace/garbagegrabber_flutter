@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_grabber/src/ui/screens/home/settings/settings.dart';
-import 'package:garbage_grabber/src/ui/screens/home/payments.dart';
+import 'package:garbage_grabber/src/ui/screens/home/payments/payments.dart';
 
 import 'package:get/get.dart';
 import 'package:unicons/unicons.dart';
 
-import '../../../data/controllers/Getx controller/homescreen.dart';
-import '../../../data/controllers/Getx controller/payments.dart';
-import '../../../data/controllers/Getx controller/pickups.dart';
-import '../../../models/appointments.dart';
+import '../../../data/controllers/home/homescreen.dart';
+import '../../../data/controllers/home/payments.dart';
+import '../../../data/controllers/home/pickups.dart';
+import '../../../data/models/appointments.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
-import 'appointments/pickups.dart';
-import 'customerqr.dart';
-import 'homescreen.dart';
+import 'pickups/pickups.dart';
+import 'floatingbutton/customerqr.dart';
+import 'home screen/homescreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

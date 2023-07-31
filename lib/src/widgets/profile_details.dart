@@ -24,6 +24,9 @@ class ProfileDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        onpress();
+      },
       contentPadding: EdgeInsets.only(left: deviceWidth * 0.02),
       minLeadingWidth: deviceWidth * 0.1,
       leading: Container(

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/ui/screens/home/product_detail.dart';
+import 'package:garbage_grabber/src/ui/screens/home/home%20screen/product_detail.dart';
 
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import 'package:percent_indicator/percent_indicator.dart';
 
-
-import '../../../data/controllers/Getx controller/homescreen.dart';
-import '../../../data/controllers/homescreen_controller.dart';
-import '../../../models/currentappointment.dart';
-import '../../../models/products.dart';
-import '../../../utils/colors.dart';
-import '../../../utils/fonts.dart';
+import '../../../../data/controllers/home/homescreen.dart';
+import '../../../../data/controllers/home/homescreen_controller.dart';
+import '../../../../data/models/currentappointment.dart';
+import '../../../../data/models/products.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/fonts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -501,6 +500,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                                 child: Card(
+                                  color: AppColors.primaryColor,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),

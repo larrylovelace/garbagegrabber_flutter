@@ -3,9 +3,9 @@ import 'package:garbage_grabber/src/data/controllers/routes.dart';
 
 import 'package:get/get.dart';
 
-import '../../../utils/colors.dart';
-import '../../../utils/fonts.dart';
-import 'mainscreen.dart';
+import '../../../../utils/colors.dart';
+import '../../../../utils/fonts.dart';
+import '../screenhandler.dart';
 
 class PaymentSuccess extends StatefulWidget {
   const PaymentSuccess({super.key});
@@ -122,7 +122,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                             borderRadius: BorderRadius.circular(20)),
                         onPressed: () async {
                           mainScreenController.resetController();
-                          Get.offAllNamed(AppRoutes.mainscreen);
+                          Get.offAllNamed(AppRoutes.screenhandler);
                         },
                         child: Text(
                           'OK',

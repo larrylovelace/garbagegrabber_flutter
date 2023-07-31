@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 
-import '../../../models/appointments.dart';
+import '../../models/appointments.dart';
 import '../../../utils/colors.dart';
 import '../../../widgets/error_handling.dart';
 import '../../../widgets/error_snackbar.dart';

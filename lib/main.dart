@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
-import 'package:garbage_grabber/src/models/products.dart';
+import 'package:garbage_grabber/src/data/models/products.dart';
 
 import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 
-import 'src/ui/screens/home/mainscreen.dart';
+import 'src/ui/screens/home/screenhandler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

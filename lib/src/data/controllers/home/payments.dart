@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart ' as http;
 
-import '../../../models/payments.dart';
+import '../../models/payments.dart';
 import '../../../utils/colors.dart';
 import '../../../widgets/error_handling.dart';
 import '../../../widgets/error_snackbar.dart';

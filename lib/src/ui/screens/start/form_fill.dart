@@ -6,7 +6,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 
-
 import 'package:garbage_grabber/src/widgets/dropdown.dart';
 import 'package:garbage_grabber/src/widgets/input_field.dart';
 import 'package:get/get.dart';
@@ -15,13 +14,12 @@ import 'package:http/http.dart ' as http;
 
 import '../../../services/apihandler.dart';
 import '../../../data/controllers/setup_controller.dart';
-import '../../../models/address.dart';
+import '../../../data/models/address.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import '../../../widgets/error_handling.dart';
 import '../../../widgets/error_snackbar.dart';
 import '../../../widgets/loading_dialog.dart';
-
 
 class FormFillScreen extends StatefulWidget {
   const FormFillScreen({super.key});
@@ -164,15 +162,15 @@ class _FormFillScreenState extends State<FormFillScreen> {
 
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
-          context,
-          'Success',
-          'Welcome to Garbage Grabber',
-          const Color.fromARGB(255, 15, 191, 98), // Custom background color
-          Icons.check, // Custom icon
-          const Color.fromARGB(255, 15, 191, 98), // Custom icon color
-        );
+            context,
+            'Success',
+            'Welcome to Garbage Grabber',
+            AppColors.primaryColor, // Custom background color
+            Icons.check, // Custom icon
+            AppColors.primaryColor // Custom icon color
+            );
         Get.back();
-        Get.offAllNamed(AppRoutes.mainscreen);
+        Get.offAllNamed(AppRoutes.screenhandler);
       } else {
         Get.back();
         // ignore: use_build_context_synchronously
