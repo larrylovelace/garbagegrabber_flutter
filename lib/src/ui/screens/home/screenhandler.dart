@@ -7,8 +7,8 @@ import 'package:unicons/unicons.dart';
 
 import '../../../data/controllers/home/homescreen.dart';
 import '../../../data/controllers/home/payments.dart';
-import '../../../data/controllers/home/pickups.dart';
-import '../../../data/models/appointments.dart';
+import '../../../data/controllers/home/pickups_controller.dart';
+import '../../../data/models/pickups_model.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import 'pickups/pickups.dart';

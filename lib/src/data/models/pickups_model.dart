@@ -38,6 +38,7 @@ class Appointment {
   final String appointmentTimeEnd;
   final double totalPayment;
   final bool isActive;
+  final List<Pickup> pickups; // New property for pickups
 
   Appointment({
     required this.id,
@@ -52,9 +53,14 @@ class Appointment {
     required this.appointmentTimeEnd,
     required this.totalPayment,
     required this.isActive,
+    required this.pickups, // Initialize the pickups property
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
+    List<dynamic> pickupsData = json['pickups'];
+    List<Pickup> pickups =
+        pickupsData.map((item) => Pickup.fromJson(item)).toList();
+
     return Appointment(
       id: json['id'],
       quantity: json['quantity'],
@@ -68,6 +74,7 @@ class Appointment {
       appointmentTimeEnd: json['appointment_time_end'],
       totalPayment: json['total_payment'],
       isActive: json['is_active'],
+      pickups: pickups, // Assign the pickups property
     );
   }
 }
@@ -91,6 +98,40 @@ class Product {
       name: json['name'],
       price: json['price'].toDouble(),
       plan: json['plan'],
+    );
+  }
+}
+
+class Pickup {
+  final int id;
+  final DateTime pickupDate;
+  final DateTime? pickedDateTime;
+  final bool picked;
+  final bool confirmed;
+  final int customer;
+  final int appointment;
+
+  Pickup({
+    required this.id,
+    required this.pickupDate,
+    this.pickedDateTime,
+    required this.picked,
+    required this.confirmed,
+    required this.customer,
+    required this.appointment,
+  });
+
+  factory Pickup.fromJson(Map<String, dynamic> json) {
+    return Pickup(
+      id: json['id'],
+      pickupDate: DateTime.parse(json['pickup_date']),
+      pickedDateTime: json['picked_date_time'] != null
+          ? DateTime.parse(json['picked_date_time'])
+          : null,
+      picked: json['picked'],
+      confirmed: json['confirmed'],
+      customer: json['customer'],
+      appointment: json['appointment'],
     );
   }
 }

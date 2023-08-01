@@ -35,7 +35,7 @@ class _OtpScreenState extends State<OtpScreen> {
   final storage = const FlutterSecureStorage();
   String email = Get.arguments['email'];
 
-  String password= Get.arguments['password'];
+  String password = Get.arguments['password'];
   var enteredCode = '';
   bool isLoading = false;
   bool isotpInvalid = false;
@@ -58,13 +58,13 @@ class _OtpScreenState extends State<OtpScreen> {
           setState(() {
             isLoading = false;
             CustomSnackBar.show(
-              context,
-              'Success',
-              'OTP verified Successfully',
-              const Color.fromARGB(255, 15, 191, 98), // Custom background color
-              Icons.check, // Custom icon
-              const Color.fromARGB(255, 15, 191, 98), // Custom icon color
-            );
+                context,
+                'Success',
+                'OTP verified Successfully',
+                AppColors.primaryColor, // Custom background color
+                Icons.check, // Custom icon
+                AppColors.primaryColor // Custom icon color
+                );
             Get.offNamed(AppRoutes.formfill,
                 arguments: {'email': email, 'password': password});
           });
@@ -99,7 +99,6 @@ class _OtpScreenState extends State<OtpScreen> {
         });
         final snackBar = buildErrorSnackBar(context, e);
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        
       }
       // Trigger verification process here
     }
@@ -214,9 +213,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       fieldHeight: deviceWidth * 0.13,
                       borderRadius: BorderRadius.circular(6),
                       borderWidth: 0.5,
-                      activeColor: isotpInvalid
-                          ? Colors.red
-                          : const Color.fromARGB(255, 15, 191, 98),
+                      activeColor:
+                          isotpInvalid ? Colors.red : AppColors.primaryColor,
                       activeFillColor: Colors.transparent.withOpacity(0.018),
                       inactiveFillColor: Colors.transparent.withOpacity(0.018),
                       selectedFillColor: Colors.transparent.withOpacity(0.018),
@@ -260,11 +258,9 @@ class _OtpScreenState extends State<OtpScreen> {
                                       context,
                                       'Success',
                                       'OTP code sent successfully',
-                                      const Color.fromARGB(255, 15, 191,
-                                          98), // Custom background color
+                                      AppColors.primaryColor,
                                       Icons.check, // Custom icon
-                                      const Color.fromARGB(255, 15, 191,
-                                          98), // Custom icon color
+                                      AppColors.primaryColor,
                                     );
                                   });
                                 }

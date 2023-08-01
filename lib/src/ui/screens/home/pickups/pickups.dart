@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/data/controllers/home/pickups.dart';
+import 'package:garbage_grabber/src/data/controllers/home/pickups_controller.dart';
 
-import 'package:garbage_grabber/src/data/controllers/datetimehandler.dart';
 import 'package:get/get.dart';
 
 import 'package:percent_indicator/percent_indicator.dart';
@@ -37,7 +36,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
     double deviceHeight = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.secondaryColor,
         appBar: AppBar(
           title: Row(
             children: [
@@ -113,14 +112,6 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                           .appointmentData
                                           .activeAppointments[index]
                                           .appointmentDateEnd;
-                                      int differenceInPickupDays =
-                                          pickupscontroller
-                                              .dateConverter
-                                              .differencepickupdays(
-                                                  startdate, enddate);
-                                      List<Map<String, dynamic>> dates =
-                                          DateGenerator.getDates(
-                                              startdate, enddate);
 
                                       final initaldate = pickupscontroller
                                           .dateConverter
@@ -138,27 +129,13 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                       final totalremainingdays =
                                           pickupscontroller.dateConverter
                                               .remainingdays(enddate);
-                                      int currentSelectedDate = 8;
+
                                       double percent = totalremainingdays == 0
                                           ? 1
                                           : 1 / totalremainingdays;
-
-                                      // Current date (example: 8th date)
-                                      // int numberOfDates = 7; // Total number of dates
-
-                                      // double progress = currentSelectedDate / numberOfDates;
-
-                                      // DateTime currentDate = DateTime.now();
-                                      // Duration totalDuration = endDate.difference(startDate);
-
-                                      // Duration elapsedDuration =
-                                      //     currentDate.difference(startDate);
-
-                                      // double percent = elapsedDuration.inMilliseconds /
-                                      //     totalDuration.inMilliseconds;
-
-                                      // ...
-                                      // Build the active payments list item
+                                      final data = pickupscontroller
+                                          .appointmentData
+                                          .activeAppointments[index];
                                       return Card(
                                           color: AppColors.planeColor,
                                           elevation: 1,
@@ -175,7 +152,6 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                 left: deviceWidth * 0.05,
                                                 top: deviceHeight * 0.02,
                                               ),
-                                              onTap: () {},
                                               title: Column(
                                                 children: [
                                                   totalremainingdays == 0
@@ -332,7 +308,11 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                                               totalremainingdays.toString(),
                                                                               style: AppFonts.poppinsMedium.copyWith(),
                                                                             ),
+                                                                            totalremainingdays>1?
                                                                             Text(
+                                                                              ' Days left',
+                                                                              style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
+                                                                            ): Text(
                                                                               ' Days left',
                                                                               style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
                                                                             )
@@ -410,103 +390,101 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                           deviceHeight * 0.02,
                                                     ),
                                                     SizedBox(
+                                                      height:
+                                                          deviceHeight * 0.19,
                                                       width: deviceWidth * 0.79,
-                                                      child:
-                                                          SingleChildScrollView(
-                                                        padding: EdgeInsets.only(
-                                                            right: deviceWidth *
-                                                                0.03),
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Row(
-                                                          children:
-                                                              List.generate(
-                                                                  dates.length,
-                                                                  (index) {
-                                                            bool isCurrentDate =
-                                                                (index +
-                                                                        initalday) ==
-                                                                    currentSelectedDate;
+                                                      child: ListView.builder(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemCount: data
+                                                              .pickups.length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            final month = pickupscontroller
+                                                                .dateConverter
+                                                                .getMonthFromDate(data
+                                                                    .pickups[
+                                                                        index]
+                                                                    .pickupDate
+                                                                    .toString());
+
+                                                            final date = pickupscontroller
+                                                                .dateConverter
+                                                                .getDayFromDate(data
+                                                                    .pickups[
+                                                                        index]
+                                                                    .pickupDate
+                                                                    .toString());
+
                                                             return Container(
-                                                              width:
-                                                                  deviceWidth *
-                                                                      0.14,
-                                                              height:
-                                                                  deviceHeight *
-                                                                      0.14,
                                                               margin: EdgeInsets.only(
                                                                   left:
                                                                       deviceWidth *
-                                                                          0.0,
+                                                                          0.00,
                                                                   right:
                                                                       deviceWidth *
-                                                                          0.03,
+                                                                          0.04,
+                                                                  top:
+                                                                      deviceWidth *
+                                                                          0.02,
                                                                   bottom:
-                                                                      deviceHeight *
+                                                                      deviceWidth *
                                                                           0.02),
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
+                                                              width:
+                                                                  deviceWidth *
+                                                                      0.14,
                                                               decoration:
                                                                   BoxDecoration(
-                                                                color: AppColors
-                                                                    .planeColor,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15),
-                                                                border:
-                                                                    Border.all(
-                                                                  color: AppColors
-                                                                      .appointmentscolor,
-                                                                  width: 1,
-                                                                ),
-                                                              ),
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                      dates[index]
-                                                                          [
-                                                                          'month'],
-                                                                      style: AppFonts
-                                                                          .poppinsLightMediumsnackBar
-                                                                          .copyWith(
-                                                                        fontSize:
-                                                                            AppFonts.smallFontSize,
+                                                                      borderRadius: const BorderRadius
+                                                                              .all(
+                                                                          Radius.circular(
+                                                                              10)),
+                                                                      border:
+                                                                          Border
+                                                                              .all(
+                                                                        color: AppColors
+                                                                            .appointmentscolor,
+                                                                        width:
+                                                                            1,
                                                                       )),
-                                                                  Text(
-                                                                    dates[index]
-                                                                            [
-                                                                            'day']
-                                                                        .toString(),
-                                                                    maxLines:
-                                                                        dates.length >
-                                                                                1
-                                                                            ? 3
-                                                                            : 1,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style: AppFonts
-                                                                        .poppinsRegular
-                                                                        .copyWith(
-                                                                      color: isCurrentDate
-                                                                          ? Colors
-                                                                              .white
-                                                                          : Colors
-                                                                              .black,
+                                                              child:
+                                                                  MaterialButton(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                onPressed:
+                                                                    () {},
+                                                                child: Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Text(month,
+                                                                        style: AppFonts
+                                                                            .poppinsRegular
+                                                                            .copyWith(
+                                                                          fontSize:
+                                                                              AppFonts.smallFontSize,
+                                                                        )),
+                                                                    Text(
+                                                                      date.toString(),
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style: AppFonts
+                                                                          .poppinsMedium
+                                                                          .copyWith(),
                                                                     ),
-                                                                  ),
-                                                                ],
+                                                                  ],
+                                                                ),
                                                               ),
                                                             );
                                                           }),
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    )
                                                   ],
                                                 ),
                                               )));

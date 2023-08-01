@@ -30,6 +30,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
     return Obx(() => Scaffold(
           backgroundColor: AppColors.secondaryColor,
           appBar: AppBar(
+            backgroundColor: AppColors.primaryColor,
             leadingWidth: deviceWidth * 0.07,
             leading: Ink(
               child: IconButton(
@@ -51,22 +52,23 @@ class _ProfileDetisState extends State<ProfileDetis> {
                 ),
               ],
             ),
-            actions: profileEditController.edit.value
-                ? []
-                : [
-                    IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          profileEditController._onedit();
-                          profileEditController._getHiveData();
-                        },
-                        icon: Icon(
-                          LineAwesomeIcons.pen,
-                          color: AppColors.planeColor,
-                        ))
-                  ],
-            elevation: 0,
-            backgroundColor: AppColors.primaryColor,
+
+            //  profileEditController.edit.value
+            //     ? []
+            //     : [
+            //         IconButton(
+            //             splashRadius: 20,
+            //             onPressed: () {
+            //               profileEditController._onedit();
+            //               profileEditController._getHiveData();
+            //             },
+            //             icon: Icon(
+            //               LineAwesomeIcons.pen,
+            //               color: AppColors.planeColor,
+            //             ))
+            //       ],
+            // elevation: 0,
+            // backgroundColor: AppColors.primaryColor,
           ),
           body: CustomScrollView(
             slivers: [
@@ -191,12 +193,12 @@ class _ProfileDetisState extends State<ProfileDetis> {
                         SizedBox(
                           height: deviceHeight * 0.01,
                         ),
-                        ProfileDetails(
-                            title: 'Change Password',
-                            subtitle: 'Change your password',
-                            icon: Icons.key_outlined,
-                            onpress: () {},
-                            deviceWidth: deviceWidth),
+                        // ProfileDetails(
+                        //     title: 'Change Password',
+                        //     subtitle: 'Change your password',
+                        //     icon: Icons.key_outlined,
+                        //     onpress: () {},
+                        //     deviceWidth: deviceWidth),
                         ProfileDetails(
                             title: 'QR Code',
                             subtitle: 'View your qr code',

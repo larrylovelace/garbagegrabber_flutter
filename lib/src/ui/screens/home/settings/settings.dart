@@ -5,7 +5,6 @@ import 'package:garbage_grabber/src/utils/fonts.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:unicons/unicons.dart';
 import '../../../../data/controllers/routes.dart';
 import '../../../../utils/colors.dart';
 import '../../../../widgets/error_snackbar.dart';
@@ -131,38 +130,38 @@ class _SettingsState extends State<Settings> {
                                     onPress: (() {
                                       Get.toNamed(AppRoutes.profiledetails);
                                     })),
-                                ProfileMenu(
-                                    title: 'Address Details',
-                                    deviceWidth: deviceWidth,
-                                    icon: Icons.location_on_outlined,
-                                    onPress: (() {})),
-                                ProfileMenu(
-                                    title: 'Support',
-                                    deviceWidth: deviceWidth,
-                                    icon: Icons.support_outlined,
-                                    onPress: (() {})),
-                                SizedBox(
-                                  height: deviceHeight * 0.01,
-                                ),
-                                const Divider(),
-                                SizedBox(
-                                  height: deviceHeight * 0.005,
-                                ),
-                                ProfileMenu(
-                                    title: 'About Us',
-                                    icon: LineAwesomeIcons.info,
-                                    deviceWidth: deviceWidth,
-                                    onPress: (() {})),
-                                ProfileMenu(
-                                    title: 'Privacy Policy',
-                                    deviceWidth: deviceWidth,
-                                    icon: LineAwesomeIcons.user_shield,
-                                    onPress: (() {})),
-                                ProfileMenu(
-                                    title: 'Terms and Conditions',
-                                    deviceWidth: deviceWidth,
-                                    icon: UniconsLine.document_info,
-                                    onPress: (() {})),
+                                // ProfileMenu(
+                                //     title: 'Address Details',
+                                //     deviceWidth: deviceWidth,
+                                //     icon: Icons.location_on_outlined,
+                                //     onPress: (() {})),
+                                // ProfileMenu(
+                                //     title: 'Support',
+                                //     deviceWidth: deviceWidth,
+                                //     icon: Icons.support_outlined,
+                                //     onPress: (() {})),
+                                // SizedBox(
+                                //   height: deviceHeight * 0.01,
+                                // ),
+                                // const Divider(),
+                                // SizedBox(
+                                //   height: deviceHeight * 0.005,
+                                // ),
+                                // ProfileMenu(
+                                //     title: 'About Us',
+                                //     icon: LineAwesomeIcons.info,
+                                //     deviceWidth: deviceWidth,
+                                //     onPress: (() {})),
+                                // ProfileMenu(
+                                //     title: 'Privacy Policy',
+                                //     deviceWidth: deviceWidth,
+                                //     icon: LineAwesomeIcons.user_shield,
+                                //     onPress: (() {})),
+                                // ProfileMenu(
+                                //     title: 'Terms and Conditions',
+                                //     deviceWidth: deviceWidth,
+                                //     icon: UniconsLine.document_info,
+                                //     onPress: (() {})),
                                 ProfileMenu(
                                     title: 'Log Out',
                                     icon: LineAwesomeIcons.alternate_sign_out,

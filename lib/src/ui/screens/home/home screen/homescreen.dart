@@ -500,7 +500,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                                 child: Card(
-                                  color: AppColors.primaryColor,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10)),

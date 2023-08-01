@@ -8,7 +8,6 @@ import 'package:garbage_grabber/src/data/models/products.dart';
 
 import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:get/get.dart';
-
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 

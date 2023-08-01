@@ -1,32 +1,19 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-
-import '../../models/appointments.dart';
-import '../../../utils/colors.dart';
-import '../../../widgets/error_handling.dart';
-import '../../../widgets/error_snackbar.dart';
-import '../../../services/apihandler.dart';
-import '../datetime.dart';
-import '../datetimehandler.dart';
-import '../routes.dart';
-import '../../../services/token_manager.dart';
+import '../../services/apihandler.dart';
+import '../../services/token_manager.dart';
 import 'package:http/http.dart ' as http;
+import '../../utils/colors.dart';
+import '../../widgets/error_handling.dart';
+import '../../widgets/error_snackbar.dart';
+import '../controllers/routes.dart';
 
-class PickupPageController extends GetxController {
+class PickupsRepository {
   final storage = const FlutterSecureStorage();
-  AppointmentData appointmentData =
-      AppointmentData(activeAppointments: [], inactiveAppointments: []);
-
-  DateConverter dateConverter = DateConverter();
-  DateGenerator dategenerator = DateGenerator();
-  bool appointmentsisempty = false;
-  Future<void> pickupschedule(BuildContext context) async {
-    // Add the context parameter here
-    const storage = FlutterSecureStorage();
+  Future<Map<String, dynamic>> pickupsRepo(BuildContext context) async {
     try {
       final refreshToken = await storage.read(key: 'refreshtoken');
 
@@ -41,17 +28,11 @@ class PickupPageController extends GetxController {
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
         });
-  
+
         if (response.statusCode == 200) {
-          var data = jsonDecode(response.body);
+          Map<String, dynamic> data = jsonDecode(response.body);
 
-          appointmentData = AppointmentData.fromJson(data['data']);
-
-          if (appointmentData.activeAppointments.isEmpty) {
-            appointmentsisempty = true;
-          }
-
-          update();
+          return data;
         } else if (response.statusCode == 401) {
           var box = Hive.box('homedata');
           await box.clear();
@@ -69,11 +50,13 @@ class PickupPageController extends GetxController {
           );
         }
       } else {
+        return {};
         // Handle the case when accessToken is null
       }
     } catch (e) {
       final snackBar = buildErrorSnackBar(context, e);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+    return {};
   }
 }

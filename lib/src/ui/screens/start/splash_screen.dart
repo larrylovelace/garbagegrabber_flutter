@@ -1,11 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart ' as http;
 import '../../../services/apihandler.dart';
@@ -65,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       if (!refreshTokenExpired && !accessTokenExpired) {
         // Tokens are not expired, navigate to the main screen
-        Get.offAllNamed(AppRoutes.screenhandler);
+        Get.offAllNamed(AppRoutes.login);
       } else if (!refreshTokenExpired && accessTokenExpired) {
         // Access token is expired, request new access token
         final newAccessToken = await requestNewAccessToken(refreshToken);
@@ -169,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: SizedBox(
                       height: deviceHeight * 0.4,
                       child: Image.asset(
-                        'assets/splash_image.png',
+                        'assets/splash.png',
                       ),
                     ),
                   ),
