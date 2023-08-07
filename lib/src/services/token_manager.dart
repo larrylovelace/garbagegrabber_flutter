@@ -43,9 +43,9 @@ class TokenManager {
       return newAccessToken;
     } else {
       // Failed to get a new access token, navigate to the login screen
-      Future.delayed(const Duration(seconds: 3), () {
-        Get.offAllNamed(AppRoutes.login);
-      });
+      // Future.delayed(const Duration(seconds: 3), () {
+      //   Get.offAllNamed(AppRoutes.login);
+      // });
       return null;
     }
   }

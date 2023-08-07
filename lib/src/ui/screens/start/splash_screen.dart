@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen>
 
       if (!refreshTokenExpired && !accessTokenExpired) {
         // Tokens are not expired, navigate to the main screen
-        Get.offAllNamed(AppRoutes.login);
+        Get.offAllNamed(AppRoutes.screenhandler);
       } else if (!refreshTokenExpired && accessTokenExpired) {
         // Access token is expired, request new access token
         final newAccessToken = await requestNewAccessToken(refreshToken);
@@ -82,9 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
         }
       } else {
         // Tokens are expired, delete them from secure storage
-        await storage.delete(key: 'refreshtoken');
-        await storage.delete(key: 'accesstoken');
-
+        await storage.deleteAll();
         // Navigate to the login screen
         Future.delayed(const Duration(seconds: 3), () {
           Get.offAllNamed(AppRoutes.login);
