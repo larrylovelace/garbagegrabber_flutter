@@ -17,7 +17,7 @@ import '../../../utils/fonts.dart';
 import '../../../widgets/error_handling.dart';
 import '../../../widgets/error_snackbar.dart';
 
-import 'package:http/http.dart ' as http;
+import 'package:http/http.dart' as http;
 
 Timer? resendTimer;
 

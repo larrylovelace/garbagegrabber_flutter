@@ -281,43 +281,54 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                           children: [
                                                             CircularPercentIndicator(
                                                               animation: true,
-                                                              percent: percent,
+                                                              percent: 1,
                                                               radius: 38,
                                                               progressColor:
                                                                   AppColors
                                                                       .appointmentscolor,
-                                                              center:
-                                                                  totalremainingdays ==
+                                                              center: totalremainingdays ==
+                                                                          0 ||
+                                                                      totalremainingdays <
                                                                           0
-                                                                      ? Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Icon(
-                                                                              Icons.check,
-                                                                              color: AppColors.appointmentscolor,
-                                                                              size: 30,
-                                                                            )
-                                                                          ],
+                                                                  ? Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Icon(
+                                                                          Icons
+                                                                              .check,
+                                                                          color:
+                                                                              AppColors.appointmentscolor,
+                                                                          size:
+                                                                              30,
                                                                         )
-                                                                      : Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            Text(
-                                                                              totalremainingdays.toString(),
-                                                                              style: AppFonts.poppinsMedium.copyWith(),
-                                                                            ),
-                                                                            totalremainingdays>1?
-                                                                            Text(
-                                                                              ' Days left',
-                                                                              style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
-                                                                            ): Text(
-                                                                              ' Days left',
-                                                                              style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
-                                                                            )
-                                                                          ],
+                                                                      ],
+                                                                    )
+                                                                  : Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        Text(
+                                                                          totalremainingdays
+                                                                              .toString(),
+                                                                          style: AppFonts
+                                                                              .poppinsMedium
+                                                                              .copyWith(),
                                                                         ),
+                                                                        totalremainingdays >
+                                                                                1
+                                                                            ? Text(
+                                                                                ' Days left',
+                                                                                style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
+                                                                              )
+                                                                            : Text(
+                                                                                ' Day left',
+                                                                                style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
+                                                                              )
+                                                                      ],
+                                                                    ),
                                                             ),
                                                           ],
                                                         ),
@@ -379,12 +390,13 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                             .circular(15),
                                                         progressColor: AppColors
                                                             .appointmentscolor,
-                                                        percent:
-                                                            totalremainingdays ==
+                                                        percent: totalremainingdays ==
+                                                                    0 ||
+                                                                totalremainingdays <
                                                                     0
-                                                                ? 1
-                                                                : 1 /
-                                                                    totalremainingdays),
+                                                            ? 1
+                                                            : 1 /
+                                                                totalremainingdays),
                                                     SizedBox(
                                                       height:
                                                           deviceHeight * 0.02,

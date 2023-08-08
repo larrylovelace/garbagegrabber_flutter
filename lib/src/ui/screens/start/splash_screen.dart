@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:http/http.dart ' as http;
+import 'package:http/http.dart' as http;
 import '../../../services/apihandler.dart';
 import '../../../data/controllers/routes.dart';
 import '../../../utils/colors.dart';

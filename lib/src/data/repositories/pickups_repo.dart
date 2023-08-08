@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import '../../services/apihandler.dart';
 import '../../services/token_manager.dart';
-import 'package:http/http.dart ' as http;
+import 'package:http/http.dart' as http;
 import '../../utils/colors.dart';
 import '../../widgets/error_handling.dart';
 import '../../widgets/error_snackbar.dart';

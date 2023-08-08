@@ -85,10 +85,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: AppColors.primaryColor,
                     elevation: 0,
                     automaticallyImplyLeading: false,
-                    title: Text(
-                      'Hi $firstname',
-                      style: AppFonts.poppinsBold
-                          .copyWith(fontSize: AppFonts.largeFontSize),
+                    title: Row(
+                      children: [
+                        Text(
+                          'Hi $firstname',
+                          style: AppFonts.poppinsBold
+                              .copyWith(fontSize: AppFonts.largeFontSize),
+                        ),
+                      ],
                     ),
                     actions: [
                       Padding(
