@@ -4,9 +4,6 @@
 <dict>
     <key>NSCameraUsageDescription</key>
     <string>We do not use the camera in this app. This permission is not required for the app's functionality.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app uses a geocoding API to obtain coordinates for specific locations. Location access is not used directly by the app for its functionality.</string>
-	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Garbage Grabbers</string>
