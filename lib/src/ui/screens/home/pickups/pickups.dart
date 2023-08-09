@@ -130,9 +130,11 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                           pickupscontroller.dateConverter
                                               .remainingdays(enddate);
 
-                                      double percent = totalremainingdays == 0
-                                          ? 1
-                                          : 1 / totalremainingdays;
+                                      double percent =
+                                          totalremainingdays == 0 ||
+                                                  totalremainingdays < 0
+                                              ? 1
+                                              : 1 / totalremainingdays;
                                       final data = pickupscontroller
                                           .appointmentData
                                           .activeAppointments[index];
@@ -281,7 +283,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                           children: [
                                                             CircularPercentIndicator(
                                                               animation: true,
-                                                              percent: 1,
+                                                              percent: percent,
                                                               radius: 38,
                                                               progressColor:
                                                                   AppColors

@@ -16,7 +16,7 @@ import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/loading_dialog.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';
-import 'package:http/http.dart ' as http;
+import 'package:http/http.dart' as http;
 
 
 
