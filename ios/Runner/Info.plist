@@ -3,7 +3,8 @@
 <plist version="1.0">
 <dict>
     <key>NSCameraUsageDescription</key>
-    <string>We do not use the camera in this app. This permission is not required for the app's functionality.</string>
+    <string>Camera usage description</string>
+	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Garbage Grabbers</string>
