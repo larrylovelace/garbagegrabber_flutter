@@ -25,7 +25,8 @@ class CurrentAppointment {
 
   factory CurrentAppointment.fromJson(Map<String, dynamic> json) {
     List<dynamic> pickupsData = json['pickups'];
-    List<Pickup> pickups = pickupsData.map((item) => Pickup.fromJson(item)).toList();
+    List<Pickup> pickups =
+        pickupsData.map((item) => Pickup.fromJson(item)).toList();
 
     return CurrentAppointment(
       quantity: json['quantity'],
@@ -46,8 +47,7 @@ class Pickup {
   final int id;
   final String pickupDate;
   final DateTime? pickedDateTime;
-  final bool picked;
-  final bool confirmed;
+
   final int customer;
   final int appointment;
 
@@ -55,8 +55,6 @@ class Pickup {
     required this.id,
     required this.pickupDate,
     this.pickedDateTime,
-    required this.picked,
-    required this.confirmed,
     required this.customer,
     required this.appointment,
   });
@@ -65,9 +63,9 @@ class Pickup {
     return Pickup(
       id: json['id'],
       pickupDate: json['pickup_date'],
-      pickedDateTime: json['picked_date_time'] != null ? DateTime.parse(json['picked_date_time']) : null,
-      picked: json['picked'],
-      confirmed: json['confirmed'],
+      pickedDateTime: json['picked_date_time'] != null
+          ? DateTime.parse(json['picked_date_time'])
+          : null,
       customer: json['customer'],
       appointment: json['appointment'],
     );

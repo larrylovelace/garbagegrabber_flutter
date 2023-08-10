@@ -18,8 +18,6 @@ import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';
 import 'package:http/http.dart' as http;
 
-
-
 class ProductDetail extends StatefulWidget {
   const ProductDetail({
     Key? key,
@@ -252,35 +250,6 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-  // void updateTotalPayment(double newPayment) async {
-  //   await Hive.close();
-  //   final box = await Hive.openBox<Products>('products');
-  //   final products = box.get('products');
-
-  //   if (products != null) {
-  //     final double currentPayment = products.totalpayment;
-  //     final double updatedPayment = currentPayment + newPayment;
-
-  //     // Update the total payment field
-  //     products.totalpayment = updatedPayment;
-  //     print(updatedPayment);
-
-  //     // Save the updated Products object back to Hive
-  //     await products.save();
-  //     await Hive.close();
-  //   }
-  // }
-  // Future<void> eventdetails(String id) async {
-  //   String uri = APIConstants.paymentIntentAPI + id;
-  //   var response = await http.get(
-  //     Uri.parse(uri),
-  //     headers: {
-  //       "Authorization": "Bearer ${dotenv.env['secretkey']}",
-  //     },
-  //   );
-  //   debugPrint(response.body);
-  // }
-
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
@@ -295,28 +264,17 @@ class _ProductDetailState extends State<ProductDetail> {
               child: Column(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10)),
-                        color: AppColors.secondaryColor,
-                        boxShadow: [
-                          BoxShadow(
-                              offset: const Offset(0, 10),
-                              blurRadius: 40,
-                              color: AppColors.primaryColor.withOpacity(0.1))
-                        ]),
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
                           bottomRight: Radius.circular(10)),
-                      child: Image.asset(
-                        widget.image,
-                      ),
+                    ),
+                    child: Image.asset(
+                      widget.image,
+                      height: deviceHeight * 0.3,
+                      width: deviceWidth,
                     ),
                   ),
                   SizedBox(

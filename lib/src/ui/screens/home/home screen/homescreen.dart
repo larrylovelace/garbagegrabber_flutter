@@ -25,10 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final HomePageController homecontroller = Get.find<HomePageController>();
 
   List<String> images = [
-    'assets/Onebag.png',
-    'assets/Onebag.png',
-    'assets/Onebag.png',
-    'assets/Onebag.png',
+    'assets/bag_onetime.png',
+    'assets/bag_weekly.png',
+    'assets/bag_monthly.png',
+    'assets/bag_onetime.png',
   ];
 
   @override
@@ -251,27 +251,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                   progressColor:
                                                                       AppColors
                                                                           .appointmentscolor,
-                                                                  center:
-                                                                      Column(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      Text(
-                                                                        homecontroller
-                                                                            .remainingdays,
-                                                                        style: AppFonts
-                                                                            .poppinsBold
-                                                                            .copyWith(fontSize: AppFonts.mediumFontSize),
-                                                                      ),
-                                                                      Text(
-                                                                        'Days left',
-                                                                        style: AppFonts
-                                                                            .poppinsRegular
-                                                                            .copyWith(fontSize: 10),
-                                                                      )
-                                                                    ],
-                                                                  ),
+                                                                  center: homecontroller
+                                                                              .remainingdays ==
+                                                                          '0'
+                                                                      ? Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Icon(
+                                                                              Icons.handshake_outlined,
+                                                                              color: AppColors.appointmentscolor,
+                                                                              size: 30,
+                                                                            ),
+                                                                            Text(
+                                                                              'Picking today',
+                                                                              style: AppFonts.poppinsRegular.copyWith(fontSize: 7),
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      : Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Text(
+                                                                              homecontroller.remainingdays,
+                                                                              style: AppFonts.poppinsBold.copyWith(fontSize: AppFonts.mediumFontSize),
+                                                                            ),
+                                                                            Text(
+                                                                              'Days left',
+                                                                              style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
+                                                                            )
+                                                                          ],
+                                                                        ),
                                                                 )
                                                               ],
                                                             ),
@@ -467,7 +478,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SliverGrid(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.87,
+                          childAspectRatio: 0.62,
                           crossAxisCount: 2,
                         ),
                         delegate: SliverChildBuilderDelegate(
@@ -484,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   controller.isdatepicked = false;
                                   controller.ispriceChange = false;
                                   showModalBottomSheet(
-                                    backgroundColor: AppColors.secondaryColor,
+                                    backgroundColor: AppColors.planeColor,
                                     isScrollControlled: true,
                                     shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
@@ -514,41 +525,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Radius.circular(10)),
                                     child: Column(
                                       children: [
-                                        Stack(
+                                        Row(
                                           children: [
-                                            Image.asset(
-                                              images[index],
-                                            ),
-                                            Positioned(
-                                              top: 3,
-                                              left: 6,
-                                              child: Container(
-                                                height: 35,
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    width: 0.5,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                            Container(
+                                              height: 35,
+                                              padding: const EdgeInsets.all(8),
+                                              margin: EdgeInsets.only(
+                                                  left: deviceWidth * 0.03,
+                                                  top: deviceWidth * 0.02),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: AppColors.primaryColor,
+                                                  width: 0.5,
                                                 ),
-                                                child: Text(
-                                                  '\$${productsdatas[index].price.toString()}',
-                                                  style: AppFonts.poppinsMedium
-                                                      .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    fontSize:
-                                                        AppFonts.smallFontSize,
-                                                  ),
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Text(
+                                                '\$${productsdatas[index].price.toString()}',
+                                                style: AppFonts.poppinsMedium
+                                                    .copyWith(
+                                                  color: AppColors.primaryColor,
+                                                  fontSize:
+                                                      AppFonts.smallFontSize,
                                                 ),
                                               ),
                                             ),
                                           ],
                                         ),
+                                        Image.asset(images[index],
+                                            height: deviceHeight * 0.2),
                                         Container(
                                           padding: EdgeInsets.only(
                                             left: deviceHeight * 0.02,

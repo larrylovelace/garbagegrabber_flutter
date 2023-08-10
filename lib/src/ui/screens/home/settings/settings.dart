@@ -19,6 +19,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final MainScreenController mainScreenController =
+      Get.find<MainScreenController>();
   final storage = const FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
@@ -172,8 +174,7 @@ class _SettingsState extends State<Settings> {
                                     onPress: (() async {
                                       await box.clear();
                                       await storage.deleteAll();
-                                      Get.find<MainScreenController>()
-                                          .resetController();
+                                      mainScreenController.resetController();
                                       Get.offAllNamed(AppRoutes.login);
 
                                       // ignore: use_build_context_synchronously

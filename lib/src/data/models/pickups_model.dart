@@ -106,8 +106,7 @@ class Pickup {
   final int id;
   final DateTime pickupDate;
   final DateTime? pickedDateTime;
-  final bool picked;
-  final bool confirmed;
+
   final int customer;
   final int appointment;
 
@@ -115,8 +114,6 @@ class Pickup {
     required this.id,
     required this.pickupDate,
     this.pickedDateTime,
-    required this.picked,
-    required this.confirmed,
     required this.customer,
     required this.appointment,
   });
@@ -125,11 +122,8 @@ class Pickup {
     return Pickup(
       id: json['id'],
       pickupDate: DateTime.parse(json['pickup_date']),
-      pickedDateTime: json['picked_date_time'] != null
-          ? DateTime.parse(json['picked_date_time'])
-          : null,
-      picked: json['picked'],
-      confirmed: json['confirmed'],
+      pickedDateTime:
+          json['picked_on'] != null ? DateTime.parse(json['picked_on']) : null,
       customer: json['customer'],
       appointment: json['appointment'],
     );
