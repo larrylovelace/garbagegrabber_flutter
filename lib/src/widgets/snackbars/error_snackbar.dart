@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../utils/colors.dart';
-import '../utils/fonts.dart';
+import '../../utils/colors.dart';
+import '../../utils/fonts.dart';
 class CustomSnackBar {
   static void show(
     BuildContext context,

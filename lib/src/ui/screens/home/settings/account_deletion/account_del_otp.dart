@@ -1,114 +1,44 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-import '../../../services/apihandler.dart';
-
-import '../../../data/controllers/routes.dart';
-import '../../../utils/colors.dart';
-import '../../../utils/fonts.dart';
-import '../../../widgets/snackbars/error_handling.dart';
-import '../../../widgets/snackbars/error_snackbar.dart';
-
 import 'package:http/http.dart' as http;
+
+import '../../../../../data/controllers/home/settings/settings_controller.dart';
+import '../../../../../services/apihandler.dart';
+import '../../../../../utils/colors.dart';
+import '../../../../../utils/fonts.dart';
+import '../../../../../widgets/snackbars/error_handling.dart';
+import '../../../../../widgets/snackbars/error_snackbar.dart';
 
 Timer? resendTimer;
 
-class OtpScreen extends StatefulWidget {
-  const OtpScreen({
+class AccountDeletionOTP extends StatefulWidget {
+  const AccountDeletionOTP({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OtpScreen> createState() => _OtpScreenState();
+  State<AccountDeletionOTP> createState() => _AccountDeletionOTPState();
 }
 
-class _OtpScreenState extends State<OtpScreen> {
+class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
   final GlobalKey<FormState> _formKey3 = GlobalKey<FormState>();
+  final SettingsScreenController settingsScreenController =
+      Get.put(SettingsScreenController());
   final storage = const FlutterSecureStorage();
   String email = Get.arguments['email'];
 
-  String password = Get.arguments['password'];
-  var enteredCode = '';
-  bool isLoading = false;
-  bool isotpInvalid = false;
-
   int countdown = 60;
-  bool showResendText = true;
-
-  Future<void> verifyCode() async {
-    if (enteredCode.length == 6) {
-      FocusScope.of(context).unfocus();
-      setState(() {
-        isLoading = true;
-      });
-      try {
-        String uri = APIConstants.baseURI + APIConstants.customerOtpValidate;
-        var response =
-            await http.post(Uri.parse(uri), body: {"otp": enteredCode});
-
-        if (response.statusCode == 200) {
-          setState(() {
-            isLoading = false;
-            CustomSnackBar.show(
-                context,
-                'Success',
-                'OTP verified Successfully',
-                AppColors.primaryColor, // Custom background color
-                Icons.check, // Custom icon
-                AppColors.primaryColor // Custom icon color
-                );
-            Get.offNamed(AppRoutes.formfill,
-                arguments: {'email': email, 'password': password});
-          });
-        }
-
-        if (response.statusCode == 400) {
-          var errormsg = jsonDecode(response.body) as Map;
-
-          setState(() {
-            isotpInvalid = true;
-            isLoading = false;
-            CustomSnackBar.show(
-                context,
-                'Error',
-                errormsg['error'],
-                AppColors.errorColor, // Custom background color
-                Icons.error_rounded, // Custom icon
-                AppColors.errorColor // Custom icon color
-                );
-          });
-          Future.delayed(const Duration(seconds: 5), () {
-            if (mounted) {
-              setState(() {
-                isotpInvalid = false;
-              });
-            }
-          });
-        }
-      } catch (e) {
-        setState(() {
-          isLoading = false;
-        });
-        final snackBar = buildErrorSnackBar(context, e);
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-      // Trigger verification process here
-    }
-  }
 
   @override
   void initState() {
     super.initState();
 
-    // Use the email address argument as needed
   }
 
   @override
@@ -128,7 +58,7 @@ class _OtpScreenState extends State<OtpScreen> {
         } else {
           // Countdown reached 0, stop the timer and show the resend text
           timer.cancel();
-          showResendText = true;
+          settingsScreenController.showResendText.value = true;
         }
       });
     });
@@ -156,7 +86,8 @@ class _OtpScreenState extends State<OtpScreen> {
         backgroundColor: AppColors.planeColor,
       ),
       body: Center(
-        child: GestureDetector(
+          child: Obx(
+        () => GestureDetector(
           onTapCancel: () {},
           onTap: (() {
             FocusScope.of(context).unfocus();
@@ -203,8 +134,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     enableActiveFill: true,
                     textStyle: AppFonts.poppinsMedium.copyWith(),
                     onChanged: (value) {
-                      enteredCode = value;
-                      verifyCode();
+                      settingsScreenController.enteredCode = value;
                     },
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     pinTheme: PinTheme(
@@ -213,7 +143,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       fieldHeight: deviceWidth * 0.13,
                       borderRadius: BorderRadius.circular(6),
                       borderWidth: 0.5,
-                      activeColor: isotpInvalid
+                      activeColor: settingsScreenController.isotpInvalid.value
                           ? AppColors.errorColor
                           : AppColors.primaryColor,
                       activeFillColor: Colors.transparent.withOpacity(0.018),
@@ -238,7 +168,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       children: [
                         Text("Did not get the code? ",
                             style: AppFonts.poppinsRegular.copyWith()),
-                        if (showResendText)
+                        if (settingsScreenController.showResendText.value)
                           TextButton(
                             onPressed: () async {
                               try {
@@ -250,20 +180,20 @@ class _OtpScreenState extends State<OtpScreen> {
                                       email, // Use the email variable directly
                                 });
                                 if (response.statusCode == 200) {
-                                  setState(() {
-                                    // Start the resend timer and hide the resend text
-                                    showResendText = false;
-                                    countdown = 59;
-                                    startResendTimer();
-                                    CustomSnackBar.show(
-                                      context,
-                                      'Success',
-                                      'OTP code sent successfully',
-                                      AppColors.primaryColor,
-                                      Icons.check, // Custom icon
-                                      AppColors.primaryColor,
-                                    );
-                                  });
+                                  // Start the resend timer and hide the resend text
+                                  settingsScreenController
+                                      .showResendText.value = false;
+                                  countdown = 59;
+                                  startResendTimer();
+                                  // ignore: use_build_context_synchronously
+                                  CustomSnackBar.show(
+                                    context,
+                                    'Success',
+                                    'OTP code sent successfully',
+                                    AppColors.primaryColor,
+                                    Icons.check, // Custom icon
+                                    AppColors.primaryColor,
+                                  );
                                 }
                               } catch (e) {
                                 final snackBar = buildErrorSnackBar(context, e);
@@ -278,7 +208,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                   color: AppColors.primaryColor),
                             ),
                           ),
-                        if (!showResendText)
+                        if (!settingsScreenController.showResendText.value)
                           TextButton(
                               onPressed: () {},
                               child: Text(
@@ -301,24 +231,25 @@ class _OtpScreenState extends State<OtpScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6)),
                           onPressed: () async {
-                            if (enteredCode.isEmpty || enteredCode.length < 6) {
-                              setState(() {
-                                isLoading = false;
-                                CustomSnackBar.show(
+                            if (settingsScreenController.enteredCode.isEmpty ||
+                                settingsScreenController.enteredCode.length <
+                                    6) {
+                              settingsScreenController.isLoading.value = false;
+
+                              CustomSnackBar.show(
                                   context,
                                   'Error',
                                   'Enter the OTP',
                                   AppColors
                                       .errorColor, // Custom background color
                                   Icons.error_rounded, // Custom icon
-                                  AppColors.errorColor, // Custom icon color
-                                );
-                              });
+                                  AppColors.errorColor // Custom icon color
+                                  );
                             } else {
-                              verifyCode();
+                              settingsScreenController.verifyCode(context);
                             }
                           },
-                          child: isLoading
+                          child: settingsScreenController.isLoading.value
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -342,7 +273,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ]),
           ),
         ),
-      ),
+      )),
     );
   }
 }

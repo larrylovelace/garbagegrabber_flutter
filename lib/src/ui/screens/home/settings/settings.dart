@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:garbage_grabber/src/data/controllers/home/settings/settings_controller.dart';
 import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
 import 'package:garbage_grabber/src/utils/fonts.dart';
 import 'package:get/get.dart';
@@ -7,8 +8,10 @@ import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../../../../data/controllers/routes.dart';
 import '../../../../utils/colors.dart';
-import '../../../../widgets/error_snackbar.dart';
-import '../../../../widgets/profile_menu_card.dart';
+import '../../../../widgets/home/settings/account_deletion_dialog.dart';
+import '../../../../widgets/snackbars/error_snackbar.dart';
+
+import '../../../../widgets/home/settings/profile_menu_card.dart';
 import 'package:unicons/unicons.dart';
 
 class Settings extends StatefulWidget {
@@ -21,6 +24,8 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final MainScreenController mainScreenController =
       Get.find<MainScreenController>();
+  final SettingsScreenController settingsScreenController =
+      Get.put(SettingsScreenController());
   final storage = const FlutterSecureStorage();
   @override
   Widget build(BuildContext context) {
@@ -165,6 +170,25 @@ class _SettingsState extends State<Settings> {
                                     deviceWidth: deviceWidth,
                                     icon: UniconsLine.document_info,
                                     onPress: (() {})),
+                                ProfileMenu(
+                                    title: 'Account Deletion',
+                                    deviceWidth: deviceWidth,
+                                    icon: Icons.delete_forever_outlined,
+                                    onPress: (() {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AccountDeletionDialog(
+                                              deviceWidth: deviceWidth,
+                                              deviceHeight: deviceHeight,
+                                              settingsScreenController:
+                                                  settingsScreenController,
+                                              headerText: 'Delete Account ?',
+                                              bodyText:
+                                                  'This will delete your Garbage Grabbers account and all the data associated with it',
+                                            );
+                                          });
+                                    })),
                                 ProfileMenu(
                                     title: 'Log Out',
                                     icon: LineAwesomeIcons.alternate_sign_out,

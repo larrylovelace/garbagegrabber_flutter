@@ -7,8 +7,8 @@ import '../../services/apihandler.dart';
 import '../../services/token_manager.dart';
 import 'package:http/http.dart' as http;
 import '../../utils/colors.dart';
-import '../../widgets/error_handling.dart';
-import '../../widgets/error_snackbar.dart';
+import '../../widgets/snackbars/error_handling.dart';
+import '../../widgets/snackbars/error_snackbar.dart';
 import '../controllers/routes.dart';
 
 class PickupsRepository {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/data/controllers/home/homescreen_controller.dart';
+import 'package:garbage_grabber/src/data/controllers/home/home%20screen/homescreen_controller.dart';
 
 import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../utils/colors.dart';
-import '../utils/fonts.dart';
+import '../../../utils/colors.dart';
+import '../../../utils/fonts.dart';
 
 
 

@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 
-import '../../../../data/controllers/home/payments.dart';
+import '../../../../data/controllers/home/payments/payments_controller.dart';
 
 import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';

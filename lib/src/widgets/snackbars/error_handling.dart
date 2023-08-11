@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../utils/colors.dart';
-import '../utils/fonts.dart';
+import '../../utils/colors.dart';
+import '../../utils/fonts.dart';
 
 SnackBar buildErrorSnackBar(BuildContext context, dynamic error) {
   String errorMessage;

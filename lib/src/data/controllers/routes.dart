@@ -1,3 +1,4 @@
+import 'package:garbage_grabber/src/ui/screens/home/settings/account_deletion/account_del_otp.dart';
 import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/profile_details.dart';
 import 'package:get/get.dart';
 import '../../ui/screens/home/home screen/homescreen.dart';
@@ -14,8 +15,9 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String otpscreen = '/otpscreen';
+  static const String accountdelotp = '/accountdelotp';
   static const String formfill = '/formfill';
-  static const String screenhandler= '/screenhandler';
+  static const String screenhandler = '/screenhandler';
   static const String homescreen = '/homescreen';
   static const String paymentsuccess = '/paymentsuccess';
   static const String profiledetails = '/profiledetails';
@@ -77,6 +79,11 @@ class AppRoutes {
         name: profiledetails,
         page: () => const ProfileDetis(),
         binding: ProfileDetailsScreenBinding(),
+        transition: Transition.fadeIn),
+    GetPage(
+        name: accountdelotp,
+        page: () => const AccountDeletionOTP(),
+        bindings: [MainScreenBinding()],
         transition: Transition.fadeIn),
   ];
 }

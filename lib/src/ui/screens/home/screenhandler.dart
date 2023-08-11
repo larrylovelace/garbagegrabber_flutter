@@ -5,9 +5,9 @@ import 'package:garbage_grabber/src/ui/screens/home/payments/payments.dart';
 import 'package:get/get.dart';
 import 'package:unicons/unicons.dart';
 
-import '../../../data/controllers/home/homescreen.dart';
-import '../../../data/controllers/home/payments.dart';
-import '../../../data/controllers/home/pickups_controller.dart';
+import '../../../data/controllers/home/home screen/homescreen.dart';
+import '../../../data/controllers/home/payments/payments_controller.dart';
+import '../../../data/controllers/home/pickups/pickups_controller.dart';
 import '../../../data/models/pickups_model.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';

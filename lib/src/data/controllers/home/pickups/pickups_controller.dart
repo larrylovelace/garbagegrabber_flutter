@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/src/data/repositories/pickups_repo.dart';
 import 'package:get/get.dart';
-import '../../models/pickups_model.dart';
-import '../datetime.dart';
-import '../datetimehandler.dart';
+import '../../../models/pickups_model.dart';
+import '../../date and time/datetime.dart';
+import '../../date and time/datetimehandler.dart';
 
 class PickupPageController extends GetxController {
-  final storage = const FlutterSecureStorage();
   AppointmentData appointmentData =
       AppointmentData(activeAppointments: [], inactiveAppointments: []);
 

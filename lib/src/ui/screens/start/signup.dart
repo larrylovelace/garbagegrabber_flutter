@@ -9,12 +9,12 @@ import 'package:http/http.dart' as http;
 
 import '../../../services/apihandler.dart';
 import '../../../data/controllers/routes.dart';
-import '../../../data/controllers/setup_controller.dart';
+import '../../../data/controllers/start/setup_controller.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
-import '../../../widgets/error_handling.dart';
-import '../../../widgets/input_field.dart';
-import '../../../widgets/loading_dialog.dart';
+import '../../../widgets/snackbars/error_handling.dart';
+import '../../../widgets/start/input_field.dart';
+import '../../../widgets/global/loading_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

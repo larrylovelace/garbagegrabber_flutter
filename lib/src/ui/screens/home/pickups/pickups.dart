@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/data/controllers/home/pickups_controller.dart';
+import 'package:garbage_grabber/src/data/controllers/home/pickups/pickups_controller.dart';
 
 import 'package:get/get.dart';
 
@@ -161,7 +161,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                                                           padding: EdgeInsets.only(
                                                               left:
                                                                   deviceWidth *
-                                                                      0.03),
+                                                                      0.015),
                                                           child: Column(
                                                             children: [
                                                               Row(

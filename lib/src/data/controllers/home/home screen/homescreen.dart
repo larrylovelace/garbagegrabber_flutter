@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:garbage_grabber/src/widgets/error_snackbar.dart';
+import 'package:garbage_grabber/src/widgets/snackbars/error_snackbar.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 
-import '../../models/currentappointment.dart';
-import '../../models/homescreendata.dart';
-import '../../models/products.dart';
-import '../../../utils/colors.dart';
-import '../../../services/apihandler.dart';
-import '../datetime.dart';
-import '../routes.dart';
-import '../../../services/token_manager.dart';
+import '../../../models/currentappointment.dart';
+import '../../../models/homescreendata.dart';
+import '../../../models/products.dart';
+import '../../../../utils/colors.dart';
+import '../../../../services/apihandler.dart';
+import '../../date and time/datetime.dart';
+import '../../routes.dart';
+import '../../../../services/token_manager.dart';
 import 'package:http/http.dart' as http;
 
 class HomePageController extends GetxController {

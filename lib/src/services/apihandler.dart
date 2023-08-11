@@ -1,6 +1,7 @@
 class APIConstants {
-  static const String baseURI =
-      'https://garbagegrabberdocker-cir5g5yodq-uc.a.run.app';
+  // static const String baseURI =
+  //     'https://garbagegrabberdocker-cir5g5yodq-uc.a.run.app';
+  static const baseURI = 'http://192.168.0.101:8000';
   static const String customerlogin = '/api/account/customer/login/';
   static const String customersignUp = '/api/account/customer/register/';
   static const String customerOtpValidate = '/api/account/validate_email/';
@@ -21,4 +22,5 @@ class APIConstants {
       'https://api.stripe.com/v1/customers';
   static const String paymentIntentAPI =
       'https://api.stripe.com/v1/payment_intents/';
+  static const String deleteCustomer = '/api/account/delete/';
 }

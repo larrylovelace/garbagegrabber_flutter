@@ -9,11 +9,12 @@ import 'package:garbage_grabber/src/data/controllers/routes.dart';
 
 import 'package:get/get.dart';
 
-import '../../../../data/controllers/home/homescreen_controller.dart';
+import '../../../../data/controllers/home/home screen/homescreen_controller.dart';
 import '../../../../services/token_manager.dart';
-import '../../../../widgets/calendar_dialog.dart';
-import '../../../../widgets/dropdown.dart';
-import '../../../../widgets/loading_dialog.dart';
+import '../../../../widgets/home/home screen/calendar_dialog.dart';
+import '../../../../widgets/start/dropdown.dart';
+import '../../../../widgets/home/home screen/error_dialog.dart';
+import '../../../../widgets/global/loading_dialog.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';
 import 'package:http/http.dart' as http;
@@ -226,7 +227,7 @@ class _ProductDetailState extends State<ProductDetail> {
     showDialog(
       context: context,
       builder: (context) {
-        return ProudctValidation(
+        return ErrorDialog(
           deviceHeight: MediaQuery.of(context).size.height,
           deviceWidth: MediaQuery.of(context).size.width,
           headertext: 'Error',
@@ -240,7 +241,7 @@ class _ProductDetailState extends State<ProductDetail> {
     showDialog(
       context: context,
       builder: (context) {
-        return ProudctValidation(
+        return ErrorDialog(
           deviceHeight: MediaQuery.of(context).size.height,
           deviceWidth: MediaQuery.of(context).size.width,
           headertext: 'Error',
@@ -521,7 +522,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return ProudctValidation(
+                                  return ErrorDialog(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
                                     headertext: 'Required',
@@ -535,7 +536,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return ProudctValidation(
+                                  return ErrorDialog(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
                                     headertext: 'Required',
@@ -548,7 +549,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return ProudctValidation(
+                                  return ErrorDialog(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
                                     headertext: 'Required',
@@ -590,102 +591,6 @@ class _ProductDetailState extends State<ProductDetail> {
           ),
         );
       },
-    );
-  }
-}
-
-class ProudctValidation extends StatelessWidget {
-  const ProudctValidation({
-    super.key,
-    required this.deviceHeight,
-    required this.deviceWidth,
-    required this.headertext,
-    required this.errortext,
-  });
-
-  final double deviceHeight;
-  final double deviceWidth;
-  final String headertext;
-  final String errortext;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        decoration: BoxDecoration(
-            color: AppColors.secondaryColor,
-            borderRadius: const BorderRadius.all(Radius.circular(10))),
-        height: deviceHeight * 0.18,
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: deviceWidth * 0.05, right: deviceWidth * 0.05),
-          child: Column(
-            children: [
-              SizedBox(
-                height: deviceHeight * 0.014,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(headertext,
-                          style: AppFonts.poppinsMedium.copyWith(
-                              color: AppColors.errorColor,
-                              fontSize: AppFonts.errorDialogHead)),
-                      SizedBox(
-                        width: deviceWidth * 0.02,
-                      ),
-                      Icon(
-                        Icons.error,
-                        color: AppColors.errorColor,
-                        size: 24,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: deviceHeight * 0.01),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: Text(errortext,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: AppFonts.poppinsRegular
-                            .copyWith(fontSize: AppFonts.errorDialogBody)),
-                  ),
-                ],
-              ),
-              SizedBox(height: deviceHeight * 0.01),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    height: deviceHeight * 0.04,
-                    width: deviceWidth * 0.2,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: AppColors.errorColor),
-                    child: MaterialButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: Text(
-                        'OK ',
-                        style: AppFonts.poppinsLightMedium.copyWith(
-                            color: AppColors.planeColor,
-                            fontSize: AppFonts.mediumFontSize),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:garbage_grabber/src/widgets/custom_button.dart';
+import 'package:garbage_grabber/src/widgets/home/custom_button.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:unicons/unicons.dart';
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/fonts.dart';
-import '../../../../../widgets/profile_details.dart';
-import '../../../../../widgets/profile_edit.dart';
+import '../../../../../widgets/home/settings/profile_details.dart';
+import '../../../../../widgets/home/settings/profile_edit.dart';
 import '../../floatingbutton/customerqr.dart';
 
 class ProfileDetis extends StatefulWidget {

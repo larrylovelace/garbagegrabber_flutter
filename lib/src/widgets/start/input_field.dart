@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../utils/colors.dart';
-import '../utils/fonts.dart';
+import '../../utils/colors.dart';
+import '../../utils/fonts.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class InputField extends StatelessWidget {

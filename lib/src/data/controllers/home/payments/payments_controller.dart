@@ -6,13 +6,13 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
-import '../../models/payments.dart';
-import '../../../utils/colors.dart';
-import '../../../widgets/error_handling.dart';
-import '../../../widgets/error_snackbar.dart';
-import '../../../services/apihandler.dart';
-import '../routes.dart';
-import '../../../services/token_manager.dart';
+import '../../../models/payments.dart';
+import '../../../../utils/colors.dart';
+import '../../../../widgets/snackbars/error_handling.dart';
+import '../../../../widgets/snackbars/error_snackbar.dart';
+import '../../../../services/apihandler.dart';
+import '../../routes.dart';
+import '../../../../services/token_manager.dart';
 
 class PaymentPageController extends GetxController {
   final storage = const FlutterSecureStorage();

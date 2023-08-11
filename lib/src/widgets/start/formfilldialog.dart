@@ -3,8 +3,8 @@ import 'package:garbage_grabber/src/data/controllers/routes.dart';
 import 'package:get/get.dart';
 
 
-import '../utils/colors.dart';
-import '../utils/fonts.dart';
+import '../../utils/colors.dart';
+import '../../utils/fonts.dart';
 
 // ignore: must_be_immutable
 class FormFillDialog extends StatelessWidget {

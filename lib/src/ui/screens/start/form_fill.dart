@@ -6,20 +6,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 
-import 'package:garbage_grabber/src/widgets/dropdown.dart';
-import 'package:garbage_grabber/src/widgets/input_field.dart';
+import 'package:garbage_grabber/src/widgets/start/dropdown.dart';
+import 'package:garbage_grabber/src/widgets/start/input_field.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
 
 import '../../../services/apihandler.dart';
-import '../../../data/controllers/setup_controller.dart';
+import '../../../data/controllers/start/setup_controller.dart';
 import '../../../data/models/address.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
-import '../../../widgets/error_handling.dart';
-import '../../../widgets/error_snackbar.dart';
-import '../../../widgets/loading_dialog.dart';
+import '../../../widgets/snackbars/error_handling.dart';
+import '../../../widgets/snackbars/error_snackbar.dart';
+import '../../../widgets/global/loading_dialog.dart';
 
 class FormFillScreen extends StatefulWidget {
   const FormFillScreen({super.key});
