@@ -16,14 +16,14 @@ import 'package:http/http.dart' as http;
 class SettingsScreenController extends GetxController {
   String errorHeader = '';
   String errorBody = '';
-  var enteredCode = '';
+  RxString enteredCode = ''.obs;
   var isLoading = false.obs;
   var isotpInvalid = false.obs;
   int countdown = 60;
   var showResendText = true.obs;
+  var box = Hive.box('homedata');
   final storage = const FlutterSecureStorage();
   Future<void> deleteAccount(BuildContext context) async {
-    var box = Hive.box('homedata');
     var products = box.get('homedata');
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
@@ -46,7 +46,7 @@ class SettingsScreenController extends GetxController {
           showResendText.value = true;
           Get.toNamed(AppRoutes.accountdelotp,
               arguments: {'email': products.email});
-        } else if (response.statusCode == 401) {
+        } else if (response.statusCode == 400) {
           Get.back();
           Map<String, dynamic> data = jsonDecode(response.body);
           // ignore: use_build_context_synchronously
@@ -83,46 +83,58 @@ class SettingsScreenController extends GetxController {
   }
 
   Future<void> verifyCode(BuildContext context) async {
-    if (enteredCode.length == 6) {
+    if (enteredCode.value.length == 6) {
       FocusScope.of(context).unfocus();
       isLoading.value = true;
 
       try {
-        String uri = APIConstants.baseURI + APIConstants.customerOtpValidate;
-        var response =
-            await http.post(Uri.parse(uri), body: {"otp": enteredCode});
+        final refreshToken = await storage.read(key: 'refreshtoken');
 
-        if (response.statusCode == 200) {
-          isLoading.value = false;
+        final tokenManager = TokenManager();
 
-          // ignore: use_build_context_synchronously
-        }
+        String? accessToken =
+            await tokenManager.checkTokensAndRequestAccessToken(
+                refreshToken!, APIConstants.tokenRefresh);
 
-        if (response.statusCode == 400) {
-          var errormsg = jsonDecode(response.body) as Map;
+        if (accessToken != null) {
+          String uri = APIConstants.baseURI + APIConstants.deleteCustomerVerify;
 
-          isotpInvalid.value = true;
-          isLoading.value = false;
-          // ignore: use_build_context_synchronously
-          CustomSnackBar.show(
-            context,
-            'Error',
-            errormsg['error'],
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
-          );
-
-          Future.delayed(const Duration(seconds: 5), () {
-            isotpInvalid.value = false;
+          var response = await http.post(Uri.parse(uri), headers: {
+            'Authorization': 'Bearer $accessToken',
+            'otp': enteredCode.value
           });
+
+          if (response.statusCode == 200) {
+            isLoading.value = false;
+            await box.clear();
+            await storage.deleteAll();
+            Get.offAllNamed(AppRoutes.login);
+          }
+
+          if (response.statusCode == 400) {
+            Map<String, dynamic> errormsg = jsonDecode(response.body);
+
+            isotpInvalid.value = true;
+            isLoading.value = false;
+            // ignore: use_build_context_synchronously
+            CustomSnackBar.show(
+              context,
+              'Error',
+              errormsg['error'],
+              AppColors.errorColor, // Custom background color
+              Icons.error_rounded, // Custom icon
+              AppColors.errorColor, // Custom icon color
+            );
+
+            Future.delayed(const Duration(seconds: 5), () {
+              isotpInvalid.value = false;
+            });
+          }
         }
       } catch (e) {
-        isLoading.value = false;
         final snackBar = buildErrorSnackBar(context, e);
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
-      // Trigger verification process here
     }
   }
 }

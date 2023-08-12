@@ -172,7 +172,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         body: GetBuilder<MainScreenController>(
-        
           builder: (controller) {
             // Get the current page widget based on the current index
             Widget currentPage = controller.getPage(controller.currentIndex);
@@ -210,6 +209,7 @@ class MainScreenController extends GetxController {
     currentIndex = 0;
     hasDataFetched = List.filled(4, false);
     update();
+    debugPrint(hasDataFetched.toString());
   }
 
   void changeIndex(int index) {

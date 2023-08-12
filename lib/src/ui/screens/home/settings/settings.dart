@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/src/data/controllers/home/settings/settings_controller.dart';
 import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
 import 'package:garbage_grabber/src/utils/fonts.dart';
+import 'package:garbage_grabber/src/widgets/global/loading_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -142,7 +143,9 @@ class _SettingsState extends State<Settings> {
                                     title: 'Address Details',
                                     deviceWidth: deviceWidth,
                                     icon: Icons.location_on_outlined,
-                                    onPress: (() {})),
+                                    onPress: (() {
+                                      Get.toNamed(AppRoutes.addressdetails);
+                                    })),
                                 ProfileMenu(
                                     title: 'Support',
                                     deviceWidth: deviceWidth,
@@ -159,17 +162,23 @@ class _SettingsState extends State<Settings> {
                                     title: 'About Us',
                                     icon: LineAwesomeIcons.info,
                                     deviceWidth: deviceWidth,
-                                    onPress: (() {})),
+                                    onPress: (() {
+                                      Get.toNamed(AppRoutes.aboutus);
+                                    })),
                                 ProfileMenu(
                                     title: 'Privacy Policy',
                                     deviceWidth: deviceWidth,
                                     icon: LineAwesomeIcons.user_shield,
-                                    onPress: (() {})),
+                                    onPress: (() {
+                                      Get.toNamed(AppRoutes.privacypolicy);
+                                    })),
                                 ProfileMenu(
                                     title: 'Terms and Conditions',
                                     deviceWidth: deviceWidth,
                                     icon: UniconsLine.document_info,
-                                    onPress: (() {})),
+                                    onPress: (() {
+                                      Get.toNamed(AppRoutes.termsandconditions);
+                                    })),
                                 ProfileMenu(
                                     title: 'Account Deletion',
                                     deviceWidth: deviceWidth,
@@ -186,6 +195,16 @@ class _SettingsState extends State<Settings> {
                                               headerText: 'Delete Account ?',
                                               bodyText:
                                                   'This will delete your Garbage Grabbers account and all the data associated with it',
+                                              onPressed1: () {
+                                                Get.back();
+                                              },
+                                              onPressed2: () {
+                                                Get.back();
+                                                LoadingDialog.show(context);
+
+                                                settingsScreenController
+                                                    .deleteAccount(context);
+                                              },
                                             );
                                           });
                                     })),

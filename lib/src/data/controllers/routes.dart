@@ -1,5 +1,9 @@
 import 'package:garbage_grabber/src/ui/screens/home/settings/account_deletion/account_del_otp.dart';
+import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/about_us.dart';
+import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/address_details.dart';
+import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/privacy_policy.dart';
 import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/profile_details.dart';
+import 'package:garbage_grabber/src/ui/screens/home/settings/settings_pages/terms_and_conditions.dart';
 import 'package:get/get.dart';
 import '../../ui/screens/home/home screen/homescreen.dart';
 import '../../ui/screens/home/screenhandler.dart';
@@ -21,6 +25,10 @@ class AppRoutes {
   static const String homescreen = '/homescreen';
   static const String paymentsuccess = '/paymentsuccess';
   static const String profiledetails = '/profiledetails';
+  static const String addressdetails = '/addressdetails';
+  static const String aboutus = '/aboutus';
+  static const String privacypolicy = '/privacypolicy';
+  static const String termsandconditions = '/termsandconditions';
 
   static final List<GetPage> routes = [
     GetPage(
@@ -79,7 +87,27 @@ class AppRoutes {
         name: profiledetails,
         page: () => const ProfileDetis(),
         binding: ProfileDetailsScreenBinding(),
-        transition: Transition.fadeIn),
+        transition: Transition.downToUp),
+    GetPage(
+        name: addressdetails,
+        page: () => const AddressDetailsScreen(),
+        binding: AddressDetailsScreenBinding(),
+        transition: Transition.downToUp),
+    GetPage(
+        name: aboutus,
+        page: () => const AboutUsScreen(),
+        binding: AboutUsScreenBinding(),
+        transition: Transition.downToUp),
+    GetPage(
+        name: privacypolicy,
+        page: () => const PrivacyPolicyScreen(),
+        binding: PrivacyPolicyScreenBinding(),
+        transition: Transition.downToUp),
+    GetPage(
+        name: termsandconditions,
+        page: () => const TermsAndConditionsScreen(),
+        binding: TermsAndConditionsScreenBinding(),
+        transition: Transition.downToUp),
     GetPage(
         name: accountdelotp,
         page: () => const AccountDeletionOTP(),
@@ -148,5 +176,33 @@ class ProfileDetailsScreenBinding extends Bindings {
   @override
   void dependencies() {
     // Dependencies for the Profile Details screen can be added here
+  }
+}
+
+class AddressDetailsScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Address Details screen can be added here
+  }
+}
+
+class AboutUsScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the AboutUs screen can be added here
+  }
+}
+
+class PrivacyPolicyScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the PrivacyPolicy screen can be added here
+  }
+}
+
+class TermsAndConditionsScreenBinding extends Bindings {
+  @override
+  void dependencies() {
+    // Dependencies for the Terms and Conditions screen can be added here
   }
 }

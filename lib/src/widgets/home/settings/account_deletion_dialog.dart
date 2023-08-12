@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import '../../../data/controllers/home/settings/settings_controller.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import '../custom_button.dart';
-import '../../global/loading_dialog.dart';
 
 class AccountDeletionDialog extends StatelessWidget {
-  const AccountDeletionDialog({
-    super.key,
-    required this.deviceWidth,
-    required this.deviceHeight,
-    required this.settingsScreenController,
-    required this.headerText,
-    required this.bodyText,
-  });
+  const AccountDeletionDialog(
+      {super.key,
+      required this.deviceWidth,
+      required this.deviceHeight,
+      required this.settingsScreenController,
+      required this.headerText,
+      required this.bodyText,
+      required this.onPressed1,
+      required this.onPressed2,
+      this.warningitems = false});
 
   final double deviceWidth;
   final double deviceHeight;
   final SettingsScreenController settingsScreenController;
   final String headerText;
   final String bodyText;
+  final VoidCallback onPressed1;
+  final VoidCallback onPressed2;
+  final bool warningitems;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class AccountDeletionDialog extends StatelessWidget {
         decoration: BoxDecoration(
             color: AppColors.planeColor,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
-        height: deviceHeight * 0.24,
+        height: warningitems ? deviceHeight * 0.32 : deviceHeight * 0.24,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -57,6 +59,73 @@ class AccountDeletionDialog extends StatelessWidget {
               style: AppFonts.poppinsRegular
                   .copyWith(fontSize: AppFonts.smallFontSize),
             ),
+            warningitems
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 5,
+                            decoration: BoxDecoration(
+                                color: AppColors.secondaryColorBlack,
+                                shape: BoxShape.circle),
+                          ),
+                          SizedBox(width: deviceWidth * 0.02),
+                          Text('Profile details',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: AppFonts.smallFontSize))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 5,
+                            decoration: BoxDecoration(
+                                color: AppColors.secondaryColorBlack,
+                                shape: BoxShape.circle),
+                          ),
+                          SizedBox(width: deviceWidth * 0.02),
+                          Text('Address details',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: AppFonts.smallFontSize))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 5,
+                            decoration: BoxDecoration(
+                                color: AppColors.secondaryColorBlack,
+                                shape: BoxShape.circle),
+                          ),
+                          SizedBox(width: deviceWidth * 0.02),
+                          Text('Appointments',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: AppFonts.smallFontSize))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 5,
+                            decoration: BoxDecoration(
+                                color: AppColors.secondaryColorBlack,
+                                shape: BoxShape.circle),
+                          ),
+                          SizedBox(width: deviceWidth * 0.02),
+                          Text('Payments',
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(fontSize: AppFonts.smallFontSize))
+                        ],
+                      )
+                    ],
+                  )
+                : const SizedBox(),
             SizedBox(
               height: deviceHeight * 0.02,
             ),
@@ -69,20 +138,15 @@ class AccountDeletionDialog extends StatelessWidget {
                     text: 'Cancel',
                     textcolor: AppColors.planeColor,
                     buttoncolor: AppColors.pricecalcontainer,
-                    oncallback: () {
-                      Get.back();
-                    }),
+                    oncallback: onPressed1),
                 CustomButton(
-                    deviceHeight: deviceHeight,
-                    deviceWidth: deviceWidth,
-                    text: 'Delete',
-                    textcolor: AppColors.planeColor,
-                    buttoncolor: AppColors.errorColor,
-                    oncallback: () {
-                      Get.back();
-                      LoadingDialog.show(context);
-                      settingsScreenController.deleteAccount(context);
-                    })
+                  deviceHeight: deviceHeight,
+                  deviceWidth: deviceWidth,
+                  text: 'Delete',
+                  textcolor: AppColors.planeColor,
+                  buttoncolor: AppColors.errorColor,
+                  oncallback: onPressed2,
+                )
               ],
             )
           ],

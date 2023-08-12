@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
+import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
@@ -35,7 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
   SetupScreenController controller = Get.put(SetupScreenController());
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   Map sendingBody = {};
-
+  final MainScreenController mainScreenController =
+      Get.find<MainScreenController>();
   Future<void> login(sendigBody) async {
     try {
       String uri = APIConstants.baseURI + APIConstants.customerlogin;
@@ -60,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
           AppColors.primaryColor, // Custom icon color
         );
         Get.back();
-
+        mainScreenController.resetController();
         Get.offAllNamed(AppRoutes.screenhandler);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);

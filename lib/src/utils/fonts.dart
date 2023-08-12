@@ -26,4 +26,6 @@ class AppFonts {
   static const double snackBarfontsmall = 12.0;
   static const double errorDialogHead = 21.0;
   static const double errorDialogBody = 15.0;
+  static const double smalltext = 13;
+  static const double mediumtext = 16;
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
+import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
 
 import 'package:garbage_grabber/src/widgets/start/dropdown.dart';
 import 'package:garbage_grabber/src/widgets/start/input_field.dart';
@@ -71,7 +72,8 @@ class _FormFillScreenState extends State<FormFillScreen> {
   TextEditingController zipcode = TextEditingController();
   TextEditingController latitude = TextEditingController();
   TextEditingController longitude = TextEditingController();
-
+  final MainScreenController mainScreenController =
+      Get.find<MainScreenController>();
   Map sendingDetails = {};
   Future<void> getaccountdetails() async {
     String uri = APIConstants.baseURI + APIConstants.getaccountdetails;
@@ -149,7 +151,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
 
   Future<void> sendfromDetails(sendigdetails) async {
     try {
-      String uri = APIConstants.baseURI + APIConstants.sendfromData;
+      String uri = APIConstants.baseURI + APIConstants.sendFormData;
       var response = await http.post(Uri.parse(uri), body: sendingDetails);
 
       if (response.statusCode == 200) {
@@ -170,6 +172,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
             AppColors.primaryColor // Custom icon color
             );
         Get.back();
+        mainScreenController.resetController();
         Get.offAllNamed(AppRoutes.screenhandler);
       } else {
         Get.back();

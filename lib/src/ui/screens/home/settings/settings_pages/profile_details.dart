@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_grabber/src/data/controllers/home/settings/profile_details_controller.dart';
 import 'package:garbage_grabber/src/widgets/home/custom_button.dart';
+import 'package:garbage_grabber/src/widgets/home/settings/details_widget.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:unicons/unicons.dart';
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/fonts.dart';
-import '../../../../../widgets/home/settings/profile_details.dart';
 import '../../../../../widgets/home/settings/profile_edit.dart';
 import '../../floatingbutton/customerqr.dart';
 
@@ -79,10 +80,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
                     SizedBox(
                       height: deviceHeight * 0.38,
                       child: Card(
-                        elevation: 1,
-                        margin: EdgeInsets.only(
-                          top: deviceWidth * 0.0,
-                        ),
+                        elevation: 0,
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(20),
@@ -95,6 +93,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                     left: deviceWidth * 0.03,
                                     right: deviceWidth * 0.03),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     ProfileEditField(
                                       controller:
@@ -132,7 +131,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                             buttoncolor:
                                                 AppColors.pricecalcontainer,
                                             oncallback: () {
-                                              profileEditController._onedit();
+                                              profileEditController.onEdit();
                                             }),
                                         CustomButton(
                                             deviceHeight: deviceHeight,
@@ -148,28 +147,28 @@ class _ProfileDetisState extends State<ProfileDetis> {
                               )
                             : Column(
                                 children: [
-                                  ProfileDetails(
+                                  DetailsWidget(
                                     onpress: () {},
                                     title: products.firstname,
                                     subtitle: 'Fisrt Name',
                                     deviceWidth: deviceWidth,
                                     icon: LineAwesomeIcons.user,
                                   ),
-                                  ProfileDetails(
+                                  DetailsWidget(
                                     onpress: () {},
                                     title: products.lastname,
                                     subtitle: 'Last Name',
                                     deviceWidth: deviceWidth,
                                     icon: LineAwesomeIcons.user_1,
                                   ),
-                                  ProfileDetails(
+                                  DetailsWidget(
                                     onpress: () {},
                                     title: products.email,
                                     subtitle: 'Email',
                                     deviceWidth: deviceWidth,
                                     icon: Icons.email_outlined,
                                   ),
-                                  ProfileDetails(
+                                  DetailsWidget(
                                     onpress: () {},
                                     title: products.phonenumber,
                                     subtitle: 'Phone',
@@ -181,7 +180,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
                       ),
                     ),
                     Card(
-                      elevation: 1,
+                      elevation: 0,
                       margin: EdgeInsets.only(
                         top: deviceHeight * 0.04,
                       ),
@@ -189,35 +188,37 @@ class _ProfileDetisState extends State<ProfileDetis> {
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20))),
-                      child: Column(children: [
-                        SizedBox(
-                          height: deviceHeight * 0.01,
-                        ),
-                        // ProfileDetails(
-                        //     title: 'Change Password',
-                        //     subtitle: 'Change your password',
-                        //     icon: Icons.key_outlined,
-                        //     onpress: () {},
-                        //     deviceWidth: deviceWidth),
-                        ProfileDetails(
-                            title: 'QR Code',
-                            subtitle: 'View your qr code',
-                            icon: Icons.qr_code_scanner_outlined,
-                            onpress: () {
-                              showModalBottomSheet(
-                                  backgroundColor: AppColors.planeColor,
-                                  isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                    ),
-                                  ),
-                                  context: context,
-                                  builder: (context) => const QRprofile());
-                            },
-                            deviceWidth: deviceWidth)
-                      ]),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: deviceHeight * 0.01,
+                            ),
+                            // ProfileDetails(
+                            //     title: 'Change Password',
+                            //     subtitle: 'Change your password',
+                            //     icon: Icons.key_outlined,
+                            //     onpress: () {},
+                            //     deviceWidth: deviceWidth),
+                            DetailsWidget(
+                                title: 'QR Code',
+                                subtitle: 'View your qr code',
+                                icon: Icons.qr_code_scanner_outlined,
+                                onpress: () {
+                                  showModalBottomSheet(
+                                      backgroundColor: AppColors.planeColor,
+                                      isScrollControlled: true,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(30),
+                                          topRight: Radius.circular(30),
+                                        ),
+                                      ),
+                                      context: context,
+                                      builder: (context) => const QRprofile());
+                                },
+                                deviceWidth: deviceWidth)
+                          ]),
                     )
                   ],
                 ),
@@ -225,25 +226,5 @@ class _ProfileDetisState extends State<ProfileDetis> {
             ],
           ),
         ));
-  }
-}
-
-class ProfileEditController extends GetxController {
-  var edit = false.obs;
-  TextEditingController firstname = TextEditingController();
-  TextEditingController lastname = TextEditingController();
-  TextEditingController phoneNum = TextEditingController();
-
-  void _onedit() {
-    edit.value = !edit.value;
-  }
-
-  void _getHiveData() {
-    var box = Hive.box('homedata');
-    var products = box.get('homedata');
-    firstname.text = products.firstname;
-    lastname.text = products.lastname;
-    phoneNum.text = products.phonenumber;
-    update();
   }
 }
