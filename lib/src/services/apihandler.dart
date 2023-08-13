@@ -1,7 +1,6 @@
 class APIConstants {
   static const String baseURI =
       'https://garbagegrabberdocker-cir5g5yodq-uc.a.run.app';
-  // static const baseURI = 'http://192.168.0.101:8000';
   static const String customerLogin = '/api/account/customer/login/';
   static const String customerSignUp = '/api/account/customer/register/';
   static const String customerOtpValidate = '/api/account/validate_email/';
