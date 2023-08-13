@@ -162,6 +162,8 @@ class _FormFillScreenState extends State<FormFillScreen> {
         await storage.write(
             key: 'accesstoken', value: data['token']['access'].toString());
         Get.back();
+        mainScreenController.resetController();
+        Get.offAllNamed(AppRoutes.screenhandler);
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
             context,
@@ -171,9 +173,6 @@ class _FormFillScreenState extends State<FormFillScreen> {
             Icons.check, // Custom icon
             AppColors.primaryColor // Custom icon color
             );
-
-        mainScreenController.resetController();
-        Get.offAllNamed(AppRoutes.screenhandler);
       } else {
         Get.back();
         // ignore: use_build_context_synchronously

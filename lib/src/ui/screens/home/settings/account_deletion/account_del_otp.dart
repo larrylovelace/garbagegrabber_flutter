@@ -41,6 +41,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
   void initState() {
     super.initState();
     settingsScreenController.enteredCode.value = '';
+    settingsScreenController.isotpInvalid.value = false;
   }
 
   @override

@@ -29,18 +29,16 @@ class CustomButton extends StatelessWidget {
         color: buttoncolor,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Center(
-        child: MaterialButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          onPressed: () {
-            oncallback();
-          },
-          child: Text(
-            text,
-            style: AppFonts.poppinsLightMedium
-                .copyWith(color: textcolor, fontSize: AppFonts.mediumtext),
-          ),
+      child: MaterialButton(
+        padding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        onPressed: () {
+          oncallback();
+        },
+        child: Text(
+          text,
+          style: AppFonts.poppinsLightMedium
+              .copyWith(color: textcolor, fontSize: AppFonts.mediumtext),
         ),
       ),
     );

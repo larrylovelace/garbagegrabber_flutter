@@ -57,6 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
             key: 'accesstoken', value: data['token']['access'].toString());
 
         Get.back();
+        mainScreenController.resetController();
+        Get.offAllNamed(AppRoutes.screenhandler);
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
@@ -66,9 +68,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Icons.check, // Custom icon
           AppColors.primaryColor, // Custom icon color
         );
-
-        mainScreenController.resetController();
-        Get.offAllNamed(AppRoutes.screenhandler);
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
 
@@ -77,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (value.containsKey("non_field_errors")) {
           controller.errormailoccur(value['non_field_errors'][0]);
         } else if (value.containsKey("password")) {
-          // ignore: use_build_context_synchronously
+// ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
             'Error',
@@ -372,7 +371,7 @@ class OtpDialog extends StatelessWidget {
                   children: [
                     CustomButton(
                         deviceHeight: deviceHeight,
-                        deviceWidth: deviceWidth / 1.2,
+                        deviceWidth: deviceWidth / 1.1,
                         text: 'Send',
                         textcolor: AppColors.planeColor,
                         buttoncolor: AppColors.primaryColor,
@@ -404,7 +403,7 @@ class OtpDialog extends StatelessWidget {
                         }),
                     CustomButton(
                         deviceHeight: deviceHeight,
-                        deviceWidth: deviceWidth / 1.2,
+                        deviceWidth: deviceWidth / 1.1,
                         text: 'Cancel',
                         textcolor: AppColors.planeColor,
                         buttoncolor: AppColors.cancelButtonColor,

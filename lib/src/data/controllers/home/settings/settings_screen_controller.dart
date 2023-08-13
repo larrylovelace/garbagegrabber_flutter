@@ -108,6 +108,7 @@ class SettingsScreenController extends GetxController {
             isLoading.value = false;
             await box.clear();
             await storage.deleteAll();
+            Get.offAllNamed(AppRoutes.login);
             // ignore: use_build_context_synchronously
             CustomSnackBar.show(
               context,
@@ -117,7 +118,6 @@ class SettingsScreenController extends GetxController {
               Icons.check, // Custom icon
               AppColors.errorColor, // Custom icon color
             );
-            Get.offAllNamed(AppRoutes.login);
           } else if (response.statusCode == 400) {
             Map<String, dynamic> errormsg = jsonDecode(response.body);
 
