@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:garbage_grabber/src/utils/fonts.dart';
-import 'package:get/get.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({super.key});
@@ -18,18 +17,10 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     return Scaffold(
       backgroundColor: AppColors.planeColor,
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: AppColors.primaryColor,
-        leadingWidth: deviceWidth * 0.07,
-        leading: Ink(
-          child: IconButton(
-            splashRadius: 20,
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Get.back();
-            },
-            splashColor: Colors.transparent, // Set splashColor to transparent
-          ),
-        ),
+        automaticallyImplyLeading: true,
+        titleSpacing: 4,
         title: Row(
           children: [
             Text(
@@ -42,8 +33,8 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
-            left: deviceWidth * 0.04,
-            right: deviceWidth * 0.04,
+            left: deviceWidth * 0.05,
+            right: deviceWidth * 0.05,
             top: deviceHeight * 0.02),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -18,7 +18,6 @@ class PaymentPageController extends GetxController {
   final storage = const FlutterSecureStorage();
   PaymentData? paymentdetails;
   ScrollController scrollController = ScrollController();
-
   double totaltransaction = 0;
   double recenttransaction = 0;
   bool dataempty = false;
@@ -66,6 +65,7 @@ class PaymentPageController extends GetxController {
           );
         } else {
           Get.back();
+
           // ignore: use_build_context_synchronously
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
@@ -80,6 +80,7 @@ class PaymentPageController extends GetxController {
       }
     } catch (e) {
       debugPrint(e.toString());
+
       Get.back();
       final snackBar = buildErrorSnackBar(context, e);
       // ignore: use_build_context_synchronously

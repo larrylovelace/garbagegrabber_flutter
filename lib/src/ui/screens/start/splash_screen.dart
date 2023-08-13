@@ -76,9 +76,6 @@ class _SplashScreenState extends State<SplashScreen>
           });
         } else {
           // Failed to get a new access token, navigate to the login screen
-          Future.delayed(const Duration(seconds: 3), () {
-            Get.offAllNamed(AppRoutes.login);
-          });
         }
       } else {
         // Tokens are expired, delete them from secure storage

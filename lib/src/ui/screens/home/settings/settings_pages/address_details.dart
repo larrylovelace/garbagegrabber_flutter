@@ -31,18 +31,10 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
     return Scaffold(
         backgroundColor: AppColors.secondaryColor,
         appBar: AppBar(
+          elevation: 0,
           backgroundColor: AppColors.primaryColor,
-          leadingWidth: deviceWidth * 0.07,
-          leading: Ink(
-            child: IconButton(
-              splashRadius: 20,
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Get.back();
-              },
-              splashColor: Colors.transparent, // Set splashColor to transparent
-            ),
-          ),
+          automaticallyImplyLeading: true,
+          titleSpacing: 11,
           title: Row(
             children: [
               Text(
@@ -67,58 +59,55 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                           delegate: SliverChildListDelegate([
                         Column(
                           children: [
-                            SizedBox(
-                              height: deviceHeight * 0.38,
-                              child: Card(
-                                elevation: 0,
-                                margin: EdgeInsets.only(
-                                  top: deviceWidth * 0.0,
-                                ),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(20),
-                                        bottomRight: Radius.circular(20))),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    DetailsWidget(
-                                      onpress: () {},
-                                      title: addressDetailsScreenController
-                                          .addressDetailsModel!
-                                          .apartmentComplexName,
-                                      subtitle: 'Apartment Complex Name',
-                                      deviceWidth: deviceWidth,
-                                      icon: UniconsLine.building,
-                                    ),
-                                    DetailsWidget(
-                                      leadingicon: false,
-                                      onpress: () {},
-                                      title: addressDetailsScreenController
-                                          .addressDetailsModel!.apartmentNumber
-                                          .toString(),
-                                      subtitle: 'Apartment Number',
-                                      deviceWidth: deviceWidth,
-                                    ),
-                                    DetailsWidget(
-                                      leadingicon: false,
-                                      onpress: () {},
-                                      title: addressDetailsScreenController
-                                          .addressDetailsModel!.unitNumber
-                                          .toString(),
-                                      subtitle: 'Unit Number',
-                                      deviceWidth: deviceWidth,
-                                    ),
-                                    DetailsWidget(
-                                      leadingicon: false,
-                                      onpress: () {},
-                                      title: addressDetailsScreenController
-                                          .addressDetailsModel!.floorNumber
-                                          .toString(),
-                                      subtitle: 'Floor Number',
-                                      deviceWidth: deviceWidth,
-                                    ),
-                                  ],
-                                ),
+                            Card(
+                              elevation: 0,
+                              margin: EdgeInsets.only(
+                                top: deviceWidth * 0.0,
+                              ),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  DetailsWidget(
+                                    onpress: () {},
+                                    title: addressDetailsScreenController
+                                        .addressDetailsModel!
+                                        .apartmentComplexName,
+                                    subtitle: 'Apartment Complex Name',
+                                    deviceWidth: deviceWidth,
+                                    icon: UniconsLine.building,
+                                  ),
+                                  DetailsWidget(
+                                    leadingicon: false,
+                                    onpress: () {},
+                                    title: addressDetailsScreenController
+                                        .addressDetailsModel!.apartmentNumber
+                                        .toString(),
+                                    subtitle: 'Apartment Number',
+                                    deviceWidth: deviceWidth,
+                                  ),
+                                  DetailsWidget(
+                                    leadingicon: false,
+                                    onpress: () {},
+                                    title: addressDetailsScreenController
+                                        .addressDetailsModel!.unitNumber
+                                        .toString(),
+                                    subtitle: 'Unit Number',
+                                    deviceWidth: deviceWidth,
+                                  ),
+                                  DetailsWidget(
+                                    leadingicon: false,
+                                    onpress: () {},
+                                    title: addressDetailsScreenController
+                                        .addressDetailsModel!.floorNumber
+                                        .toString(),
+                                    subtitle: 'Floor Number',
+                                    deviceWidth: deviceWidth,
+                                  ),
+                                ],
                               ),
                             ),
                             Card(

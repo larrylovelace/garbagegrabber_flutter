@@ -40,7 +40,7 @@ class AppRoutes {
       name: login,
       page: () => const LoginScreen(),
       binding: LoginBinding(),
-      transition: Transition.fadeIn,
+      transition: Transition.upToDown,
       bindings: [
         OtpScreenBinding()
       ], // Set a transition animation for login screen
@@ -49,39 +49,39 @@ class AppRoutes {
       name: register,
       page: () => const RegisterScreen(),
       binding: RegisterBinding(),
-      transition: Transition.fadeIn,
+      transition: Transition.downToUp,
       bindings: [OtpScreenBinding()],
     ),
     GetPage(
       name: otpscreen,
       page: () => const OtpScreen(),
       binding: OtpScreenBinding(),
-      transition: Transition.fadeIn,
+      transition: Transition.downToUp,
       bindings: [FormFillScreenBinding()],
     ),
     GetPage(
       name: formfill,
       page: () => const FormFillScreen(),
       binding: FormFillScreenBinding(),
-      transition: Transition.fadeIn,
+      transition: Transition.downToUp,
     ),
     GetPage(
       name: screenhandler,
       page: () => const MainScreen(),
       binding: MainScreenBinding(),
-      transition: Transition.fadeIn,
+      transition: Transition.downToUp,
     ),
     GetPage(
         name: homescreen,
         page: () => const HomeScreen(),
         binding: HomeScreenBinding(),
-        transition: Transition.fadeIn,
+        transition: Transition.downToUp,
         bindings: [PaymentSuccessScreenBinding()]),
     GetPage(
       name: paymentsuccess,
       page: () => const PaymentSuccess(),
       binding: PaymentSuccessScreenBinding(),
-      transition: Transition.fadeIn,
+      transition: Transition.downToUp,
     ),
     GetPage(
         name: profiledetails,

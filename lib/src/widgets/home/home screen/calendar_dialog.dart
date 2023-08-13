@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_grabber/src/data/controllers/home/home%20screen/homescreen_controller.dart';
+import 'package:garbage_grabber/src/widgets/global/custom_button.dart';
 
 import 'package:get/get.dart';
 
@@ -8,8 +9,6 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
-
-
 
 class CalendarDialog extends StatefulWidget {
   const CalendarDialog({super.key});
@@ -101,7 +100,7 @@ class _CalendarDialogState extends State<CalendarDialog> {
                             .copyWith(fontSize: AppFonts.mediumFontSize),
                       ),
                       SizedBox(
-                        height: deviceHeight * 0.01,
+                        height: deviceHeight * 0.02,
                       ),
                       Container(
                         decoration: BoxDecoration(
@@ -122,53 +121,37 @@ class _CalendarDialogState extends State<CalendarDialog> {
                       SizedBox(
                         height: deviceHeight * 0.02,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            height: deviceHeight * 0.05,
-                            width: deviceWidth * 0.4,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: AppColors.primaryColor),
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
-                              onPressed: () {
-                                if (formattedDate != null) {
-                                  controller.getdate(formattedDate);
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: deviceHeight * 0.05,
+                            left: deviceWidth * 0.05,
+                            right: deviceWidth * 0.05),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomButton(
+                                deviceHeight: deviceHeight,
+                                deviceWidth: deviceWidth,
+                                text: 'Submit',
+                                textcolor: AppColors.planeColor,
+                                buttoncolor: AppColors.primaryColor,
+                                oncallback: () {
+                                  if (formattedDate != null) {
+                                    controller.getdate(formattedDate);
+                                    Get.back();
+                                  }
+                                }),
+                            CustomButton(
+                                deviceHeight: deviceHeight,
+                                deviceWidth: deviceWidth,
+                                text: 'Cancel',
+                                textcolor: AppColors.planeColor,
+                                buttoncolor: AppColors.cancelButtonColor,
+                                oncallback: () {
                                   Get.back();
-                                }
-                              },
-                              child: Text(
-                                'Submit',
-                                style: AppFonts.poppinsMedium.copyWith(
-                                    fontSize: AppFonts.mediumFontSize,
-                                    color: AppColors.planeColor),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: deviceHeight * 0.05,
-                            width: deviceWidth * 0.4,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: AppColors.secondaryColor.withOpacity(1)),
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text(
-                                'Cancel',
-                                style: AppFonts.poppinsMedium.copyWith(
-                                    fontSize: AppFonts.mediumFontSize,
-                                    color: AppColors.cancelColor),
-                              ),
-                            ),
-                          ),
-                        ],
+                                })
+                          ],
+                        ),
                       ),
                     ],
                   )

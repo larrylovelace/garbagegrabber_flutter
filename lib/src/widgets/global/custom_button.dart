@@ -18,7 +18,7 @@ class CustomButton extends StatelessWidget {
   final String text;
   final Color textcolor;
   final Color buttoncolor;
-  final Function oncallback;
+  final VoidCallback oncallback;
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +29,17 @@ class CustomButton extends StatelessWidget {
         color: buttoncolor,
         borderRadius: BorderRadius.circular(12),
       ),
-      child: MaterialButton(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onPressed: () {
-          oncallback();
-        },
-        child: Center(
+      child: Center(
+        child: MaterialButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          onPressed: () {
+            oncallback();
+          },
           child: Text(
             text,
-            style: AppFonts.poppinsMedium
-                .copyWith(color: textcolor, fontSize: AppFonts.mediumFontSize),
+            style: AppFonts.poppinsLightMedium
+                .copyWith(color: textcolor, fontSize: AppFonts.mediumtext),
           ),
         ),
       ),

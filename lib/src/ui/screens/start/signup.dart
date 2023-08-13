@@ -36,7 +36,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> signup(sendigBody) async {
     try {
-      String uri = APIConstants.baseURI + APIConstants.customersignUp;
+      String uri = APIConstants.baseURI + APIConstants.customerSignUp;
       var response = await http.post(Uri.parse(uri), body: sendingBody);
 
       if (response.statusCode == 200) {
@@ -68,17 +68,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          leading: Ink(
-            child: IconButton(
-              splashRadius: 20,
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                Get.offNamed(AppRoutes.login);
-              },
-              splashColor: Colors.transparent, // Set splashColor to transparent
-            ),
-          ),
-          iconTheme: const IconThemeData(color: Colors.black),
+          automaticallyImplyLeading: true,
+          titleSpacing: 1,
           elevation: 0,
           backgroundColor: AppColors.planeColor),
       backgroundColor: AppColors.planeColor,

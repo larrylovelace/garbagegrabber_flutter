@@ -28,7 +28,7 @@ class DetailsWidget extends StatelessWidget {
       onTap: () {
         onpress();
       },
-      contentPadding: EdgeInsets.only(left: deviceWidth * 0.02),
+      contentPadding: EdgeInsets.only(left: deviceWidth * 0.03),
       minLeadingWidth: deviceWidth * 0.1,
       leading: leadingicon
           ? Container(

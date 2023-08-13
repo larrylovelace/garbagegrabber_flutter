@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../data/controllers/home/settings/settings_controller.dart';
+import '../../../data/controllers/home/settings/settings_screen_controller.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
-import '../custom_button.dart';
+import '../../global/custom_button.dart';
 
 class AccountDeletionDialog extends StatelessWidget {
   const AccountDeletionDialog(
@@ -137,7 +137,7 @@ class AccountDeletionDialog extends StatelessWidget {
                     deviceWidth: deviceWidth,
                     text: 'Cancel',
                     textcolor: AppColors.planeColor,
-                    buttoncolor: AppColors.pricecalcontainer,
+                    buttoncolor: AppColors.cancelButtonColor,
                     oncallback: onPressed1),
                 CustomButton(
                   deviceHeight: deviceHeight,

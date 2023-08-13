@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:garbage_grabber/src/services/apihandler.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
+import 'package:garbage_grabber/src/widgets/global/error_dialog.dart';
 
 import 'package:get/get.dart';
 
@@ -13,7 +14,6 @@ import '../../../../data/controllers/home/home screen/homescreen_controller.dart
 import '../../../../services/token_manager.dart';
 import '../../../../widgets/home/home screen/calendar_dialog.dart';
 import '../../../../widgets/start/dropdown.dart';
-import '../../../../widgets/home/home screen/error_dialog.dart';
 import '../../../../widgets/global/loading_dialog.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';
@@ -56,7 +56,7 @@ class _ProductDetailState extends State<ProductDetail> {
       String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
           refreshToken!, APIConstants.tokenRefresh);
       if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.verifyappointment;
+        String uri = APIConstants.baseURI + APIConstants.verifyAppointment;
 
         var response = await http.post(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
@@ -203,7 +203,7 @@ class _ProductDetailState extends State<ProductDetail> {
       String? accessToken = await tokenManager.checkTokensAndRequestAccessToken(
           refreshToken!, APIConstants.tokenRefresh);
       if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.registerappointment;
+        String uri = APIConstants.baseURI + APIConstants.viewAppointments;
 
         var response = await http.post(Uri.parse(uri),
             headers: {
@@ -230,8 +230,8 @@ class _ProductDetailState extends State<ProductDetail> {
         return ErrorDialog(
           deviceHeight: MediaQuery.of(context).size.height,
           deviceWidth: MediaQuery.of(context).size.width,
-          headertext: 'Error',
-          errortext: 'Something went wrong',
+          headerText: 'Error',
+          bodyText: 'Something went wrong',
         );
       },
     );
@@ -244,8 +244,8 @@ class _ProductDetailState extends State<ProductDetail> {
         return ErrorDialog(
           deviceHeight: MediaQuery.of(context).size.height,
           deviceWidth: MediaQuery.of(context).size.width,
-          headertext: 'Error',
-          errortext: "Appointments for today can't be scheduled after 6 a.m.",
+          headerText: 'Error',
+          bodyText: "Appointments for today can't be scheduled after 6 a.m.",
         );
       },
     );
@@ -428,16 +428,17 @@ class _ProductDetailState extends State<ProductDetail> {
                                       left: deviceWidth * 0.04,
                                       right: deviceWidth * 0.04),
                                   width: deviceWidth * 0.5,
-                                  height: deviceHeight * 0.11,
+                                  height: deviceHeight * 0.12,
                                   decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.only(
                                           topLeft: Radius.circular(10),
                                           topRight: Radius.circular(10),
                                           bottomLeft: Radius.circular(10),
                                           bottomRight: Radius.circular(10)),
-                                      color: AppColors.pricecalcontainer
+                                      color: AppColors.cancelButtonColor
                                           .withOpacity(0.1)),
                                   child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Row(
                                         mainAxisAlignment:
@@ -525,9 +526,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                   return ErrorDialog(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
-                                    headertext: 'Required',
-                                    errortext:
-                                        'Select quantity and pickup date',
+                                    headerText: 'Required',
+                                    bodyText: 'Select quantity and pickup date',
                                   );
                                 });
                           } else if (controller.isdatepicked == false &&
@@ -539,8 +539,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                   return ErrorDialog(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
-                                    headertext: 'Required',
-                                    errortext: 'Select pickup date',
+                                    headerText: 'Required',
+                                    bodyText: 'Select pickup date',
                                   );
                                 });
                           } else if (controller.isdatepicked == true &&
@@ -552,8 +552,8 @@ class _ProductDetailState extends State<ProductDetail> {
                                   return ErrorDialog(
                                     deviceHeight: deviceHeight,
                                     deviceWidth: deviceWidth,
-                                    headertext: 'Required',
-                                    errortext: 'Select quantity',
+                                    headerText: 'Required',
+                                    bodyText: 'Select quantity',
                                   );
                                 });
                           }

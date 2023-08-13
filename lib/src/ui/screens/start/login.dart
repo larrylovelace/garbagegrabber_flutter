@@ -6,6 +6,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
+import 'package:garbage_grabber/src/widgets/global/custom_button.dart';
+import 'package:garbage_grabber/src/widgets/global/error_dialog.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
@@ -16,7 +18,6 @@ import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import '../../../widgets/snackbars/error_handling.dart';
 import '../../../widgets/snackbars/error_snackbar.dart';
-import '../../../widgets/start/formfilldialog.dart';
 import '../../../widgets/start/input_field.dart';
 import '../../../widgets/global/loading_dialog.dart';
 
@@ -38,9 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Map sendingBody = {};
   final MainScreenController mainScreenController =
       Get.find<MainScreenController>();
-  Future<void> login(sendigBody) async {
+  Future<void> login(BuildContext context, sendingBody) async {
+    double deviceHeight = MediaQuery.of(context).size.height;
+    double deviceWidth = MediaQuery.of(context).size.width;
     try {
-      String uri = APIConstants.baseURI + APIConstants.customerlogin;
+      String uri = APIConstants.baseURI + APIConstants.customerLogin;
       var response = await http.post(Uri.parse(uri), body: sendingBody);
 
       if (response.statusCode == 200) {
@@ -52,6 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
             key: 'refreshtoken', value: data['token']['refresh'].toString());
         await storage.write(
             key: 'accesstoken', value: data['token']['access'].toString());
+
+        Get.back();
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
@@ -61,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Icons.check, // Custom icon
           AppColors.primaryColor, // Custom icon color
         );
-        Get.back();
+
         mainScreenController.resetController();
         Get.offAllNamed(AppRoutes.screenhandler);
       } else if (response.statusCode == 400) {
@@ -97,12 +102,19 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (response.statusCode == 422) {
         Get.back();
         // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) => FormFillDialog(
-                  email: email.text,
-                  password: password.text,
-                ));
+        Get.dialog(ErrorDialog(
+          setupScreenDialog: true,
+          text: 'Cancel',
+          deviceWidth: deviceWidth,
+          deviceHeight: deviceHeight,
+          headerText: 'Profile Details are not filled',
+          bodyText: 'Continue to fill your details',
+          onPressed: () {
+            Get.back();
+            Get.toNamed(AppRoutes.formfill,
+                arguments: {'email': email.text, 'password': password.text});
+          },
+        ));
       } else {}
     } catch (e) {
       Get.back();
@@ -245,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       "email": email.text,
                                       "password": password.text
                                     };
-                                    await login(sendingBody);
+                                    await login(context, sendingBody);
                                   }
                                 },
                                 child: Text('Login',
@@ -302,22 +314,15 @@ class OtpDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    return AlertDialog(
+    return Dialog(
       backgroundColor: const Color.fromARGB(255, 255, 252, 252),
       elevation: 0,
-      scrollable: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(6),
-          topRight: Radius.circular(6),
-          bottomLeft: Radius.circular(6),
-          bottomRight: Radius.circular(6),
-        ),
-      ),
-      title: SingleChildScrollView(
-        child: SizedBox(
-          height: deviceHeight * 0.2,
-          child: Column(children: [
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(
+              left: deviceWidth * 0.05, right: deviceWidth * 0.05),
+          height: deviceHeight * 0.22,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -363,82 +368,49 @@ class OtpDialog extends StatelessWidget {
                   height: deviceHeight * 0.042,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GetBuilder<SetupScreenController>(
-                      builder: (controller) {
-                        return SizedBox(
-                          width: deviceWidth * 0.24,
-                          child: Container(
-                            height: deviceHeight * 0.044,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: AppColors.primaryColor),
-                            child: MaterialButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
-                              onPressed: () async {
-                                LoadingDialog.show(context);
-                                try {
-                                  String uri = APIConstants.baseURI +
-                                      APIConstants.customerEmailVerification;
-                                  var response =
-                                      await http.post(Uri.parse(uri), body: {
-                                    "email": email.text,
-                                  });
-                                  if (response.statusCode == 200) {
-                                    Get.back();
-                                    Get.back();
-                                    Get.toNamed(AppRoutes.otpscreen,
-                                        arguments: {
-                                          'email': email.text,
-                                          'password': password.text,
-                                        });
-                                  } else {
-                                    Get.back();
-                                  }
-                                } catch (e) {
-                                  Get.back();
-                                  final snackBar =
-                                      buildErrorSnackBar(context, e);
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                }
-                              },
-                              child: Text('Send',
-                                  style: AppFonts.poppinsLightMedium.copyWith(
-                                      color: AppColors.planeColor,
-                                      fontSize: AppFonts.snackBarfontsmall)),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(
-                      width: deviceWidth * 0.03,
-                    ),
-                    SizedBox(
-                      width: deviceWidth * 0.24,
-                      child: Container(
-                        height: deviceHeight * 0.044,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: AppColors.errorColor),
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6)),
-                          onPressed: () {
+                    CustomButton(
+                        deviceHeight: deviceHeight,
+                        deviceWidth: deviceWidth / 1.2,
+                        text: 'Send',
+                        textcolor: AppColors.planeColor,
+                        buttoncolor: AppColors.primaryColor,
+                        oncallback: () async {
+                          LoadingDialog.show(context);
+                          try {
+                            String uri = APIConstants.baseURI +
+                                APIConstants.customerEmailVerification;
+                            var response =
+                                await http.post(Uri.parse(uri), body: {
+                              "email": email.text,
+                            });
+                            if (response.statusCode == 200) {
+                              Get.back();
+                              Get.back();
+                              Get.toNamed(AppRoutes.otpscreen, arguments: {
+                                'email': email.text,
+                                'password': password.text,
+                              });
+                            } else {
+                              Get.back();
+                            }
+                          } catch (e) {
                             Get.back();
-                          },
-                          child: Text('Cancel',
-                              style: AppFonts.poppinsLightMedium.copyWith(
-                                  color: AppColors.planeColor,
-                                  fontSize: AppFonts.snackBarfontsmall)),
-                        ),
-                      ),
-                    ),
+                            final snackBar = buildErrorSnackBar(context, e);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          }
+                        }),
+                    CustomButton(
+                        deviceHeight: deviceHeight,
+                        deviceWidth: deviceWidth / 1.2,
+                        text: 'Cancel',
+                        textcolor: AppColors.planeColor,
+                        buttoncolor: AppColors.cancelButtonColor,
+                        oncallback: () {
+                          Get.back();
+                        })
                   ],
                 )
               ],

@@ -23,7 +23,7 @@ class PickupsRepository {
           refreshToken!, APIConstants.tokenRefresh);
 
       if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.registerappointment;
+        String uri = APIConstants.baseURI + APIConstants.viewAppointments;
 
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
@@ -48,10 +48,7 @@ class PickupsRepository {
             Icons.error_rounded, // Custom icon
             AppColors.errorColor, // Custom icon color
           );
-        }
-      } else {
-        return {};
-        // Handle the case when accessToken is null
+        } else {}
       }
     } catch (e) {
       final snackBar = buildErrorSnackBar(context, e);

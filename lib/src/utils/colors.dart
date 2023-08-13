@@ -9,7 +9,7 @@ class AppColors {
   static Color cancelColor = Colors.black87;
   static Color fillColor = Colors.transparent.withOpacity(0.018);
   static Color errorColor = Colors.red;
-  static Color pricecalcontainer = Colors.grey;
+  static Color cancelButtonColor = Colors.grey;
   static Color appointmentscolor = const Color.fromARGB(206, 0, 202, 152);
   static Color profileMenuIcon =
       const Color.fromARGB(255, 185, 178, 178).withOpacity(0.1);

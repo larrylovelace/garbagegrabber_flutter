@@ -145,8 +145,8 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                   child: Card(
                                       margin: EdgeInsets.only(
                                           top: deviceheight * 0.02,
-                                          left: deviceWidth * 0.04,
-                                          right: deviceWidth * 0.04),
+                                          left: deviceWidth * 0.03,
+                                          right: deviceWidth * 0.03),
                                       elevation: 0.5,
                                       color: AppColors.planeColor,
                                       shape: const RoundedRectangleBorder(

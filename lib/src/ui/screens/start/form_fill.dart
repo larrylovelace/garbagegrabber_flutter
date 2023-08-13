@@ -76,7 +76,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
       Get.find<MainScreenController>();
   Map sendingDetails = {};
   Future<void> getaccountdetails() async {
-    String uri = APIConstants.baseURI + APIConstants.getaccountdetails;
+    String uri = APIConstants.baseURI + APIConstants.getAccountDetails;
     var response = await http.post(Uri.parse(uri), body: {
       "email": email,
       "password": key,
@@ -93,9 +93,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
         context,
         'Error',
         'Something went wrong',
-        Colors.red, // Custom background color
+        AppColors.errorColor, // Custom background color
         Icons.error_rounded, // Custom icon
-        Colors.red, // Custom icon color
+        AppColors.errorColor, // Custom icon color
       );
     }
   }
@@ -161,7 +161,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
             key: 'refreshtoken', value: data['token']['refresh'].toString());
         await storage.write(
             key: 'accesstoken', value: data['token']['access'].toString());
-
+        Get.back();
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
             context,
@@ -171,7 +171,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
             Icons.check, // Custom icon
             AppColors.primaryColor // Custom icon color
             );
-        Get.back();
+
         mainScreenController.resetController();
         Get.offAllNamed(AppRoutes.screenhandler);
       } else {
@@ -181,9 +181,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
           context,
           'Error',
           'Something went wrong',
-          Colors.red, // Custom background color
+          AppColors.errorColor, // Custom background color
           Icons.error_rounded, // Custom icon
-          Colors.red, // Custom icon color
+          AppColors.errorColor, // Custom icon color
         );
       }
     } catch (e) {
@@ -770,8 +770,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color:
-                                      AppColors.secondaryColor.withOpacity(1)),
+                                  color: AppColors.cancelButtonColor),
                               child: MaterialButton(
                                 onPressed: () {
                                   details.onStepCancel!();
@@ -780,7 +779,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                                   'Cancel',
                                   style: AppFonts.poppinsMedium.copyWith(
                                       fontSize: AppFonts.mediumFontSize,
-                                      color: AppColors.cancelColor),
+                                      color: AppColors.planeColor),
                                 ),
                               ),
                             ),

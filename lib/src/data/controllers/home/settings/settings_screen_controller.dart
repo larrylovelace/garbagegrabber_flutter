@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_grabber/src/widgets/global/error_dialog.dart';
+import 'package:garbage_grabber/src/widgets/snackbars/error_handling.dart';
+import 'package:garbage_grabber/src/widgets/snackbars/error_snackbar.dart';
 import 'package:get/get.dart';
 import '../../../../services/apihandler.dart';
 import '../../../../services/token_manager.dart';
@@ -6,9 +9,6 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import '../../../../utils/colors.dart';
-import '../../../../widgets/home/settings/account_deletion_error_dialog.dart';
-import '../../../../widgets/snackbars/error_handling.dart';
-import '../../../../widgets/snackbars/error_snackbar.dart';
 import '../../routes.dart';
 
 import 'package:http/http.dart' as http;
@@ -19,7 +19,6 @@ class SettingsScreenController extends GetxController {
   RxString enteredCode = ''.obs;
   var isLoading = false.obs;
   var isotpInvalid = false.obs;
-  int countdown = 60;
   var showResendText = true.obs;
   var box = Hive.box('homedata');
   final storage = const FlutterSecureStorage();
@@ -41,6 +40,7 @@ class SettingsScreenController extends GetxController {
         var response = await http.delete(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',
         });
+
         if (response.statusCode == 200) {
           Get.back();
           showResendText.value = true;
@@ -50,14 +50,13 @@ class SettingsScreenController extends GetxController {
           Get.back();
           Map<String, dynamic> data = jsonDecode(response.body);
           // ignore: use_build_context_synchronously
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AccountDeletionErrorDialog(
-                    deviceWidth: deviceWidth,
-                    deviceHeight: deviceHeight,
-                    data: data);
-              });
+          Get.dialog(ErrorDialog(
+            deleteAccountDialog: true,
+            deviceWidth: deviceWidth,
+            deviceHeight: deviceHeight,
+            headerText: data['error'],
+            bodyText: data['message'],
+          ));
         } else if (response.statusCode == 401) {
           await box.clear();
           await storage.deleteAll();
@@ -101,17 +100,25 @@ class SettingsScreenController extends GetxController {
 
           var response = await http.post(Uri.parse(uri), headers: {
             'Authorization': 'Bearer $accessToken',
-            'otp': enteredCode.value
+          }, body: {
+            'otp': enteredCode.value,
           });
 
           if (response.statusCode == 200) {
             isLoading.value = false;
             await box.clear();
             await storage.deleteAll();
+            // ignore: use_build_context_synchronously
+            CustomSnackBar.show(
+              context,
+              'Success',
+              'Account Deleted Successfully',
+              AppColors.errorColor, // Custom background color
+              Icons.check, // Custom icon
+              AppColors.errorColor, // Custom icon color
+            );
             Get.offAllNamed(AppRoutes.login);
-          }
-
-          if (response.statusCode == 400) {
+          } else if (response.statusCode == 400) {
             Map<String, dynamic> errormsg = jsonDecode(response.body);
 
             isotpInvalid.value = true;
@@ -132,8 +139,7 @@ class SettingsScreenController extends GetxController {
           }
         }
       } catch (e) {
-        final snackBar = buildErrorSnackBar(context, e);
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        debugPrint(e.toString());
       }
     }
   }

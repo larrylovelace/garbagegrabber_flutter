@@ -41,7 +41,7 @@ class HomePageController extends GetxController {
           refreshToken!, APIConstants.tokenRefresh);
 
       if (accessToken != null) {
-        String uri = APIConstants.baseURI + APIConstants.hompagedata;
+        String uri = APIConstants.baseURI + APIConstants.homePageData;
 
         var response = await http.get(Uri.parse(uri), headers: {
           'Authorization': 'Bearer $accessToken',

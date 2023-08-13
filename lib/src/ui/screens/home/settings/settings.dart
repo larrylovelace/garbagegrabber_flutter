@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:garbage_grabber/src/data/controllers/home/settings/settings_controller.dart';
+import 'package:garbage_grabber/src/data/controllers/home/settings/settings_screen_controller.dart';
 import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
 import 'package:garbage_grabber/src/utils/fonts.dart';
 import 'package:garbage_grabber/src/widgets/global/loading_dialog.dart';
@@ -12,7 +12,7 @@ import '../../../../utils/colors.dart';
 import '../../../../widgets/home/settings/account_deletion_dialog.dart';
 import '../../../../widgets/snackbars/error_snackbar.dart';
 
-import '../../../../widgets/home/settings/profile_menu_card.dart';
+import '../../../../widgets/home/settings/settings_items.dart';
 import 'package:unicons/unicons.dart';
 
 class Settings extends StatefulWidget {
@@ -132,21 +132,21 @@ class _SettingsState extends State<Settings> {
                             onPressed: () {},
                             child: Column(
                               children: [
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Profile Details',
                                     deviceWidth: deviceWidth,
                                     icon: LineAwesomeIcons.user,
                                     onPress: (() {
                                       Get.toNamed(AppRoutes.profiledetails);
                                     })),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Address Details',
                                     deviceWidth: deviceWidth,
                                     icon: Icons.location_on_outlined,
                                     onPress: (() {
                                       Get.toNamed(AppRoutes.addressdetails);
                                     })),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Support',
                                     deviceWidth: deviceWidth,
                                     icon: Icons.support_outlined,
@@ -158,28 +158,28 @@ class _SettingsState extends State<Settings> {
                                 SizedBox(
                                   height: deviceHeight * 0.005,
                                 ),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'About Us',
                                     icon: LineAwesomeIcons.info,
                                     deviceWidth: deviceWidth,
                                     onPress: (() {
                                       Get.toNamed(AppRoutes.aboutus);
                                     })),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Privacy Policy',
                                     deviceWidth: deviceWidth,
                                     icon: LineAwesomeIcons.user_shield,
                                     onPress: (() {
                                       Get.toNamed(AppRoutes.privacypolicy);
                                     })),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Terms and Conditions',
                                     deviceWidth: deviceWidth,
                                     icon: UniconsLine.document_info,
                                     onPress: (() {
                                       Get.toNamed(AppRoutes.termsandconditions);
                                     })),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Account Deletion',
                                     deviceWidth: deviceWidth,
                                     icon: Icons.delete_forever_outlined,
@@ -208,7 +208,7 @@ class _SettingsState extends State<Settings> {
                                             );
                                           });
                                     })),
-                                ProfileMenu(
+                                SettingsItems(
                                     title: 'Log Out',
                                     icon: LineAwesomeIcons.alternate_sign_out,
                                     deviceWidth: deviceWidth,

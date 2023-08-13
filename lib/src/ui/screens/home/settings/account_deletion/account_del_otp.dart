@@ -8,7 +8,7 @@ import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'package:http/http.dart' as http;
-import '../../../../../data/controllers/home/settings/settings_controller.dart';
+import '../../../../../data/controllers/home/settings/settings_screen_controller.dart';
 import '../../../../../data/controllers/routes.dart';
 import '../../../../../services/apihandler.dart';
 import '../../../../../services/token_manager.dart';
@@ -97,7 +97,6 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
             Icons.check, // Custom icon
             AppColors.primaryColor,
           );
-        } else if (response.statusCode == 401) {
         } else if (response.statusCode == 401) {
           await box.clear();
           await storage.deleteAll();
@@ -278,7 +277,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                                 context: context,
                                 builder: (context) {
                                   return AccountDeletionDialog(
-                                    deviceWidth: deviceWidth,
+                                    deviceWidth: deviceWidth / 1.1,
                                     deviceHeight: deviceHeight,
                                     settingsScreenController:
                                         settingsScreenController,

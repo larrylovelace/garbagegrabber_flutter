@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:garbage_grabber/src/data/controllers/home/settings/profile_details_controller.dart';
-import 'package:garbage_grabber/src/widgets/home/custom_button.dart';
+import 'package:garbage_grabber/src/widgets/global/custom_button.dart';
 import 'package:garbage_grabber/src/widgets/home/settings/details_widget.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -32,18 +32,8 @@ class _ProfileDetisState extends State<ProfileDetis> {
           backgroundColor: AppColors.secondaryColor,
           appBar: AppBar(
             backgroundColor: AppColors.primaryColor,
-            leadingWidth: deviceWidth * 0.07,
-            leading: Ink(
-              child: IconButton(
-                splashRadius: 20,
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  Get.back();
-                },
-                splashColor:
-                    Colors.transparent, // Set splashColor to transparent
-              ),
-            ),
+            automaticallyImplyLeading: true,
+            titleSpacing: 11,
             title: Row(
               children: [
                 Text(
@@ -53,23 +43,21 @@ class _ProfileDetisState extends State<ProfileDetis> {
                 ),
               ],
             ),
-
-            //  profileEditController.edit.value
+            // actions: profileEditController.edit.value
             //     ? []
             //     : [
             //         IconButton(
             //             splashRadius: 20,
             //             onPressed: () {
-            //               profileEditController._onedit();
-            //               profileEditController._getHiveData();
+            //               profileEditController.onEdit();
+            //               profileEditController.getHiveData();
             //             },
             //             icon: Icon(
             //               LineAwesomeIcons.pen,
             //               color: AppColors.planeColor,
             //             ))
             //       ],
-            // elevation: 0,
-            // backgroundColor: AppColors.primaryColor,
+            elevation: 0,
           ),
           body: CustomScrollView(
             slivers: [
@@ -77,107 +65,102 @@ class _ProfileDetisState extends State<ProfileDetis> {
                   delegate: SliverChildListDelegate([
                 Column(
                   children: [
-                    SizedBox(
-                      height: deviceHeight * 0.38,
-                      child: Card(
-                        elevation: 0,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(20))),
-                        child: profileEditController.edit.value
-                            ? Padding(
-                                padding: EdgeInsets.only(
-                                    top: deviceHeight * 0.03,
-                                    bottom: deviceHeight * 0.03,
-                                    left: deviceWidth * 0.03,
-                                    right: deviceWidth * 0.03),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ProfileEditField(
-                                      controller:
-                                          profileEditController.firstname,
-                                      labelText: 'First Name',
-                                    ),
-                                    SizedBox(
-                                      height: deviceHeight * 0.02,
-                                    ),
-                                    ProfileEditField(
-                                      controller:
-                                          profileEditController.lastname,
-                                      labelText: 'Last Name',
-                                    ),
-                                    SizedBox(
-                                      height: deviceHeight * 0.02,
-                                    ),
-                                    ProfileEditField(
-                                      controller:
-                                          profileEditController.phoneNum,
-                                      labelText: 'Phone Number',
-                                    ),
-                                    SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        CustomButton(
-                                            deviceHeight: deviceHeight,
-                                            deviceWidth: deviceWidth,
-                                            text: 'Cancel',
-                                            textcolor: AppColors.planeColor,
-                                            buttoncolor:
-                                                AppColors.pricecalcontainer,
-                                            oncallback: () {
-                                              profileEditController.onEdit();
-                                            }),
-                                        CustomButton(
-                                            deviceHeight: deviceHeight,
-                                            deviceWidth: deviceWidth,
-                                            text: 'Save',
-                                            textcolor: AppColors.planeColor,
-                                            buttoncolor: AppColors.primaryColor,
-                                            oncallback: () {}),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            : Column(
+                    Card(
+                      margin: EdgeInsets.only(top: deviceWidth * 0.0),
+                      elevation: 0,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20))),
+                      child: profileEditController.edit.value
+                          ? Padding(
+                              padding: EdgeInsets.only(
+                                  top: deviceHeight * 0.03,
+                                  bottom: deviceHeight * 0.03,
+                                  left: deviceWidth * 0.03,
+                                  right: deviceWidth * 0.03),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  DetailsWidget(
-                                    onpress: () {},
-                                    title: products.firstname,
-                                    subtitle: 'Fisrt Name',
-                                    deviceWidth: deviceWidth,
-                                    icon: LineAwesomeIcons.user,
+                                  ProfileEditField(
+                                    controller: profileEditController.firstname,
+                                    labelText: 'First Name',
                                   ),
-                                  DetailsWidget(
-                                    onpress: () {},
-                                    title: products.lastname,
-                                    subtitle: 'Last Name',
-                                    deviceWidth: deviceWidth,
-                                    icon: LineAwesomeIcons.user_1,
+                                  SizedBox(
+                                    height: deviceHeight * 0.02,
                                   ),
-                                  DetailsWidget(
-                                    onpress: () {},
-                                    title: products.email,
-                                    subtitle: 'Email',
-                                    deviceWidth: deviceWidth,
-                                    icon: Icons.email_outlined,
+                                  ProfileEditField(
+                                    controller: profileEditController.lastname,
+                                    labelText: 'Last Name',
                                   ),
-                                  DetailsWidget(
-                                    onpress: () {},
-                                    title: products.phonenumber,
-                                    subtitle: 'Phone',
-                                    icon: UniconsLine.phone,
-                                    deviceWidth: deviceWidth,
+                                  SizedBox(
+                                    height: deviceHeight * 0.02,
                                   ),
+                                  ProfileEditField(
+                                    controller: profileEditController.phoneNum,
+                                    labelText: 'Phone Number',
+                                  ),
+                                  SizedBox(
+                                    height: deviceHeight * 0.04,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      CustomButton(
+                                          deviceHeight: deviceHeight,
+                                          deviceWidth: deviceWidth,
+                                          text: 'Cancel',
+                                          textcolor: AppColors.planeColor,
+                                          buttoncolor:
+                                              AppColors.cancelButtonColor,
+                                          oncallback: () {
+                                            profileEditController.onEdit();
+                                          }),
+                                      CustomButton(
+                                          deviceHeight: deviceHeight,
+                                          deviceWidth: deviceWidth,
+                                          text: 'Save',
+                                          textcolor: AppColors.planeColor,
+                                          buttoncolor: AppColors.primaryColor,
+                                          oncallback: () {}),
+                                    ],
+                                  )
                                 ],
                               ),
-                      ),
+                            )
+                          : Column(
+                              children: [
+                                DetailsWidget(
+                                  onpress: () {},
+                                  title: products.firstname,
+                                  subtitle: 'Fisrt Name',
+                                  deviceWidth: deviceWidth,
+                                  icon: LineAwesomeIcons.user,
+                                ),
+                                DetailsWidget(
+                                  onpress: () {},
+                                  title: products.lastname,
+                                  subtitle: 'Last Name',
+                                  deviceWidth: deviceWidth,
+                                  icon: LineAwesomeIcons.user_1,
+                                ),
+                                DetailsWidget(
+                                  onpress: () {},
+                                  title: products.email,
+                                  subtitle: 'Email',
+                                  deviceWidth: deviceWidth,
+                                  icon: Icons.email_outlined,
+                                ),
+                                DetailsWidget(
+                                  onpress: () {},
+                                  title: products.phonenumber,
+                                  subtitle: 'Phone',
+                                  icon: UniconsLine.phone,
+                                  deviceWidth: deviceWidth,
+                                ),
+                              ],
+                            ),
                     ),
                     Card(
                       elevation: 0,
@@ -186,8 +169,8 @@ class _ProfileDetisState extends State<ProfileDetis> {
                       ),
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20))),
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20))),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

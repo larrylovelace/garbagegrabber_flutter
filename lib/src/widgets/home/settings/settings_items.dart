@@ -4,8 +4,8 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 
-class ProfileMenu extends StatelessWidget {
-  const ProfileMenu(
+class SettingsItems extends StatelessWidget {
+  const SettingsItems(
       {Key? key,
       required this.title,
       required this.icon,
@@ -43,7 +43,7 @@ class ProfileMenu extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppColors.profileMenuIcon, shape: BoxShape.circle),
               child: Icon(LineAwesomeIcons.angle_right,
-                  size: 18, color: AppColors.pricecalcontainer),
+                  size: 18, color: AppColors.cancelButtonColor),
             )
           : null,
     );
