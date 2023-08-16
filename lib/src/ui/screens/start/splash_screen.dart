@@ -137,10 +137,10 @@ class _SplashScreenState extends State<SplashScreen>
     double deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: AppColors.planeColor,
+      backgroundColor: AppColors.kBackgroundColor,
       appBar: AppBar(
         toolbarHeight: deviceHeight * 0.01,
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.kBackgroundColor,
         automaticallyImplyLeading: false,
         elevation: 0,
       ),
@@ -166,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   SizedBox(height: deviceHeight * 0.05),
                   CircularProgressIndicator(
-                    color: AppColors.primaryColor,
+                    color: AppColors.kPrimaryColor,
                   )
                 ],
               ),

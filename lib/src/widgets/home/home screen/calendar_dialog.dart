@@ -49,115 +49,112 @@ class _CalendarDialogState extends State<CalendarDialog> {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    return SizedBox(
-      height: deviceHeight * 0.7,
-      width: double.infinity,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            TableCalendar(
-              headerStyle: HeaderStyle(
-                  titleCentered: false,
-                  titleTextStyle: AppFonts.poppinsMedium
-                      .copyWith(fontSize: AppFonts.mediumFontSize)),
-              rowHeight: deviceHeight * 0.07,
-              calendarFormat: _format,
-              weekendDays: const [
-                DateTime.monday,
-                DateTime.wednesday,
-                DateTime.friday
-              ],
-              calendarStyle: CalendarStyle(
-                selectedDecoration: BoxDecoration(
-                    // Set default green color for Monday, Wednesday, and Friday
-                    shape: BoxShape.circle,
-                    color: AppColors.primaryColor),
-                todayDecoration: BoxDecoration(
-                    shape: BoxShape.circle, color: AppColors.iconColor),
-                weekendTextStyle: AppFonts.poppinsRegular,
-                weekendDecoration: BoxDecoration(
-                    // Set default green color for Monday, Wednesday, and Friday
-                    shape: BoxShape.circle,
-                    color: AppColors.primaryColor.withOpacity(0.2)),
-              ),
-              availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-              firstDay: DateTime.now(),
-              lastDay: DateTime.utc(2023, 12, 31),
-              focusedDay: today,
-              onDaySelected: onDaySelected,
-              selectedDayPredicate: (day) =>
-                  isSelectable(day) && isSameDay(day, today),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          TableCalendar(
+            headerStyle: HeaderStyle(
+                titleCentered: false,
+                titleTextStyle: AppFonts.poppinsMedium
+                    .copyWith(fontSize: AppFonts.mediumFontSize)),
+            rowHeight: deviceHeight * 0.07,
+            calendarFormat: _format,
+            weekendDays: const [
+              DateTime.monday,
+              DateTime.wednesday,
+              DateTime.friday
+            ],
+            calendarStyle: CalendarStyle(
+              selectedDecoration: BoxDecoration(
+                  // Set default green color for Monday, Wednesday, and Friday
+                  shape: BoxShape.circle,
+                  color: AppColors.kPrimaryColor),
+              todayDecoration: BoxDecoration(
+                  shape: BoxShape.circle, color: AppColors.iconColor),
+              weekendTextStyle: AppFonts.poppinsRegular
+                  .copyWith(fontSize: AppFonts.smallFontSize),
+              selectedTextStyle: AppFonts.poppinsRegular
+                  .copyWith(color: AppColors.kBackgroundColor),
+              disabledTextStyle: AppFonts.poppinsRegular,
+              outsideTextStyle: AppFonts.poppinsRegular,
+              withinRangeTextStyle: AppFonts.poppinsRegular,
+              defaultTextStyle: AppFonts.poppinsRegular,
+              todayTextStyle: AppFonts.poppinsRegular,
+              weekNumberTextStyle: AppFonts.poppinsRegular,
+              holidayTextStyle: AppFonts.poppinsRegular,
+              weekendDecoration: BoxDecoration(
+                  // Set default green color for Monday, Wednesday, and Friday
+                  shape: BoxShape.circle,
+                  color: AppColors.kPrimaryColor.withOpacity(0.2)),
             ),
-            SizedBox(
-              height: deviceHeight * 0.015,
-            ),
-            isSelected
-                ? Column(
-                    children: [
-                      Text(
-                        'Pickup Date',
-                        style: AppFonts.poppinsMedium
-                            .copyWith(fontSize: AppFonts.mediumFontSize),
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.02,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primaryColor),
-                            color: AppColors.planeColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(6))),
-                        height: deviceHeight * 0.05,
-                        width: deviceWidth * 0.7,
-                        child: Center(
-                            child: Text(
-                          '$formattedDate',
-                          style: AppFonts.poppinsMedium.copyWith(
-                              fontSize: AppFonts.mediumFontSize,
-                              color: AppColors.primaryColor),
-                        )),
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.02,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: deviceHeight * 0.05,
-                            left: deviceWidth * 0.05,
-                            right: deviceWidth * 0.05),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomButton(
-                                deviceHeight: deviceHeight,
-                                deviceWidth: deviceWidth,
-                                text: 'Submit',
-                                textcolor: AppColors.planeColor,
-                                buttoncolor: AppColors.primaryColor,
-                                oncallback: () {
-                                  if (formattedDate != null) {
-                                    controller.getdate(formattedDate);
-                                    Get.back();
-                                  }
-                                }),
-                            CustomButton(
-                                deviceHeight: deviceHeight,
-                                deviceWidth: deviceWidth,
-                                text: 'Cancel',
-                                textcolor: AppColors.planeColor,
-                                buttoncolor: AppColors.cancelButtonColor,
-                                oncallback: () {
+            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+            firstDay: DateTime.now(),
+            lastDay: DateTime.utc(2023, 12, 31),
+            focusedDay: today,
+            onDaySelected: onDaySelected,
+            selectedDayPredicate: (day) =>
+                isSelectable(day) && isSameDay(day, today),
+          ),
+          SizedBox(
+            height: deviceHeight * 0.015,
+          ),
+          isSelected
+              ? Column(
+                  children: [
+                    Text(
+                      'Pickup Date',
+                      style: AppFonts.poppinsMedium
+                          .copyWith(fontSize: AppFonts.mediumFontSize),
+                    ),
+                    SizedBox(
+                      height: deviceHeight * 0.02,
+                    ),
+                    CustomButton(
+                        deviceHeight: deviceHeight,
+                        deviceWidth: deviceWidth * 2,
+                        text: '$formattedDate',
+                        textcolor: AppColors.kBlackColor,
+                        buttoncolor: AppColors.kPrimaryColor.withOpacity(0.1),
+                        oncallback: () {}),
+                    SizedBox(
+                      height: deviceHeight * 0.02,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: deviceHeight * 0.05,
+                          left: deviceWidth * 0.05,
+                          right: deviceWidth * 0.05),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomButton(
+                              deviceHeight: deviceHeight,
+                              deviceWidth: deviceWidth,
+                              text: 'Submit',
+                              textcolor: AppColors.kBackgroundColor,
+                              buttoncolor: AppColors.kPrimaryColor,
+                              oncallback: () {
+                                if (formattedDate != null) {
+                                  controller.getdate(formattedDate);
                                   Get.back();
-                                })
-                          ],
-                        ),
+                                }
+                              }),
+                          CustomButton(
+                              deviceHeight: deviceHeight,
+                              deviceWidth: deviceWidth,
+                              text: 'Cancel',
+                              textcolor: AppColors.kWhiteColor,
+                              buttoncolor: AppColors.kCancelButtonColor,
+                              oncallback: () {
+                                Get.back();
+                              })
+                        ],
                       ),
-                    ],
-                  )
-                : const SizedBox(),
-          ],
-        ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
+        ],
       ),
     );
   }

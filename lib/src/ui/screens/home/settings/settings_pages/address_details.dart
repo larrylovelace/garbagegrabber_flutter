@@ -29,28 +29,29 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-        backgroundColor: AppColors.secondaryColor,
+        backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
-          elevation: 0,
-          backgroundColor: AppColors.primaryColor,
-          automaticallyImplyLeading: true,
-          titleSpacing: 11,
+          iconTheme: IconThemeData(color: AppColors.kBlackColor),
+          toolbarHeight: deviceHeight > 1000 ? 100 : 50,
           title: Row(
             children: [
               Text(
                 'Address Details',
-                style: AppFonts.poppinsMedium
-                    .copyWith(fontSize: 22, color: AppColors.planeColor),
+                style: AppFonts.poppinsBold.copyWith(
+                    fontSize: AppFonts.largeFontSize,
+                    color: AppColors.kBlackColor),
               ),
             ],
           ),
+          elevation: 0,
+          backgroundColor: AppColors.kBackgroundColor,
         ),
         body: GetBuilder<AddressDetailsScreenController>(
           builder: (controller) {
             return addressDetailsScreenController.addressDetailsModel == null
                 ? Center(
                     child: CircularProgressIndicator(
-                      color: AppColors.primaryColor,
+                      color: AppColors.kPrimaryColor,
                     ),
                   )
                 : CustomScrollView(
@@ -59,15 +60,17 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                           delegate: SliverChildListDelegate([
                         Column(
                           children: [
+                            deviceHeight > 1000
+                                ? SizedBox(
+                                    height: deviceHeight * 0.02,
+                                  )
+                                : const SizedBox(),
                             Card(
                               elevation: 0,
+                              color: AppColors.kBackgroundColor,
                               margin: EdgeInsets.only(
                                 top: deviceWidth * 0.0,
                               ),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(20),
-                                      bottomRight: Radius.circular(20))),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -80,6 +83,11 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                     deviceWidth: deviceWidth,
                                     icon: UniconsLine.building,
                                   ),
+                                  deviceHeight > 1000
+                                      ? SizedBox(
+                                          height: deviceHeight * 0.02,
+                                        )
+                                      : const SizedBox(),
                                   DetailsWidget(
                                     leadingicon: false,
                                     onpress: () {},
@@ -89,6 +97,11 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                     subtitle: 'Apartment Number',
                                     deviceWidth: deviceWidth,
                                   ),
+                                  deviceHeight > 1000
+                                      ? SizedBox(
+                                          height: deviceHeight * 0.02,
+                                        )
+                                      : const SizedBox(),
                                   DetailsWidget(
                                     leadingicon: false,
                                     onpress: () {},
@@ -98,6 +111,11 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                     subtitle: 'Unit Number',
                                     deviceWidth: deviceWidth,
                                   ),
+                                  deviceHeight > 1000
+                                      ? SizedBox(
+                                          height: deviceHeight * 0.02,
+                                        )
+                                      : const SizedBox(),
                                   DetailsWidget(
                                     leadingicon: false,
                                     onpress: () {},
@@ -107,19 +125,30 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                     subtitle: 'Floor Number',
                                     deviceWidth: deviceWidth,
                                   ),
+                                  deviceHeight > 1000
+                                      ? SizedBox(
+                                          height: deviceHeight * 0.02,
+                                        )
+                                      : const SizedBox(),
                                 ],
                               ),
                             ),
-                            Card(
-                              elevation: 0,
+                            Container(
                               margin: EdgeInsets.only(
                                 top: deviceHeight * 0.04,
                               ),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              )),
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 1,
+                                        blurStyle: BlurStyle.solid,
+                                        color: AppColors.kBlackColor
+                                            .withOpacity(0.1),
+                                        offset: const Offset(0, 1))
+                                  ],
+                                  color: AppColors.kWhiteColor,
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20))),
                               child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -139,6 +168,11 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                         icon: UniconsLine.location_pin_alt,
                                         onpress: () {},
                                         deviceWidth: deviceWidth),
+                                    deviceHeight > 1000
+                                        ? SizedBox(
+                                            height: deviceHeight * 0.02,
+                                          )
+                                        : const SizedBox(),
                                     DetailsWidget(
                                         title: addressDetailsScreenController
                                             .addressDetailsModel!.city,
@@ -146,6 +180,11 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                         icon: LineAwesomeIcons.city,
                                         onpress: () {},
                                         deviceWidth: deviceWidth),
+                                    deviceHeight > 1000
+                                        ? SizedBox(
+                                            height: deviceHeight * 0.02,
+                                          )
+                                        : const SizedBox(),
                                     DetailsWidget(
                                         leadingicon: true,
                                         title: addressDetailsScreenController
@@ -154,6 +193,11 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                         icon: LineAwesomeIcons.landmark,
                                         onpress: () {},
                                         deviceWidth: deviceWidth),
+                                    deviceHeight > 1000
+                                        ? SizedBox(
+                                            height: deviceHeight * 0.02,
+                                          )
+                                        : const SizedBox(),
                                     DetailsWidget(
                                         leadingicon: true,
                                         title: addressDetailsScreenController

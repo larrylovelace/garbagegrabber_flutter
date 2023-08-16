@@ -29,36 +29,38 @@ class _ProfileDetisState extends State<ProfileDetis> {
     var products = box.get('homedata');
 
     return Obx(() => Scaffold(
-          backgroundColor: AppColors.secondaryColor,
+          backgroundColor: AppColors.kBackgroundColor,
           appBar: AppBar(
-            backgroundColor: AppColors.primaryColor,
-            automaticallyImplyLeading: true,
-            titleSpacing: 11,
+            iconTheme: IconThemeData(color: AppColors.kBlackColor),
+            toolbarHeight: deviceHeight > 1000 ? 100 : 50,
             title: Row(
               children: [
                 Text(
                   'Profile Details',
-                  style: AppFonts.poppinsMedium
-                      .copyWith(fontSize: 22, color: AppColors.planeColor),
+                  style: AppFonts.poppinsBold.copyWith(
+                      fontSize: AppFonts.largeFontSize,
+                      color: AppColors.kBlackColor),
                 ),
               ],
             ),
-            // actions: profileEditController.edit.value
-            //     ? []
-            //     : [
-            //         IconButton(
-            //             splashRadius: 20,
-            //             onPressed: () {
-            //               profileEditController.onEdit();
-            //               profileEditController.getHiveData();
-            //             },
-            //             icon: Icon(
-            //               LineAwesomeIcons.pen,
-            //               color: AppColors.planeColor,
-            //             ))
-            //       ],
             elevation: 0,
+            backgroundColor: AppColors.kBackgroundColor,
           ),
+          // actions: profileEditController.edit.value
+          //     ? []
+          //     : [
+          //         IconButton(
+          //             splashRadius: 20,
+          //             onPressed: () {
+          //               profileEditController.onEdit();
+          //               profileEditController.getHiveData();
+          //             },
+          //             icon: Icon(
+          //               LineAwesomeIcons.pen,
+          //               color: AppColors.planeColor,
+          //             ))
+          //       ],
+
           body: CustomScrollView(
             slivers: [
               SliverList(
@@ -68,6 +70,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
                     Card(
                       margin: EdgeInsets.only(top: deviceWidth * 0.0),
                       elevation: 0,
+                      color: AppColors.kBackgroundColor,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(20),
@@ -82,6 +85,11 @@ class _ProfileDetisState extends State<ProfileDetis> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  deviceHeight > 1000
+                                      ? SizedBox(
+                                          height: deviceHeight * 0.02,
+                                        )
+                                      : const SizedBox(),
                                   ProfileEditField(
                                     controller: profileEditController.firstname,
                                     labelText: 'First Name',
@@ -111,9 +119,9 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                           deviceHeight: deviceHeight,
                                           deviceWidth: deviceWidth,
                                           text: 'Cancel',
-                                          textcolor: AppColors.planeColor,
+                                          textcolor: AppColors.kWhiteColor,
                                           buttoncolor:
-                                              AppColors.cancelButtonColor,
+                                              AppColors.kCancelButtonColor,
                                           oncallback: () {
                                             profileEditController.onEdit();
                                           }),
@@ -121,8 +129,8 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                           deviceHeight: deviceHeight,
                                           deviceWidth: deviceWidth,
                                           text: 'Save',
-                                          textcolor: AppColors.planeColor,
-                                          buttoncolor: AppColors.primaryColor,
+                                          textcolor: AppColors.kWhiteColor,
+                                          buttoncolor: AppColors.kPrimaryColor,
                                           oncallback: () {}),
                                     ],
                                   )
@@ -131,6 +139,11 @@ class _ProfileDetisState extends State<ProfileDetis> {
                             )
                           : Column(
                               children: [
+                                deviceHeight > 1000
+                                    ? SizedBox(
+                                        height: deviceHeight * 0.02,
+                                      )
+                                    : const SizedBox(),
                                 DetailsWidget(
                                   onpress: () {},
                                   title: products.firstname,
@@ -138,6 +151,11 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                   deviceWidth: deviceWidth,
                                   icon: LineAwesomeIcons.user,
                                 ),
+                                deviceHeight > 1000
+                                    ? SizedBox(
+                                        height: deviceHeight * 0.02,
+                                      )
+                                    : const SizedBox(),
                                 DetailsWidget(
                                   onpress: () {},
                                   title: products.lastname,
@@ -145,6 +163,11 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                   deviceWidth: deviceWidth,
                                   icon: LineAwesomeIcons.user_1,
                                 ),
+                                deviceHeight > 1000
+                                    ? SizedBox(
+                                        height: deviceHeight * 0.02,
+                                      )
+                                    : const SizedBox(),
                                 DetailsWidget(
                                   onpress: () {},
                                   title: products.email,
@@ -152,6 +175,11 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                   deviceWidth: deviceWidth,
                                   icon: Icons.email_outlined,
                                 ),
+                                deviceHeight > 1000
+                                    ? SizedBox(
+                                        height: deviceHeight * 0.02,
+                                      )
+                                    : const SizedBox(),
                                 DetailsWidget(
                                   onpress: () {},
                                   title: products.phonenumber,
@@ -159,18 +187,31 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                   icon: UniconsLine.phone,
                                   deviceWidth: deviceWidth,
                                 ),
+                                deviceHeight > 1000
+                                    ? SizedBox(
+                                        height: deviceHeight * 0.02,
+                                      )
+                                    : const SizedBox(),
                               ],
                             ),
                     ),
-                    Card(
-                      elevation: 0,
-                      margin: EdgeInsets.only(
-                        top: deviceHeight * 0.04,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.kWhiteColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 1,
+                              blurStyle: BlurStyle.solid,
+                              color: AppColors.kBlackColor.withOpacity(0.1),
+                              offset: const Offset(0, 1))
+                        ],
                       ),
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20))),
+                      margin: EdgeInsets.only(
+                          top: deviceHeight * 0.04,
+                          left: deviceWidth * 0.01,
+                          right: deviceWidth * 0.01),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -189,7 +230,8 @@ class _ProfileDetisState extends State<ProfileDetis> {
                                 icon: Icons.qr_code_scanner_outlined,
                                 onpress: () {
                                   showModalBottomSheet(
-                                      backgroundColor: AppColors.planeColor,
+                                      backgroundColor:
+                                          AppColors.kBackgroundColor,
                                       isScrollControlled: true,
                                       shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(

@@ -15,21 +15,22 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: AppColors.planeColor,
+      backgroundColor: AppColors.kBackgroundColor,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.primaryColor,
-        automaticallyImplyLeading: true,
-        titleSpacing: 4,
+        iconTheme: IconThemeData(color: AppColors.kBlackColor),
+        toolbarHeight: deviceHeight > 1000 ? 100 : 50,
         title: Row(
           children: [
             Text(
               'Privacy Policy',
-              style: AppFonts.poppinsMedium
-                  .copyWith(fontSize: 22, color: AppColors.planeColor),
+              style: AppFonts.poppinsBold.copyWith(
+                  fontSize: AppFonts.largeFontSize,
+                  color: AppColors.kBlackColor),
             ),
           ],
         ),
+        elevation: 0,
+        backgroundColor: AppColors.kBackgroundColor,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
@@ -227,7 +228,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
             ),
             SizedBox(height: deviceHeight * 0.02),
             Text(
-              'Larry Love\n678-943-5125',
+              'Larry Love\n615-437-3087',
               style: AppFonts.poppinsMedium
                   .copyWith(fontSize: AppFonts.mediumFontSize),
               textAlign: TextAlign.justify,

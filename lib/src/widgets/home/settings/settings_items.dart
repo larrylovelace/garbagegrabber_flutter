@@ -23,19 +23,37 @@ class SettingsItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double deviceHeight = MediaQuery.of(context).size.height;
     return ListTile(
       onTap: onPress,
-      leading: Container(
-        width: deviceWidth * 0.09,
-        height: deviceWidth * 0.09,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: AppColors.profileMenuIcon),
-        child: Icon(icon, color: AppColors.primaryColor),
+      leading: CircleAvatar(
+        backgroundColor: deviceHeight > 1000
+            ? Colors.transparent
+            : AppColors.kPrimaryColor.withOpacity(0.1),
+        radius: deviceHeight * 0.024,
+        child: Center(
+          child: Icon(
+            icon,
+            color: AppColors.kPrimaryColor,
+            size: AppFonts.largeFontSize,
+          ),
+        ),
       ),
-      title: Text(title,
-          style: AppFonts.poppinsLightMedium
-              .copyWith(fontSize: 14, letterSpacing: 0.1, color: textColor)),
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          deviceHeight > 1000
+              ? SizedBox(
+                  width: deviceWidth * 0.02,
+                )
+              : const SizedBox(),
+          Text(title,
+              style: AppFonts.poppinsLightMedium.copyWith(
+                  fontSize: AppFonts.smallFontSize,
+                  letterSpacing: 0.1,
+                  color: textColor)),
+        ],
+      ),
       trailing: endIcon
           ? Container(
               width: deviceWidth * 0.08,
@@ -43,7 +61,8 @@ class SettingsItems extends StatelessWidget {
               decoration: BoxDecoration(
                   color: AppColors.profileMenuIcon, shape: BoxShape.circle),
               child: Icon(LineAwesomeIcons.angle_right,
-                  size: 18, color: AppColors.cancelButtonColor),
+                  size: AppFonts.mediumFontSize,
+                  color: AppColors.kCancelButtonColor),
             )
           : null,
     );

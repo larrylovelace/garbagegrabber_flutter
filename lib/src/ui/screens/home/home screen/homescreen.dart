@@ -4,11 +4,9 @@ import 'package:garbage_grabber/src/ui/screens/home/home%20screen/product_detail
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import 'package:percent_indicator/percent_indicator.dart';
-
 import '../../../../data/controllers/home/home screen/homescreen.dart';
 import '../../../../data/controllers/home/home screen/homescreen_controller.dart';
-import '../../../../data/models/currentappointment.dart';
+
 import '../../../../data/models/products.dart';
 import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';
@@ -25,10 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final HomePageController homecontroller = Get.find<HomePageController>();
 
   List<String> images = [
-    'assets/Onebag.png',
-    'assets/Onebag.png',
-    'assets/Onebag.png',
-    'assets/Onebag.png',
+    'assets/garbagebag_onetime.png',
+    'assets/garbagebag_weekly.png',
+    'assets/garbagebag_monthly.png',
+    'assets/garbagebag_onetime.png',
   ];
 
   @override
@@ -45,20 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    int countPickupDatesAfterCurrentDate(List<Pickup> pickups) {
-      DateTime currentDate = DateTime.now();
-      int count = 0;
-
-      for (Pickup pickup in pickups) {
-        DateTime pickupDate = DateTime.parse(pickup.pickupDate);
-
-        if (pickupDate.isAfter(currentDate)) {
-          count++;
-        }
-      }
-
-      return count;
-    }
 
     return GetBuilder<HomePageController>(builder: (homecontroller) {
       return ValueListenableBuilder<Box<dynamic>>(
@@ -66,11 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context, box, _) {
             if (box.isEmpty) {
               return Scaffold(
-                backgroundColor: AppColors.secondaryColor,
+                backgroundColor: AppColors.kBackgroundColor,
                 body: Center(
                   child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ),
+                      color: AppColors.kBackgroundColor),
                 ),
               );
             } else {
@@ -80,34 +63,47 @@ class _HomeScreenState extends State<HomeScreen> {
               final productsdatas = products.productDatas;
 
               return Scaffold(
-                backgroundColor: AppColors.secondaryColor,
+                backgroundColor: AppColors.kBackgroundColor,
                 appBar: AppBar(
-                    backgroundColor: AppColors.primaryColor,
-                    elevation: 0,
-                    automaticallyImplyLeading: false,
-                    title: Row(
+                  toolbarHeight: deviceHeight > 1000 ? 100 : 50,
+                  backgroundColor: AppColors.kBackgroundColor,
+                  elevation: 0,
+                  automaticallyImplyLeading: false,
+                  title: Padding(
+                    padding: deviceHeight > 1000
+                        ? EdgeInsets.only(left: deviceWidth * 0.03)
+                        : EdgeInsets.zero,
+                    child: Row(
                       children: [
                         Text(
                           'Hi $firstname',
-                          style: AppFonts.poppinsBold
-                              .copyWith(fontSize: AppFonts.largeFontSize),
+                          style: AppFonts.poppinsBold.copyWith(
+                              fontSize: AppFonts.largeFontSize,
+                              color: AppColors.kBlackColor),
                         ),
+                        SizedBox(
+                          width: deviceWidth * 0.02,
+                        ),
+                        Icon(
+                          Icons.waving_hand_outlined,
+                          color: AppColors.kHighlightColor,
+                          size: AppFonts.largeFontSize,
+                        )
                       ],
                     ),
-                    actions: [
-                      Padding(
-                        padding: EdgeInsets.only(right: deviceWidth * 0.02),
-                        child: IconButton(
-                            splashRadius: 20,
-                            onPressed: () {},
-                            icon: Image.asset('assets/notification.png',
-                                height: deviceHeight * 0.028,
-                                width: deviceWidth * 0.2,
-                                color: AppColors.planeColor)),
-                      ),
-                    ]),
+                  ),
+                  // actions: [
+                  //   IconButton(
+                  //       splashRadius: 20,
+                  //       onPressed: () {},
+                  //       icon: Image.asset('assets/notification.png',
+                  //           height: deviceHeight * 0.028,
+                  //           width: deviceWidth * 0.2,
+                  //           color: AppColors.kBlackColor)),
+                  // ]
+                ),
                 body: RefreshIndicator(
-                  color: AppColors.primaryColor,
+                  color: AppColors.kPrimaryColor,
                   onRefresh: () {
                     return homecontroller.getHomeScreeData(context);
                   },
@@ -117,347 +113,296 @@ class _HomeScreenState extends State<HomeScreen> {
                         delegate: SliverChildListDelegate([
                           homecontroller.currentAppointment == null
                               ? const SizedBox()
-                              : Container(
-                                  width: deviceWidth,
-                                  height: deviceHeight * 0.23,
-                                  margin: EdgeInsets.only(
-                                      bottom: deviceHeight * 0.03),
-                                  child: Stack(children: [
-                                    Container(
-                                      padding: EdgeInsets.only(
-                                        left: deviceWidth * 0.04,
-                                        right: deviceWidth * 0.04,
-                                        bottom: deviceWidth * 0.1,
-                                      ),
-                                      height: deviceHeight * 0.12,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.primaryColor,
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(0),
-                                          bottomRight: Radius.circular(0),
-                                        ),
-                                      ),
+                              : Column(children: [
+                                  Container(
+                                    height: deviceHeight > 1000
+                                        ? deviceHeight * 0.32
+                                        : deviceHeight * 0.26,
+                                    padding: EdgeInsets.only(
+                                      left: deviceWidth * 0.04,
                                     ),
-                                    Positioned(
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        child: Card(
-                                          elevation: 0.5,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: AppColors.kBackgroundColor),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                            top: deviceHeight * 0.005,
                                           ),
-                                          margin: EdgeInsets.only(
-                                              top: deviceWidth * 0.01,
-                                              left: deviceWidth * 0.03,
-                                              right: deviceWidth * 0.03),
                                           child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: deviceWidth * 0.04),
-                                            height: deviceHeight * 0.23,
-                                            decoration: BoxDecoration(
-                                              color: AppColors.planeColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                            margin: EdgeInsets.only(
+                                              left: deviceWidth * 0.0,
+                                              right: deviceWidth * 0.03,
                                             ),
-                                            child: homecontroller
-                                                        .currentAppointment ==
-                                                    null
-                                                ? Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                    ),
-                                                  )
-                                                : Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                            padding: EdgeInsets.only(
+                                                left: deviceWidth * 0.01,
+                                                top: deviceWidth * 0.02,
+                                                bottom: deviceWidth * 0.01),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: AppColors.kBlackColor),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: deviceWidth * 0.02,
+                                                  right: deviceWidth * 0.02),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Expanded(
+                                                    child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                              'Upcoming Pickup',
+                                                              style: AppFonts
+                                                                  .poppinsMedium
+                                                                  .copyWith(
+                                                                      color: AppColors
+                                                                          .kWhiteColor,
+                                                                      fontSize:
+                                                                          AppFonts
+                                                                              .smallFontSize)),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                  homecontroller
+                                                                      .currentAppointment!
+                                                                      .product
+                                                                      .name,
+                                                                  maxLines: 2,
+                                                                  style: AppFonts
+                                                                      .poppinsRegular
+                                                                      .copyWith(
+                                                                          fontSize: AppFonts
+                                                                              .minimalText,
+                                                                          color:
+                                                                              AppColors.kWhiteColor)),
+                                                              SizedBox(
+                                                                width:
+                                                                    deviceWidth *
+                                                                        0.02,
+                                                              ),
+                                                              Text(
+                                                                  "(${homecontroller.currentAppointment!.product.plan})",
+                                                                  style: AppFonts
+                                                                      .poppinsMedium
+                                                                      .copyWith(
+                                                                          fontSize: AppFonts
+                                                                              .smallFontSize,
+                                                                          color:
+                                                                              AppColors.kWhiteColor)),
+                                                            ],
+                                                          ),
+                                                        ]),
+                                                  ),
+                                                  SizedBox(
+                                                    width: deviceWidth * 0.1,
+                                                  ),
+                                                  Stack(
                                                     children: [
-                                                      Padding(
-                                                        padding: EdgeInsets.only(
-                                                            top: deviceHeight *
-                                                                0.01),
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SizedBox(
-                                                              width:
-                                                                  deviceWidth *
-                                                                      0.25,
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
+                                                      Image.asset(
+                                                        'assets/calendar.png',
+                                                        height:
+                                                            deviceHeight > 1000
+                                                                ? deviceHeight *
+                                                                    0.12
+                                                                : deviceHeight *
+                                                                    0.09,
+                                                      ),
+                                                      Positioned(
+                                                          top: deviceHeight >
+                                                                  1000
+                                                              ? deviceHeight *
+                                                                  0.044
+                                                              : deviceHeight *
+                                                                  0.034,
+                                                          left: deviceHeight >
+                                                                  1000
+                                                              ? deviceHeight *
+                                                                  0.027
+                                                              : deviceHeight *
+                                                                  0.022,
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Row(
                                                                 children: [
                                                                   Text(
                                                                       homecontroller
-                                                                          .currentAppointment!
-                                                                          .product
-                                                                          .name,
-                                                                      maxLines:
-                                                                          2,
+                                                                          .remainingdays,
                                                                       style: AppFonts
-                                                                          .poppinsLightMediumsnackBar
+                                                                          .poppinsBold
                                                                           .copyWith(
                                                                         fontSize:
-                                                                            AppFonts.smallFontSize,
-                                                                      )),
-                                                                  Text(
-                                                                      homecontroller
-                                                                          .currentAppointment!
-                                                                          .product
-                                                                          .plan,
-                                                                      style: AppFonts
-                                                                          .poppinsMedium
-                                                                          .copyWith(
-                                                                        fontSize:
-                                                                            AppFonts.smallFontSize,
-                                                                        color: AppColors
-                                                                            .primaryColor
-                                                                            .withOpacity(0.9),
+                                                                            AppFonts.mediumFontSize,
+                                                                        textBaseline:
+                                                                            TextBaseline.alphabetic,
                                                                       )),
                                                                 ],
                                                               ),
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                                  deviceWidth *
-                                                                      0.1,
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                CircularPercentIndicator(
-                                                                  radius: 35,
-                                                                  percent: homecontroller
-                                                                              .remainingdays ==
-                                                                          '0'
-                                                                      ? 1.0
-                                                                      : 1.0 /
-                                                                          int.parse(
-                                                                              homecontroller.remainingdays),
-                                                                  animation:
-                                                                      true,
-                                                                  progressColor:
-                                                                      AppColors
-                                                                          .appointmentscolor,
-                                                                  center:
-                                                                      Column(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      Text(
-                                                                        homecontroller
-                                                                            .remainingdays,
-                                                                        style: AppFonts
-                                                                            .poppinsBold
-                                                                            .copyWith(fontSize: AppFonts.mediumFontSize),
-                                                                      ),
-                                                                      Text(
-                                                                        'Days left',
-                                                                        style: AppFonts
-                                                                            .poppinsRegular
-                                                                            .copyWith(fontSize: 10),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                              width:
-                                                                  deviceWidth *
-                                                                      0.1,
-                                                            ),
-                                                            Builder(builder:
-                                                                (context) {
-                                                              final totalPickupDays =
-                                                                  homecontroller
-                                                                      .currentAppointment!
-                                                                      .pickups
-                                                                      .length;
-                                                              int remainingPickupDays =
-                                                                  countPickupDatesAfterCurrentDate(
-                                                                      homecontroller
-                                                                          .currentAppointment!
-                                                                          .pickups);
-                                                              double percent =
-                                                                  ((totalPickupDays -
-                                                                              remainingPickupDays) /
-                                                                          totalPickupDays) *
-                                                                      100;
-
-                                                              return Column(
+                                                              Row(
                                                                 children: [
-                                                                  CircularPercentIndicator(
-                                                                    radius: 35,
-                                                                    percent:
-                                                                        percent /
-                                                                            100,
-                                                                    animation:
-                                                                        true,
-                                                                    progressColor:
-                                                                        AppColors
-                                                                            .appointmentscolor,
-                                                                    center:
-                                                                        Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Text(
-                                                                          remainingPickupDays
-                                                                              .toString(),
-                                                                          style: AppFonts
-                                                                              .poppinsBold
-                                                                              .copyWith(fontSize: AppFonts.mediumFontSize),
-                                                                        ),
-                                                                        Text(
-                                                                          'Pickups left',
-                                                                          style: AppFonts
-                                                                              .poppinsRegular
-                                                                              .copyWith(fontSize: 8),
-                                                                        )
-                                                                      ],
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              );
-                                                            })
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height:
-                                                            deviceHeight * 0.01,
-                                                      ),
-                                                      Text('Pickup Dates',
-                                                          style: AppFonts
-                                                              .poppinsMedium
-                                                              .copyWith()),
-                                                      SizedBox(
-                                                        height:
-                                                            deviceHeight * 0.01,
-                                                      ),
-                                                      SizedBox(
-                                                        height: deviceHeight *
-                                                            0.065,
-                                                        child: ListView.builder(
-                                                            scrollDirection:
-                                                                Axis.horizontal,
-                                                            itemCount:
-                                                                homecontroller
-                                                                    .currentAppointment!
-                                                                    .pickups
-                                                                    .length,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              final month = homecontroller
-                                                                  .dateConverter
-                                                                  .getMonthFromDate(homecontroller
-                                                                      .currentAppointment!
-                                                                      .pickups[
-                                                                          index]
-                                                                      .pickupDate);
-                                                              final date = homecontroller
-                                                                  .dateConverter
-                                                                  .getDayFromDate(homecontroller
-                                                                      .currentAppointment!
-                                                                      .pickups[
-                                                                          index]
-                                                                      .pickupDate);
-
-                                                              return Container(
-                                                                margin: EdgeInsets.only(
-                                                                    left:
-                                                                        deviceWidth *
-                                                                            0.00,
-                                                                    right:
-                                                                        deviceWidth *
-                                                                            0.02,
-                                                                    bottom:
-                                                                        deviceWidth *
-                                                                            0.0),
-                                                                width:
-                                                                    deviceWidth *
-                                                                        0.14,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                        borderRadius:
-                                                                            const BorderRadius.all(Radius.circular(
-                                                                                10)),
-                                                                        border:
-                                                                            Border.all(
-                                                                          color:
-                                                                              AppColors.appointmentscolor,
-                                                                          width:
-                                                                              1,
-                                                                        )),
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(month,
-                                                                        style: AppFonts
-                                                                            .poppinsLightMediumsnackBar
-                                                                            .copyWith(
-                                                                          fontSize:
-                                                                              AppFonts.smallFontSize,
-                                                                        )),
-                                                                    Text(
-                                                                      date.toString(),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
+                                                                  Text(
+                                                                      int.parse(homecontroller.remainingdays) >
+                                                                              1
+                                                                          ? 'Days left'
+                                                                          : 'Day left',
                                                                       style: AppFonts
-                                                                          .poppinsBold
-                                                                          .copyWith(),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            }),
-                                                      )
+                                                                          .poppinsRegular
+                                                                          .copyWith(
+                                                                        fontSize:
+                                                                            AppFonts.innerboxTextSize,
+                                                                        textBaseline:
+                                                                            TextBaseline.alphabetic,
+                                                                      )),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ))
                                                     ],
                                                   ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                        ))
-                                  ]),
-                                ),
+                                        ),
+                                        SizedBox(
+                                          height: deviceHeight * 0.015,
+                                        ),
+                                        Text('Pickup Dates',
+                                            style: AppFonts.poppinsMedium
+                                                .copyWith(
+                                                    fontSize:
+                                                        AppFonts.mediumtext,
+                                                    color:
+                                                        AppColors.kBlackColor)),
+                                        SizedBox(
+                                          height: deviceHeight * 0.01,
+                                        ),
+                                        Expanded(
+                                          child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: homecontroller
+                                                  .currentAppointment!
+                                                  .pickups
+                                                  .length,
+                                              itemBuilder: (context, index) {
+                                                final month = homecontroller
+                                                    .dateConverter
+                                                    .getMonthFromDate(
+                                                        homecontroller
+                                                            .currentAppointment!
+                                                            .pickups[index]
+                                                            .pickupDate);
+
+                                                final date = homecontroller
+                                                    .dateConverter
+                                                    .getDayFromDate(
+                                                        homecontroller
+                                                            .currentAppointment!
+                                                            .pickups[index]
+                                                            .pickupDate)
+                                                    .toString();
+
+                                                final upcomingPickupDate =
+                                                    homecontroller.pickupdate
+                                                        .toString();
+                                                final upComingPickupMonth =
+                                                    homecontroller.pickupmonth
+                                                        .toString();
+
+                                                return Container(
+                                                  margin: EdgeInsets.only(
+                                                      left: deviceWidth * 0.0,
+                                                      right: deviceWidth * 0.02,
+                                                      bottom:
+                                                          deviceWidth * 0.02),
+                                                  width: deviceWidth * 0.14,
+                                                  decoration: BoxDecoration(
+                                                    color: upcomingPickupDate ==
+                                                                date &&
+                                                            upComingPickupMonth ==
+                                                                month
+                                                        ? AppColors
+                                                            .kPrimaryColor
+                                                        : AppColors
+                                                            .kBackgroundColor,
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                20)),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(month,
+                                                          style: AppFonts.poppinsLightMediumsnackBar.copyWith(
+                                                              fontSize: AppFonts
+                                                                  .minimalText,
+                                                              color: upcomingPickupDate == date &&
+                                                                      upComingPickupMonth ==
+                                                                          month
+                                                                  ? AppColors
+                                                                      .kWhiteColor
+                                                                  : AppColors
+                                                                      .kBlackColor)),
+                                                      Text(
+                                                        date.toString(),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: AppFonts.poppinsBold.copyWith(
+                                                            fontSize: AppFonts
+                                                                .smallFontSize,
+                                                            color: upcomingPickupDate ==
+                                                                        date &&
+                                                                    upComingPickupMonth ==
+                                                                        month
+                                                                ? AppColors
+                                                                    .kWhiteColor
+                                                                : AppColors
+                                                                    .kBlackColor),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]),
                           SizedBox(
-                            height: deviceHeight * 0.015,
+                            height: deviceHeight * 0.01,
                           ),
                           Container(
                             padding: EdgeInsets.only(
-                              left: deviceWidth * 0.03,
-                              right: deviceWidth * 0.04,
-                            ),
-                            height: deviceHeight * 0.03,
+                                left: deviceWidth * 0.03,
+                                right: deviceWidth * 0.04,
+                                bottom: deviceHeight * 0.005),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Stack(
-                                  children: [
-                                    Text(
-                                      ' Current Services',
-                                      style: AppFonts.poppinsMedium.copyWith(
-                                        fontSize: AppFonts.mediumFontSize,
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  ' Current Services',
+                                  style: AppFonts.poppinsMedium.copyWith(
+                                    color: AppColors.kBlackColor,
+                                    fontSize: AppFonts.mediumtext,
+                                  ),
                                 ),
                               ],
                             ),
@@ -467,145 +412,99 @@ class _HomeScreenState extends State<HomeScreen> {
                       SliverGrid(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.87,
+                          childAspectRatio: 0.8,
                           crossAxisCount: 2,
+                          mainAxisSpacing: 1.8,
                         ),
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                left: deviceWidth * 0.03,
-                                right: deviceWidth * 0.03,
-                                top: deviceHeight * 0.02,
-                                bottom: deviceHeight * 0.02,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  controller.isdatepicked = false;
-                                  controller.ispriceChange = false;
-                                  showModalBottomSheet(
-                                    backgroundColor: AppColors.secondaryColor,
-                                    isScrollControlled: true,
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(30),
-                                        topRight: Radius.circular(30),
-                                      ),
-                                    ),
-                                    context: context,
-                                    builder: (context) => ProductDetail(
-                                      image: images[index],
-                                      id: productsdatas[index].id,
-                                      price: productsdatas[index].price,
-                                      name: productsdatas[index].name,
-                                      plan: productsdatas[index].plan,
-                                      email: homecontroller.email,
-                                    ),
-                                  );
-                                },
-                                child: Card(
+                            return GestureDetector(
+                              onTap: () {
+                                controller.isdatepicked = false;
+                                controller.ispriceChange = false;
+                                showModalBottomSheet(
+                                  backgroundColor: AppColors.kBackgroundColor,
+                                  isScrollControlled: true,
                                   shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(30),
+                                      topRight: Radius.circular(30),
+                                    ),
                                   ),
-                                  elevation: 0.5,
-                                  child: ClipRRect(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(10)),
-                                    child: Column(
+                                  context: context,
+                                  builder: (context) => ProductDetail(
+                                    image: images[index],
+                                    id: productsdatas[index].id,
+                                    price: productsdatas[index].price,
+                                    name: productsdatas[index].name,
+                                    plan: productsdatas[index].plan,
+                                    email: homecontroller.email,
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: deviceWidth * 0.035,
+                                    vertical: deviceHeight * 0.01),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 1,
+                                          blurStyle: BlurStyle.solid,
+                                          color: AppColors.kBlackColor
+                                              .withOpacity(0.1),
+                                          offset: const Offset(0, 1))
+                                    ],
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: AppColors.kWhiteColor),
+                                padding: EdgeInsets.only(
+                                    top: deviceHeight * 0.02,
+                                    left: deviceWidth * 0.025,
+                                    right: deviceWidth * 0.025),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Stack(
-                                          children: [
-                                            Image.asset(
-                                              images[index],
-                                            ),
-                                            Positioned(
-                                              top: 3,
-                                              left: 6,
-                                              child: Container(
-                                                height: 35,
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                    width: 0.5,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                                child: Text(
-                                                  '\$${productsdatas[index].price.toString()}',
-                                                  style: AppFonts.poppinsMedium
-                                                      .copyWith(
-                                                    color:
-                                                        AppColors.primaryColor,
+                                        Flexible(
+                                          child: Text(
+                                            productsdatas[index].name,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppFonts.poppinsRegular
+                                                .copyWith(
                                                     fontSize:
-                                                        AppFonts.smallFontSize,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                                        AppFonts.minimalText),
+                                          ),
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                            left: deviceHeight * 0.02,
-                                            top: deviceHeight * 0.02,
-                                            right: deviceHeight * 0.02,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.planeColor,
-                                            borderRadius:
-                                                const BorderRadius.only(
-                                              bottomLeft: Radius.circular(10),
-                                              bottomRight: Radius.circular(10),
-                                            ),
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Flexible(
-                                                    child: Text(
-                                                      productsdatas[index].name,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: AppFonts
-                                                          .poppinsLightMediumsnackBar
-                                                          .copyWith(
-                                                        fontSize: AppFonts
-                                                            .smallFontSize,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    productsdatas[index].plan,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: AppFonts
-                                                        .poppinsMedium
-                                                        .copyWith(
-                                                      fontSize: AppFonts
-                                                          .smallFontSize,
-                                                      color: AppColors
-                                                          .primaryColor
-                                                          .withOpacity(0.9),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                        Text(
+                                          '\$${productsdatas[index].price.toString()}',
+                                          style:
+                                              AppFonts.poppinsMedium.copyWith(
+                                            color: AppColors.kHighlightColor,
+                                            fontSize: AppFonts.smallFontSize,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          productsdatas[index].plan,
+                                          overflow: TextOverflow.ellipsis,
+                                          style:
+                                              AppFonts.poppinsMedium.copyWith(
+                                            fontSize: AppFonts.smallFontSize,
+                                            color: AppColors.kPrimaryColor
+                                                .withOpacity(0.9),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Image.asset(
+                                      images[index],
+                                    ),
+                                  ],
                                 ),
                               ),
                             );

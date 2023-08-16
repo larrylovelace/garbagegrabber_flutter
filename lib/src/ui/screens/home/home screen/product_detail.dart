@@ -66,12 +66,17 @@ class _ProductDetailState extends State<ProductDetail> {
           "appointment_date_start": controller.sendinddate,
           "total_payment": controller.priceindouble.toString()
         });
-
+        Map<String, dynamic> data = jsonDecode(response.body);
         if (response.statusCode == 200) {
           await makePayment();
         } else if (response.statusCode == 400) {
+          String errorMessage = data['error'];
           Get.back();
-          lateappointment();
+          appointmetError(errorMessage);
+        } else if (response.statusCode == 403) {
+          String errorMessage = data['error'];
+          Get.back();
+          appointmetError(errorMessage);
         } else {
           Get.back();
           showErrorDialog();
@@ -97,13 +102,13 @@ class _ProductDetailState extends State<ProductDetail> {
         appearance: PaymentSheetAppearance(
             shapes: const PaymentSheetShape(borderRadius: 10),
             colors:
-                PaymentSheetAppearanceColors(primary: AppColors.primaryColor),
+                PaymentSheetAppearanceColors(primary: AppColors.kPrimaryColor),
             primaryButton: PaymentSheetPrimaryButtonAppearance(
                 shapes: const PaymentSheetPrimaryButtonShape(blurRadius: 8),
                 colors: PaymentSheetPrimaryButtonTheme(
                     light: PaymentSheetPrimaryButtonThemeColors(
-                  background: AppColors.primaryColor,
-                  text: AppColors.planeColor,
+                  background: AppColors.kPrimaryColor,
+                  text: AppColors.kWhiteColor,
                 )))),
         paymentIntentClientSecret: paymentIntent!["client_secret"],
         style: ThemeMode.system,
@@ -237,16 +242,15 @@ class _ProductDetailState extends State<ProductDetail> {
     );
   }
 
-  void lateappointment() {
+  void appointmetError(String errorMessage) {
     showDialog(
       context: context,
       builder: (context) {
         return ErrorDialog(
-          deviceHeight: MediaQuery.of(context).size.height,
-          deviceWidth: MediaQuery.of(context).size.width,
-          headerText: 'Error',
-          bodyText: "Appointments for today can't be scheduled after 6 a.m.",
-        );
+            deviceHeight: MediaQuery.of(context).size.height,
+            deviceWidth: MediaQuery.of(context).size.width,
+            headerText: 'Error',
+            bodyText: errorMessage);
       },
     );
   }
@@ -259,334 +263,344 @@ class _ProductDetailState extends State<ProductDetail> {
       builder: (controller) {
         return Padding(
           padding: const EdgeInsets.all(30),
-          child: SizedBox(
-            height: deviceHeight * 0.875,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10)),
-                    ),
-                    child: Image.asset(
-                      widget.image,
-                      height: deviceHeight * 0.3,
-                      width: deviceWidth,
-                    ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10)),
                   ),
-                  SizedBox(
-                    height: deviceHeight * 0.02,
+                  child: Image.asset(
+                    widget.image,
+                    height: deviceHeight * 0.3,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            widget.name,
-                            overflow: TextOverflow.ellipsis,
-                            style:
-                                AppFonts.poppinsRegular.copyWith(fontSize: 20),
-                          ),
-                          Flexible(
-                            child: controller.pricechanged
-                                ? Text(
-                                    '\$${controller.totalprice}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppFonts.poppinsMedium.copyWith(
-                                        color: AppColors.primaryColor,
-                                        fontSize: 20),
-                                  )
-                                : Text(
-                                    '\$${widget.price}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppFonts.poppinsMedium.copyWith(
-                                        color: AppColors.primaryColor,
-                                        fontSize: 20),
-                                  ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(widget.plan,
-                                style: AppFonts.poppinsMedium.copyWith(
-                                    fontSize: 17,
-                                    color: AppColors.primaryColor
-                                        .withOpacity(0.9))),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.02,
-                      ),
-                      Row(
-                        children: [
-                          Text('Quantity',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 17))
-                        ],
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.01,
-                      ),
-                      SizedBox(
-                        width: deviceWidth * 0.19,
-                        child: DropDown(
-                            hintText: '    1',
-                            currentSelectedValue: '1',
-                            selectingCategory: items,
-                            heightofCategory: deviceHeight * 0.3,
-                            onSelecting: (value) {
-                              int intValue = int.parse(value);
-                              quantity = intValue;
-
-                              double pricevalue =
-                                  widget.price; // Convert string to int
-                              double total = intValue * pricevalue;
-                              String totalprice = total.toStringAsFixed(2);
-                              controller.quantitycaclculation(totalprice);
-                            },
-                            formvalidation: (value) {}),
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.02,
-                      ),
-                      Row(
-                        children: [
-                          Text('Select pickup date',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 17))
-                        ],
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.01,
-                      ),
-                      Container(
-                        height: deviceHeight * 0.05,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: AppColors.fillColor),
-                        child: MaterialButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30)),
-                                ),
-                                context: context,
-                                builder: (context) => const CalendarDialog());
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.date_range_outlined,
-                                color: AppColors.iconColor,
-                              ),
-                              SizedBox(
-                                width: deviceWidth * 0.02,
-                              ),
-                              controller.datepicked
-                                  ? Text(
-                                      controller.date,
-                                      style: AppFonts.poppinsRegular.copyWith(
-                                          fontSize: AppFonts.smallFontSize,
-                                          letterSpacing: 0.5),
-                                    )
-                                  : Text(
-                                      'Pickup date',
-                                      style: AppFonts.poppinsRegular.copyWith(
-                                          fontSize: AppFonts.smallFontSize,
-                                          color: AppColors.iconColor,
-                                          letterSpacing: 0.5),
-                                    )
-                            ],
-                          ),
+                ),
+                SizedBox(
+                  height: deviceHeight * 0.02,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppFonts.poppinsRegular
+                              .copyWith(fontSize: AppFonts.mediumFontSize),
                         ),
-                      ),
-                      SizedBox(
-                        height: deviceHeight * 0.04,
-                      ),
-                      controller.ispriceChange
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      top: deviceHeight * 0.01,
-                                      left: deviceWidth * 0.04,
-                                      right: deviceWidth * 0.04),
-                                  width: deviceWidth * 0.5,
-                                  height: deviceHeight * 0.12,
-                                  decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10)),
-                                      color: AppColors.cancelButtonColor
-                                          .withOpacity(0.1)),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Net Price',
-                                            style: AppFonts.poppinsRegular,
-                                          ),
-                                          Text(
-                                            '\$${controller.totalprice}',
-                                            style: AppFonts.poppinsRegular,
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Tax',
-                                            style: AppFonts.poppinsRegular,
-                                          ),
-                                          Text(
-                                            '8.5 %',
-                                            style: AppFonts.poppinsRegular,
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: deviceHeight * 0.005,
-                                      ),
-                                      Divider(
-                                        thickness: 1,
-                                        color: AppColors.primaryColor,
-                                        height: 1,
-                                      ),
-                                      SizedBox(
-                                        height: deviceHeight * 0.005,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Total',
-                                            style: AppFonts.poppinsMedium,
-                                          ),
-                                          Text(
-                                            '\$${controller.payingprice}',
-                                            style: AppFonts.poppinsMedium,
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                        Flexible(
+                          child: controller.pricechanged
+                              ? Text(
+                                  '\$${controller.totalprice}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppFonts.poppinsMedium.copyWith(
+                                      color: AppColors.kHighlightColor,
+                                      fontSize: AppFonts.mediumFontSize),
+                                )
+                              : Text(
+                                  '\$${widget.price}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppFonts.poppinsMedium.copyWith(
+                                      color: AppColors.kHighlightColor,
+                                      fontSize: AppFonts.mediumFontSize),
                                 ),
-                              ],
-                            )
-                          : const SizedBox(),
-                    ],
-                  ),
-                  SizedBox(
-                    height: deviceHeight * 0.05,
-                  ),
-                  Container(
-                    height: deviceHeight * 0.05,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                        color: AppColors.primaryColor),
-                    child: Builder(builder: (context) {
-                      return MaterialButton(
-                        onPressed: () async {
-                          if (controller.isdatepicked == true &&
-                              controller.ispriceChange == true) {
-                            LoadingDialog.show(context);
-                            verifyappointment();
-                          } else if (controller.isdatepicked == false &&
-                              controller.ispriceChange == false) {
-                            // ignore: use_build_context_synchronously
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ErrorDialog(
-                                    deviceHeight: deviceHeight,
-                                    deviceWidth: deviceWidth,
-                                    headerText: 'Required',
-                                    bodyText: 'Select quantity and pickup date',
-                                  );
-                                });
-                          } else if (controller.isdatepicked == false &&
-                              controller.ispriceChange == true) {
-                            // ignore: use_build_context_synchronously
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ErrorDialog(
-                                    deviceHeight: deviceHeight,
-                                    deviceWidth: deviceWidth,
-                                    headerText: 'Required',
-                                    bodyText: 'Select pickup date',
-                                  );
-                                });
-                          } else if (controller.isdatepicked == true &&
-                              controller.ispriceChange == false) {
-                            // ignore: use_build_context_synchronously
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ErrorDialog(
-                                    deviceHeight: deviceHeight,
-                                    deviceWidth: deviceWidth,
-                                    headerText: 'Required',
-                                    bodyText: 'Select quantity',
-                                  );
-                                });
-                          }
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(widget.plan,
+                              style: AppFonts.poppinsMedium.copyWith(
+                                  fontSize: AppFonts.mediumFontSize,
+                                  color: AppColors.kPrimaryColor
+                                      .withOpacity(0.9))),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: deviceHeight * 0.02,
+                    ),
+                    Row(
+                      children: [
+                        Text('Quantity',
+                            style: AppFonts.poppinsRegular
+                                .copyWith(fontSize: AppFonts.smallFontSize))
+                      ],
+                    ),
+                    SizedBox(
+                      height: deviceHeight * 0.01,
+                    ),
+                    SizedBox(
+                      width: deviceWidth * 0.2,
+                      child: DropDown(
+                          hintText: '    1',
+                          currentSelectedValue: '1',
+                          selectingCategory: items,
+                          heightofCategory: deviceHeight * 0.3,
+                          onSelecting: (value) {
+                            int intValue = int.parse(value);
+                            quantity = intValue;
+
+                            double pricevalue =
+                                widget.price; // Convert string to int
+                            double total = intValue * pricevalue;
+                            String totalprice = total.toStringAsFixed(2);
+                            controller.quantitycaclculation(totalprice);
+                          },
+                          formvalidation: (value) {}),
+                    ),
+                    SizedBox(
+                      height: deviceHeight * 0.02,
+                    ),
+                    Row(
+                      children: [
+                        Text('Select pickup date',
+                            style: AppFonts.poppinsRegular
+                                .copyWith(fontSize: AppFonts.smallFontSize))
+                      ],
+                    ),
+                    SizedBox(
+                      height: deviceHeight * 0.01,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          color: AppColors.fillColor),
+                      child: MaterialButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30)),
+                              ),
+                              context: context,
+                              builder: (context) => const CalendarDialog());
                         },
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(
-                              'Pay ',
-                              style: AppFonts.poppinsLightMedium.copyWith(
-                                  color: AppColors.planeColor,
-                                  fontSize: AppFonts.mediumFontSize),
+                            Icon(
+                              Icons.date_range_outlined,
+                              color: AppColors.iconColor,
+                              size: AppFonts.largeFontSize,
                             ),
-                            controller.ispriceChange
+                            SizedBox(
+                              width: deviceWidth * 0.02,
+                            ),
+                            controller.datepicked
                                 ? Text(
-                                    '\$${controller.payingprice}',
-                                    style: AppFonts.poppinsBold.copyWith(
-                                        color: AppColors.planeColor,
-                                        fontSize: AppFonts.mediumFontSize),
+                                    controller.date,
+                                    style: AppFonts.poppinsRegular.copyWith(
+                                        fontSize: AppFonts.smallFontSize,
+                                        letterSpacing: 0.5),
                                   )
                                 : Text(
-                                    '\$${widget.price}',
-                                    style: AppFonts.poppinsBold.copyWith(
-                                        color: AppColors.planeColor,
-                                        fontSize: AppFonts.mediumFontSize),
-                                  ),
+                                    'Pickup date',
+                                    style: AppFonts.poppinsRegular.copyWith(
+                                        fontSize: AppFonts.smallFontSize,
+                                        color: AppColors.iconColor,
+                                        letterSpacing: 0.5),
+                                  )
                           ],
                         ),
-                      );
-                    }),
-                  )
-                ],
-              ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: deviceHeight * 0.04,
+                    ),
+                    controller.ispriceChange
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(
+                                    top: deviceHeight * 0.01,
+                                    left: deviceWidth * 0.04,
+                                    right: deviceWidth * 0.04),
+                                width: deviceWidth * 0.5,
+                                decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10)),
+                                    color: AppColors.kCancelButtonColor
+                                        .withOpacity(0.1)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text('Net Price',
+                                            style: AppFonts.poppinsRegular
+                                                .copyWith(
+                                                    fontSize: AppFonts
+                                                        .smallFontSize)),
+                                        Text('\$${controller.totalprice}',
+                                            style: AppFonts.poppinsRegular
+                                                .copyWith(
+                                                    fontSize:
+                                                        AppFonts.smallFontSize))
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Tax',
+                                          style: AppFonts.poppinsRegular
+                                              .copyWith(
+                                                  fontSize:
+                                                      AppFonts.smallFontSize),
+                                        ),
+                                        Text(
+                                          '8.5 %',
+                                          style: AppFonts.poppinsRegular
+                                              .copyWith(
+                                                  fontSize:
+                                                      AppFonts.smallFontSize),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: deviceHeight * 0.005,
+                                    ),
+                                    Divider(
+                                      thickness: 1,
+                                      color: AppColors.kPrimaryColor,
+                                      height: 1,
+                                    ),
+                                    SizedBox(
+                                      height: deviceHeight * 0.005,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Total',
+                                          style: AppFonts.poppinsMedium
+                                              .copyWith(
+                                                  fontSize:
+                                                      AppFonts.mediumFontSize),
+                                        ),
+                                        Text(
+                                          '\$${controller.payingprice}',
+                                          style: AppFonts.poppinsMedium
+                                              .copyWith(
+                                                  fontSize:
+                                                      AppFonts.mediumFontSize,
+                                                  color: AppColors
+                                                      .kHighlightColor),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
+                        : const SizedBox(),
+                  ],
+                ),
+                SizedBox(
+                  height: deviceHeight * 0.05,
+                ),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: AppColors.kPrimaryColor),
+                  child: Builder(builder: (context) {
+                    return MaterialButton(
+                      onPressed: () async {
+                        if (controller.isdatepicked == true &&
+                            controller.ispriceChange == true) {
+                          LoadingDialog.show(context);
+                          verifyappointment();
+                        } else if (controller.isdatepicked == false &&
+                            controller.ispriceChange == false) {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ErrorDialog(
+                                  deviceHeight: deviceHeight,
+                                  deviceWidth: deviceWidth,
+                                  headerText: 'Required',
+                                  bodyText: 'Select quantity and pickup date',
+                                );
+                              });
+                        } else if (controller.isdatepicked == false &&
+                            controller.ispriceChange == true) {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ErrorDialog(
+                                  deviceHeight: deviceHeight,
+                                  deviceWidth: deviceWidth,
+                                  headerText: 'Required',
+                                  bodyText: 'Select pickup date',
+                                );
+                              });
+                        } else if (controller.isdatepicked == true &&
+                            controller.ispriceChange == false) {
+                          // ignore: use_build_context_synchronously
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ErrorDialog(
+                                  deviceHeight: deviceHeight,
+                                  deviceWidth: deviceWidth,
+                                  headerText: 'Required',
+                                  bodyText: 'Select quantity',
+                                );
+                              });
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Pay ',
+                            style: AppFonts.poppinsLightMedium.copyWith(
+                                color: AppColors.kWhiteColor,
+                                fontSize: AppFonts.mediumFontSize),
+                          ),
+                          controller.ispriceChange
+                              ? Text(
+                                  '\$${controller.payingprice}',
+                                  style: AppFonts.poppinsBold.copyWith(
+                                      color: AppColors.kWhiteColor,
+                                      fontSize: AppFonts.mediumFontSize),
+                                )
+                              : Text(
+                                  '\$${widget.price}',
+                                  style: AppFonts.poppinsBold.copyWith(
+                                      color: AppColors.kWhiteColor,
+                                      fontSize: AppFonts.mediumFontSize),
+                                ),
+                        ],
+                      ),
+                    );
+                  }),
+                )
+              ],
             ),
           ),
         );

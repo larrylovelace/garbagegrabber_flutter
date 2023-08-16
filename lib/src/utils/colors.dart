@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static Color primaryColor = const Color(0xFF39AC52);
-  static Color secondaryColor = const Color.fromARGB(254, 247, 247, 247);
-  static Color secondaryColorBlack = Colors.black;
-  static Color planeColor = Colors.white;
+  static Color kPrimaryColor = const Color(0xFF4EB662);
+  static Color kBlackColor = const Color(0xFF3A394D);
+  static Color kWhiteColor = const Color(0xFFFFFFFF);
+  static Color kBackgroundColor = const Color(0xFFF7F7F7);
+  static Color kHighlightColor = const Color(0xFFFF9800);
+  static Color kErrorColor = const Color(0xFFFF0033);
+  static Color kCancelButtonColor = Colors.grey;
   static Color iconColor = Colors.black38;
-  static Color cancelColor = Colors.black87;
   static Color fillColor = Colors.transparent.withOpacity(0.018);
-  static Color errorColor = Colors.red;
-  static Color cancelButtonColor = Colors.grey;
-  static Color appointmentscolor = const Color.fromARGB(206, 0, 202, 152);
   static Color profileMenuIcon =
       const Color.fromARGB(255, 185, 178, 178).withOpacity(0.1);
 }

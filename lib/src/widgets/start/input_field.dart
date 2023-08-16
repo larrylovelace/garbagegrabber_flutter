@@ -26,8 +26,8 @@ class InputField extends StatelessWidget {
   final TextInputType keywordType;
   final bool obscureText;
   final bool isPrefix;
-  final Widget? suffix;
-  final Widget? prefixIcon;
+  final IconButton? suffix;
+  final IconData? prefixIcon;
   final bool readonly;
 
   @override
@@ -38,7 +38,7 @@ class InputField extends StatelessWidget {
     return TextFormField(
       readOnly: readonly,
       controller: controller,
-      cursorColor: AppColors.secondaryColorBlack,
+      cursorColor: AppColors.kBlackColor,
       cursorHeight: deviceHeight * 0.027,
       style: AppFonts.poppinsRegular.copyWith(),
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -46,8 +46,14 @@ class InputField extends StatelessWidget {
       obscureText: obscureText,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        prefixIcon: prefixIcon,
-        prefixIconColor: AppColors.iconColor,
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: deviceWidth * 0.01),
+          child: Icon(
+            prefixIcon,
+            size: AppFonts.largeFontSize,
+          ),
+        ),
+        prefixIconColor: AppColors.kPrimaryColor,
         errorText: errorText,
         fillColor: AppColors.fillColor,
         filled: true,
@@ -56,8 +62,11 @@ class InputField extends StatelessWidget {
           top: deviceHeight * 0.015,
         ),
         prefix: isPrefix
-            ? const Padding(padding: EdgeInsets.zero)
-            : Padding(padding: EdgeInsets.only(left: deviceWidth * 0.04)),
+            ? Padding(
+                padding: EdgeInsets.only(
+                left: deviceWidth * 0.02,
+              ))
+            : Padding(padding: EdgeInsets.only(left: deviceWidth * 0.1)),
         enabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             width: 0.1,
@@ -70,7 +79,10 @@ class InputField extends StatelessWidget {
             fontSize: AppFonts.smallFontSize,
             color: AppColors.iconColor,
             letterSpacing: 0.5),
-        suffixIcon: suffix,
+        suffixIcon: Padding(
+          padding: EdgeInsets.only(right: deviceWidth * 0.03),
+          child: suffix,
+        ),
         disabledBorder: OutlineInputBorder(
           borderSide: const BorderSide(
             width: 0.8,
@@ -79,19 +91,20 @@ class InputField extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 0.8, color: AppColors.primaryColor),
+          borderSide: BorderSide(width: 0.8, color: AppColors.kPrimaryColor),
           borderRadius: BorderRadius.circular(6),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 0.8, color: Colors.red),
+          borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
           borderRadius: BorderRadius.circular(6),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 0.8, color: Colors.red),
+          borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
           borderRadius: BorderRadius.circular(6),
         ),
         errorMaxLines: 3,
-        errorStyle: GoogleFonts.poppins(color: Colors.red),
+        errorStyle: GoogleFonts.poppins(
+            color: AppColors.kErrorColor, fontSize: AppFonts.smallFontSize),
       ),
       validator: (value) => validation(value),
     );

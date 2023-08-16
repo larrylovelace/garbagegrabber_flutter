@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../models/payments.dart';
-import '../../../../utils/colors.dart';
+
 import '../../../../widgets/snackbars/error_handling.dart';
 import '../../../../widgets/snackbars/error_snackbar.dart';
 import '../../../../services/apihandler.dart';
@@ -57,11 +57,8 @@ class PaymentPageController extends GetxController {
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
             'Unauthorized',
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
+            
           );
         } else {
           Get.back();
@@ -70,11 +67,8 @@ class PaymentPageController extends GetxController {
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
             'Something went wrong',
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
+            
           );
         }
       }

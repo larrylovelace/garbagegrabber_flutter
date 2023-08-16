@@ -6,7 +6,6 @@ import 'package:hive/hive.dart';
 import '../../services/apihandler.dart';
 import '../../services/token_manager.dart';
 import 'package:http/http.dart' as http;
-import '../../utils/colors.dart';
 import '../../widgets/snackbars/error_handling.dart';
 import '../../widgets/snackbars/error_snackbar.dart';
 import '../controllers/routes.dart';
@@ -42,11 +41,7 @@ class PickupsRepository {
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
             'Unauthorized',
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
           );
         } else {}
       }

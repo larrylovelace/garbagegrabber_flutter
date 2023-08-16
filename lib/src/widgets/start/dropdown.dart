@@ -31,6 +31,12 @@ class DropDown extends StatelessWidget {
     double deviceWidth = MediaQuery.of(context).size.width;
     return FormField<String>(builder: (FormFieldState<String> state) {
       return DropdownButtonFormField2(
+        iconStyleData: IconStyleData(
+            icon: Padding(
+          padding: EdgeInsets.only(right: deviceWidth * 0.01),
+          child: Icon(Icons.arrow_downward_outlined,
+              color: AppColors.iconColor, size: AppFonts.mediumFontSize),
+        )),
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: ((value) => formvalidation(value)),
         decoration: InputDecoration(
@@ -49,7 +55,7 @@ class DropDown extends StatelessWidget {
           ),
           hintText: hintText,
           hintStyle: AppFonts.poppinsRegular.copyWith(
-              fontSize: AppFonts.smallFontSize,
+              fontSize: AppFonts.mediumFontSize,
               color: AppColors.iconColor,
               letterSpacing: 0.5),
           disabledBorder: OutlineInputBorder(
@@ -60,7 +66,7 @@ class DropDown extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 0.8, color: AppColors.primaryColor),
+            borderSide: BorderSide(width: 0.8, color: AppColors.kPrimaryColor),
             borderRadius: BorderRadius.circular(6),
           ),
           focusedErrorBorder: OutlineInputBorder(
@@ -71,12 +77,12 @@ class DropDown extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 0.8, color: AppColors.errorColor),
+            borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
             borderRadius: BorderRadius.circular(6),
           ),
           errorStyle: AppFonts.poppinsRegular.copyWith(
               fontSize: AppFonts.smallFontSize,
-              color: AppColors.errorColor,
+              color: AppColors.kErrorColor,
               letterSpacing: 0.5),
         ),
         onChanged: ((value) => onSelecting(value)),
@@ -96,7 +102,7 @@ class DropDown extends StatelessWidget {
           elevation: 1,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
-              color: AppColors.secondaryColor),
+              color: AppColors.kWhiteColor),
           maxHeight: heightofCategory,
           scrollbarTheme: ScrollbarThemeData(
             radius: const Radius.circular(6),

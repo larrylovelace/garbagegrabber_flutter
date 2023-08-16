@@ -33,21 +33,27 @@ class AccountDeletionDialog extends StatelessWidget {
         padding: EdgeInsets.only(
             left: deviceWidth * 0.05, right: deviceWidth * 0.05),
         decoration: BoxDecoration(
-            color: AppColors.planeColor,
+            color: AppColors.kWhiteColor,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         height: warningitems ? deviceHeight * 0.32 : deviceHeight * 0.24,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(headerText,
-                    maxLines: 2,
-                    style: AppFonts.poppinsMedium
-                        .copyWith(fontSize: AppFonts.mediumFontSize)),
-              ],
-            ),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Icon(
+                Icons.error_outlined,
+                color: AppColors.kErrorColor,
+                size: AppFonts.largeFontSize,
+              ),
+              SizedBox(
+                width: deviceWidth * 0.02,
+              ),
+              Text(headerText,
+                  maxLines: 2,
+                  style: AppFonts.poppinsMedium.copyWith(
+                      fontSize: AppFonts.mediumFontSize,
+                      color: AppColors.kErrorColor)),
+            ]),
             SizedBox(
               height: deviceHeight * 0.02,
             ),
@@ -69,7 +75,7 @@ class AccountDeletionDialog extends StatelessWidget {
                             height: 5,
                             width: 5,
                             decoration: BoxDecoration(
-                                color: AppColors.secondaryColorBlack,
+                                color: AppColors.kBlackColor,
                                 shape: BoxShape.circle),
                           ),
                           SizedBox(width: deviceWidth * 0.02),
@@ -84,7 +90,7 @@ class AccountDeletionDialog extends StatelessWidget {
                             height: 5,
                             width: 5,
                             decoration: BoxDecoration(
-                                color: AppColors.secondaryColorBlack,
+                                color: AppColors.kBlackColor,
                                 shape: BoxShape.circle),
                           ),
                           SizedBox(width: deviceWidth * 0.02),
@@ -99,7 +105,7 @@ class AccountDeletionDialog extends StatelessWidget {
                             height: 5,
                             width: 5,
                             decoration: BoxDecoration(
-                                color: AppColors.secondaryColorBlack,
+                                color: AppColors.kBlackColor,
                                 shape: BoxShape.circle),
                           ),
                           SizedBox(width: deviceWidth * 0.02),
@@ -114,7 +120,7 @@ class AccountDeletionDialog extends StatelessWidget {
                             height: 5,
                             width: 5,
                             decoration: BoxDecoration(
-                                color: AppColors.secondaryColorBlack,
+                                color: AppColors.kBlackColor,
                                 shape: BoxShape.circle),
                           ),
                           SizedBox(width: deviceWidth * 0.02),
@@ -136,15 +142,15 @@ class AccountDeletionDialog extends StatelessWidget {
                     deviceHeight: deviceHeight,
                     deviceWidth: deviceWidth,
                     text: 'Cancel',
-                    textcolor: AppColors.planeColor,
-                    buttoncolor: AppColors.cancelButtonColor,
+                    textcolor: AppColors.kBlackColor,
+                    buttoncolor: AppColors.kWhiteColor,
                     oncallback: onPressed1),
                 CustomButton(
                   deviceHeight: deviceHeight,
                   deviceWidth: deviceWidth,
                   text: 'Delete',
-                  textcolor: AppColors.planeColor,
-                  buttoncolor: AppColors.errorColor,
+                  textcolor: AppColors.kWhiteColor,
+                  buttoncolor: AppColors.kErrorColor,
                   oncallback: onPressed2,
                 )
               ],

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:garbage_grabber/src/data/controllers/home/pickups/pickups_controller.dart';
 
 import 'package:get/get.dart';
-
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../utils/colors.dart';
 import '../../../../utils/fonts.dart';
@@ -20,6 +20,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
   final PickupPageController pickupscontroller =
       Get.find<PickupPageController>();
   TabController? _tabController;
+  DateTime today = DateTime.now();
 
   @override
   void initState() {
@@ -30,25 +31,42 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
     );
   }
 
+  void onDaySelected(DateTime day, DateTime focusedDay) {
+    if (isSelectable(day)) {
+      setState(() {
+        today = day;
+      });
+    }
+  }
+
+  bool isSelectable(DateTime day) {
+    final weekday = day.weekday;
+    return weekday == DateTime.monday ||
+        weekday == DateTime.wednesday ||
+        weekday == DateTime.friday;
+  }
+
   @override
   Widget build(BuildContext context) {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.width;
 
     return Scaffold(
-        backgroundColor: AppColors.secondaryColor,
+        backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
+          toolbarHeight: deviceHeight > 1000 ? 100 : 50,
           title: Row(
             children: [
               Text(
-                'Appointments',
-                style: AppFonts.poppinsMedium
-                    .copyWith(fontSize: 22, color: AppColors.planeColor),
+                'Pickups',
+                style: AppFonts.poppinsBold.copyWith(
+                    fontSize: AppFonts.largeFontSize,
+                    color: AppColors.kBlackColor),
               ),
             ],
           ),
           elevation: 0,
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: AppColors.kBackgroundColor,
         ),
         body: GetBuilder<PickupPageController>(
           builder: (pickupscontroller) {
@@ -56,19 +74,23 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
-                    backgroundColor: AppColors.primaryColor,
+                    backgroundColor: AppColors.kBackgroundColor,
                     pinned: false,
                     floating: false,
                     toolbarHeight: deviceHeight * 0.05,
                     bottom: TabBar(
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: AppColors.kPrimaryColor.withOpacity(0.1),
+                      ),
                       controller: _tabController,
                       labelStyle: AppFonts.poppinsMedium
                           .copyWith(fontSize: AppFonts.mediumFontSize),
+                      labelColor: AppColors.kPrimaryColor,
+                      unselectedLabelColor: AppColors.kCancelButtonColor,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      indicatorColor: AppColors.planeColor,
-                      indicatorWeight: 4,
-                      indicatorPadding:
-                          EdgeInsets.only(left: deviceWidth * 0.04),
+                      indicatorPadding: EdgeInsets.only(
+                          left: deviceWidth * 0.04, right: deviceWidth * 0.04),
                       tabs: const [
                         Tab(
                           text: 'Active',
@@ -87,8 +109,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                           pickupscontroller.appointmentsisempty == false
                       ? Center(
                           child: CircularProgressIndicator(
-                            color: AppColors.primaryColor,
-                          ),
+                              color: AppColors.kPrimaryColor),
                         )
                       : pickupscontroller
                                   .appointmentData.activeAppointments.isEmpty &&
@@ -96,418 +117,143 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                           ? Center(
                               child: Text(
                                 'No active appointments found',
-                                style: AppFonts.poppinsRegular,
+                                style: AppFonts.poppinsRegular
+                                    .copyWith(fontSize: AppFonts.smallFontSize),
                               ),
                             )
                           : CustomScrollView(
                               slivers: [
                                 SliverList(
                                   delegate: SliverChildBuilderDelegate(
-                                    (context, index) {
-                                      String startdate = pickupscontroller
-                                          .appointmentData
-                                          .activeAppointments[index]
-                                          .appointmentDateStart;
-                                      String enddate = pickupscontroller
-                                          .appointmentData
-                                          .activeAppointments[index]
-                                          .appointmentDateEnd;
-
-                                      final initaldate = pickupscontroller
-                                          .dateConverter
-                                          .getMonthFromDate(startdate);
-                                      final endingdate = pickupscontroller
-                                          .dateConverter
-                                          .getMonthFromDate(enddate);
-                                      final initalday = pickupscontroller
-                                          .dateConverter
-                                          .getDayFromDate(startdate);
-                                      final endingday = pickupscontroller
-                                          .dateConverter
-                                          .getDayFromDate(enddate);
-
-                                      final totalremainingdays =
-                                          pickupscontroller.dateConverter
-                                              .remainingdays(enddate);
-
-                                      double percent =
-                                          totalremainingdays == 0 ||
-                                                  totalremainingdays < 0
-                                              ? 1
-                                              : 1 / totalremainingdays;
-                                      final data = pickupscontroller
-                                          .appointmentData
-                                          .activeAppointments[index];
-                                      return Card(
-                                          color: AppColors.planeColor,
-                                          elevation: 1,
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          margin: EdgeInsets.only(
-                                              left: deviceWidth * 0.03,
-                                              right: deviceWidth * 0.03,
-                                              top: deviceHeight * 0.02,
-                                              bottom: deviceHeight * 0.02),
-                                          child: ListTile(
-                                              contentPadding: EdgeInsets.only(
-                                                left: deviceWidth * 0.05,
-                                                top: deviceHeight * 0.02,
-                                              ),
-                                              title: Column(
-                                                children: [
-                                                  totalremainingdays == 0
-                                                      ? Padding(
-                                                          padding: EdgeInsets.only(
-                                                              left:
-                                                                  deviceWidth *
-                                                                      0.015),
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  Text(
-                                                                      'Appointments will be completed today',
-                                                                      maxLines:
-                                                                          3,
-                                                                      style: AppFonts
-                                                                          .poppinsMedium
-                                                                          .copyWith(
-                                                                              fontSize: 10)),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : const SizedBox(),
-                                                  SizedBox(
-                                                    height: deviceHeight * 0.24,
-                                                    child: Row(children: [
-                                                      SizedBox(
-                                                        width:
-                                                            deviceWidth * 0.1,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            SizedBox(
-                                                              height:
-                                                                  deviceHeight *
-                                                                      0.02,
-                                                            ),
-                                                            Text(initaldate,
-                                                                style: AppFonts
-                                                                    .poppinsLightMediumsnackBar
-                                                                    .copyWith(
-                                                                  fontSize: AppFonts
-                                                                      .smallFontSize,
-                                                                )),
-                                                            Text(
-                                                              initalday
-                                                                  .toString(),
-                                                              style: AppFonts
-                                                                  .poppinsMedium
-                                                                  .copyWith(),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            deviceWidth * 0.05,
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            deviceWidth * 0.25,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                                pickupscontroller
-                                                                    .appointmentData
-                                                                    .activeAppointments[
-                                                                        index]
-                                                                    .product
-                                                                    .name,
-                                                                style: AppFonts
-                                                                    .poppinsLightMediumsnackBar
-                                                                    .copyWith(
-                                                                  fontSize: AppFonts
-                                                                      .smallFontSize,
-                                                                )),
-                                                            Text(
-                                                                pickupscontroller
-                                                                    .appointmentData
-                                                                    .activeAppointments[
-                                                                        index]
-                                                                    .product
-                                                                    .plan,
-                                                                style: AppFonts
-                                                                    .poppinsMedium
-                                                                    .copyWith(
-                                                                  fontSize: AppFonts
-                                                                      .smallFontSize,
-                                                                  color: AppColors
-                                                                      .primaryColor
-                                                                      .withOpacity(
-                                                                          0.9),
-                                                                ))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            deviceWidth * 0.05,
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            deviceWidth * 0.28,
-                                                        height:
-                                                            deviceHeight * 0.2,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            CircularPercentIndicator(
-                                                              animation: true,
-                                                              percent: percent,
-                                                              radius: 38,
-                                                              progressColor:
-                                                                  AppColors
-                                                                      .appointmentscolor,
-                                                              center: totalremainingdays ==
-                                                                          0 ||
-                                                                      totalremainingdays <
-                                                                          0
-                                                                  ? Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Icon(
-                                                                          Icons
-                                                                              .check,
-                                                                          color:
-                                                                              AppColors.appointmentscolor,
-                                                                          size:
-                                                                              30,
-                                                                        )
-                                                                      ],
-                                                                    )
-                                                                  : Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Text(
-                                                                          totalremainingdays
-                                                                              .toString(),
-                                                                          style: AppFonts
-                                                                              .poppinsMedium
-                                                                              .copyWith(),
-                                                                        ),
-                                                                        totalremainingdays >
-                                                                                1
-                                                                            ? Text(
-                                                                                ' Days left',
-                                                                                style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
-                                                                              )
-                                                                            : Text(
-                                                                                ' Day left',
-                                                                                style: AppFonts.poppinsRegular.copyWith(fontSize: 10),
-                                                                              )
-                                                                      ],
-                                                                    ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            deviceWidth * 0.1,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Text(endingdate,
-                                                                style: AppFonts
-                                                                    .poppinsLightMediumsnackBar
-                                                                    .copyWith(
-                                                                  fontSize: AppFonts
-                                                                      .smallFontSize,
-                                                                )),
-                                                            Text(
-                                                              endingday
-                                                                  .toString(),
-                                                              style: AppFonts
-                                                                  .poppinsMedium
-                                                                  .copyWith(),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ]),
-                                                  ),
-                                                ],
-                                              ),
-                                              subtitle: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: deviceWidth * 0.02),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Text('Pickup Dates',
-                                                            style: AppFonts
-                                                                .poppinsMedium),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          deviceHeight * 0.02,
-                                                    ),
-                                                    LinearPercentIndicator(
-                                                        padding: EdgeInsets.only(
-                                                            left:
-                                                                deviceWidth * 0,
-                                                            right: deviceWidth *
-                                                                0.07),
-                                                        barRadius: const Radius
-                                                            .circular(15),
-                                                        progressColor: AppColors
-                                                            .appointmentscolor,
-                                                        percent: totalremainingdays ==
-                                                                    0 ||
-                                                                totalremainingdays <
-                                                                    0
-                                                            ? 1
-                                                            : 1 /
-                                                                totalremainingdays),
-                                                    SizedBox(
-                                                      height:
-                                                          deviceHeight * 0.02,
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          deviceHeight * 0.19,
-                                                      width: deviceWidth * 0.79,
-                                                      child: ListView.builder(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          itemCount: data
-                                                              .pickups.length,
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            final month = pickupscontroller
-                                                                .dateConverter
-                                                                .getMonthFromDate(data
-                                                                    .pickups[
-                                                                        index]
-                                                                    .pickupDate
-                                                                    .toString());
-
-                                                            final date = pickupscontroller
-                                                                .dateConverter
-                                                                .getDayFromDate(data
-                                                                    .pickups[
-                                                                        index]
-                                                                    .pickupDate
-                                                                    .toString());
-
-                                                            return Container(
-                                                              margin: EdgeInsets.only(
-                                                                  left:
-                                                                      deviceWidth *
-                                                                          0.00,
-                                                                  right:
-                                                                      deviceWidth *
-                                                                          0.04,
-                                                                  top:
-                                                                      deviceWidth *
-                                                                          0.02,
-                                                                  bottom:
-                                                                      deviceWidth *
-                                                                          0.02),
-                                                              width:
-                                                                  deviceWidth *
-                                                                      0.14,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                      borderRadius: const BorderRadius
-                                                                              .all(
-                                                                          Radius.circular(
-                                                                              10)),
-                                                                      border:
-                                                                          Border
-                                                                              .all(
-                                                                        color: AppColors
-                                                                            .appointmentscolor,
-                                                                        width:
-                                                                            1,
-                                                                      )),
-                                                              child:
-                                                                  MaterialButton(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10)),
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                onPressed:
-                                                                    () {},
-                                                                child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Text(month,
-                                                                        style: AppFonts
-                                                                            .poppinsRegular
-                                                                            .copyWith(
-                                                                          fontSize:
-                                                                              AppFonts.smallFontSize,
-                                                                        )),
-                                                                    Text(
-                                                                      date.toString(),
-                                                                      textAlign:
-                                                                          TextAlign
-                                                                              .center,
-                                                                      style: AppFonts
-                                                                          .poppinsMedium
-                                                                          .copyWith(),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            );
-                                                          }),
-                                                    )
-                                                  ],
-                                                ),
-                                              )));
-                                    },
-                                    childCount: pickupscontroller
+                                      (context, index) {
+                                    String startdate = pickupscontroller
                                         .appointmentData
-                                        .activeAppointments
-                                        .length,
-                                  ),
+                                        .activeAppointments[index]
+                                        .appointmentDateStart;
+                                    String enddate = pickupscontroller
+                                        .appointmentData
+                                        .activeAppointments[index]
+                                        .appointmentDateEnd;
+
+                                    final initaldate = pickupscontroller
+                                        .dateConverter
+                                        .getMonthFromDate(startdate);
+                                    final endingdate = pickupscontroller
+                                        .dateConverter
+                                        .getMonthFromDate(enddate);
+                                    final initalday = pickupscontroller
+                                        .dateConverter
+                                        .getDayFromDate(startdate);
+                                    final endingday = pickupscontroller
+                                        .dateConverter
+                                        .getDayFromDate(enddate);
+
+                                    final totalremainingdays = pickupscontroller
+                                        .dateConverter
+                                        .remainingdays(enddate);
+
+                                    double percent = totalremainingdays == 0 ||
+                                            totalremainingdays < 0
+                                        ? 1
+                                        : 1 / totalremainingdays;
+                                    final data = pickupscontroller
+                                        .appointmentData
+                                        .activeAppointments[index];
+                                    return Column(
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: deviceHeight * 0.03,
+                                              horizontal: deviceWidth * 0.03),
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: 1,
+                                                    blurStyle: BlurStyle.solid,
+                                                    color: AppColors.kBlackColor
+                                                        .withOpacity(0.1),
+                                                    offset: const Offset(0, 1))
+                                              ],
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              color: AppColors.kWhiteColor),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: deviceWidth * 0.01,
+                                              vertical: deviceHeight * 0.01),
+                                          child: TableCalendar(
+                                            focusedDay: pickupscontroller
+                                                .upcomingPickup!.pickupDate,
+
+                                            headerStyle: HeaderStyle(
+                                                titleCentered: false,
+                                                titleTextStyle: AppFonts
+                                                    .poppinsMedium
+                                                    .copyWith(
+                                                        fontSize: AppFonts
+                                                            .mediumFontSize)),
+                                            rowHeight: deviceHeight * 0.14,
+                                            // calendarFormat: _format,
+                                            weekendDays: const [
+                                              DateTime.monday,
+                                              DateTime.wednesday,
+                                              DateTime.friday
+                                            ],
+                                            calendarStyle: CalendarStyle(
+                                              selectedDecoration: BoxDecoration(
+
+                                                  // Set default green color for Monday, Wednesday, and Friday
+                                                  shape: BoxShape.circle,
+                                                  color:
+                                                      AppColors.kPrimaryColor),
+                                              weekendTextStyle: AppFonts
+                                                  .poppinsRegular
+                                                  .copyWith(
+                                                      fontSize: AppFonts
+                                                          .smallFontSize),
+                                              selectedTextStyle: AppFonts
+                                                  .poppinsRegular
+                                                  .copyWith(
+                                                      color: AppColors
+                                                          .kBackgroundColor),
+                                              disabledTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              outsideTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              withinRangeTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              defaultTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              todayTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              weekNumberTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              holidayTextStyle:
+                                                  AppFonts.poppinsRegular,
+                                              weekendDecoration: BoxDecoration(
+                                                  // Set default green color for Monday, Wednesday, and Friday
+                                                  shape: BoxShape.circle,
+                                                  color: AppColors.kPrimaryColor
+                                                      .withOpacity(0.2)),
+                                            ),
+                                            availableCalendarFormats: const {
+                                              CalendarFormat.month: 'Month'
+                                            },
+                                            firstDay: DateTime.parse(
+                                                pickupscontroller
+                                                    .appointmentData
+                                                    .activeAppointments[index]
+                                                    .appointmentDateStart),
+                                            lastDay: DateTime.parse(
+                                                pickupscontroller
+                                                    .appointmentData
+                                                    .activeAppointments[index]
+                                                    .appointmentDateEnd),
+                                            onDaySelected: onDaySelected,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }, childCount: 1),
                                 ),
                               ],
                             ),
@@ -515,7 +261,8 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                       ? Center(
                           child: Text(
                             "No previous appointments found",
-                            style: AppFonts.poppinsRegular,
+                            style: AppFonts.poppinsRegular
+                                .copyWith(fontSize: AppFonts.smallFontSize),
                           ),
                         )
                       : CustomScrollView(

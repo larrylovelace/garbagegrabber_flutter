@@ -58,13 +58,9 @@ class _OtpScreenState extends State<OtpScreen> {
           setState(() {
             isLoading = false;
             CustomSnackBar.show(
-                context,
-                'Success',
-                'OTP verified Successfully',
-                AppColors.primaryColor, // Custom background color
-                Icons.check, // Custom icon
-                AppColors.primaryColor // Custom icon color
-                );
+              context,
+              'OTP verified Successfully',
+            );
             Get.offNamed(AppRoutes.formfill,
                 arguments: {'email': email, 'password': password});
           });
@@ -77,13 +73,9 @@ class _OtpScreenState extends State<OtpScreen> {
             isotpInvalid = true;
             isLoading = false;
             CustomSnackBar.show(
-                context,
-                'Error',
-                errormsg['error'],
-                AppColors.errorColor, // Custom background color
-                Icons.error_rounded, // Custom icon
-                AppColors.errorColor // Custom icon color
-                );
+              context,
+              errormsg['error'],
+            );
           });
           Future.delayed(const Duration(seconds: 5), () {
             if (mounted) {
@@ -139,7 +131,7 @@ class _OtpScreenState extends State<OtpScreen> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: AppColors.planeColor,
+      backgroundColor: AppColors.kBackgroundColor,
       appBar: AppBar(
         leading: Ink(
           child: IconButton(
@@ -153,7 +145,7 @@ class _OtpScreenState extends State<OtpScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.kBackgroundColor,
       ),
       body: Center(
         child: GestureDetector(
@@ -214,8 +206,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       borderRadius: BorderRadius.circular(6),
                       borderWidth: 0.5,
                       activeColor: isotpInvalid
-                          ? AppColors.errorColor
-                          : AppColors.primaryColor,
+                          ? AppColors.kErrorColor
+                          : AppColors.kPrimaryColor,
                       activeFillColor: Colors.transparent.withOpacity(0.018),
                       inactiveFillColor: Colors.transparent.withOpacity(0.018),
                       selectedFillColor: Colors.transparent.withOpacity(0.018),
@@ -257,11 +249,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     startResendTimer();
                                     CustomSnackBar.show(
                                       context,
-                                      'Success',
                                       'OTP code sent successfully',
-                                      AppColors.primaryColor,
-                                      Icons.check, // Custom icon
-                                      AppColors.primaryColor,
                                     );
                                   });
                                 }
@@ -275,7 +263,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               'Resend code',
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.poppins(
-                                  color: AppColors.primaryColor),
+                                  color: AppColors.kPrimaryColor),
                             ),
                           ),
                         if (!showResendText)
@@ -285,7 +273,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                   'Resend in ${countdown.toString().padLeft(2, '0')} sec',
                                   overflow: TextOverflow.ellipsis,
                                   style: AppFonts.poppinsRegular.copyWith(
-                                      color: AppColors.primaryColor))),
+                                      color: AppColors.kPrimaryColor))),
                       ],
                     ),
                     SizedBox(
@@ -296,7 +284,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
-                          color: AppColors.primaryColor),
+                          color: AppColors.kPrimaryColor),
                       child: MaterialButton(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(6)),
@@ -306,12 +294,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                 isLoading = false;
                                 CustomSnackBar.show(
                                   context,
-                                  'Error',
                                   'Enter the OTP',
-                                  AppColors
-                                      .errorColor, // Custom background color
-                                  Icons.error_rounded, // Custom icon
-                                  AppColors.errorColor, // Custom icon color
                                 );
                               });
                             } else {
@@ -327,14 +310,14 @@ class _OtpScreenState extends State<OtpScreen> {
                                       height: deviceWidth * 0.062,
                                       child: CircularProgressIndicator(
                                           strokeWidth: 1.7,
-                                          color: AppColors.planeColor),
+                                          color: AppColors.kBackgroundColor),
                                     ),
                                   ],
                                 )
                               : Text('Verify',
                                   style: AppFonts.poppinsMedium.copyWith(
                                       fontSize: AppFonts.mediumFontSize,
-                                      color: AppColors.planeColor))),
+                                      color: AppColors.kBackgroundColor))),
                     ),
                   ],
                 ),

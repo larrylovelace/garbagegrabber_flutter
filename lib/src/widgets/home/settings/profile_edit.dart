@@ -24,10 +24,10 @@ class ProfileEditField extends StatelessWidget {
           labelStyle: AppFonts.poppinsRegular
               .copyWith(letterSpacing: 0.2, fontSize: AppFonts.smallFontSize),
           focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1),
+              borderSide: BorderSide(color: AppColors.kPrimaryColor, width: 1),
               borderRadius: const BorderRadius.all(Radius.circular(12))),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 0.5),
+              borderSide: BorderSide(color: AppColors.kPrimaryColor, width: 0.5),
               borderRadius: const BorderRadius.all(Radius.circular(12)))),
     );
   }

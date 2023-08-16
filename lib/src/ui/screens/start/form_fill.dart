@@ -91,11 +91,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
       // ignore: use_build_context_synchronously
       CustomSnackBar.show(
         context,
-        'Error',
         'Something went wrong',
-        AppColors.errorColor, // Custom background color
-        Icons.error_rounded, // Custom icon
-        AppColors.errorColor, // Custom icon color
       );
     }
   }
@@ -166,23 +162,15 @@ class _FormFillScreenState extends State<FormFillScreen> {
         Get.offAllNamed(AppRoutes.screenhandler);
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
-            context,
-            'Success',
-            'Welcome to Garbage Grabber',
-            AppColors.primaryColor, // Custom background color
-            Icons.check, // Custom icon
-            AppColors.primaryColor // Custom icon color
-            );
+          context,
+          'Welcome to Garbage Grabber',
+        );
       } else {
         Get.back();
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
-          'Error',
           'Something went wrong',
-          AppColors.errorColor, // Custom background color
-          Icons.error_rounded, // Custom icon
-          AppColors.errorColor, // Custom icon color
         );
       }
     } catch (e) {
@@ -220,7 +208,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
       showModalBottomSheet(
           enableDrag: true,
           isDismissible: true,
-          backgroundColor: AppColors.secondaryColor,
+          backgroundColor: AppColors.kBackgroundColor,
           isScrollControlled: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
@@ -666,7 +654,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
           title: Text(
             'Fill your details',
@@ -686,13 +674,13 @@ class _FormFillScreenState extends State<FormFillScreen> {
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           elevation: 0,
-          backgroundColor: AppColors.planeColor,
+          backgroundColor: AppColors.kBackgroundColor,
         ),
         body: Theme(
           data: Theme.of(context).copyWith(
               colorScheme: ColorScheme.light(
-                  secondary: AppColors.planeColor,
-                  primary: AppColors.primaryColor)),
+                  secondary: AppColors.kWhiteColor,
+                  primary: AppColors.kPrimaryColor)),
           child: GetBuilder<SetupScreenController>(
             builder: (controller) {
               return Stepper(
@@ -742,7 +730,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
-                                color: AppColors.primaryColor),
+                                color: AppColors.kPrimaryColor),
                             child: MaterialButton(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6)),
@@ -753,7 +741,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                                 'Next',
                                 style: AppFonts.poppinsMedium.copyWith(
                                     fontSize: AppFonts.mediumFontSize,
-                                    color: AppColors.planeColor),
+                                    color: AppColors.kWhiteColor),
                               ),
                             ),
                           ),
@@ -769,7 +757,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(6),
-                                  color: AppColors.cancelButtonColor),
+                                  color: AppColors.kCancelButtonColor),
                               child: MaterialButton(
                                 onPressed: () {
                                   details.onStepCancel!();
@@ -778,7 +766,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
                                   'Cancel',
                                   style: AppFonts.poppinsMedium.copyWith(
                                       fontSize: AppFonts.mediumFontSize,
-                                      color: AppColors.planeColor),
+                                      color: AppColors.kWhiteColor),
                                 ),
                               ),
                             ),

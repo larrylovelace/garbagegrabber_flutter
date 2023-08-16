@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../../utils/colors.dart';
 import '../../utils/fonts.dart';
 
@@ -14,7 +13,7 @@ class LoadingDialog {
         return WillPopScope(
           onWillPop: () async => false,
           child: AlertDialog(
-            backgroundColor: AppColors.secondaryColor,
+            backgroundColor: AppColors.kBackgroundColor,
             content: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -22,9 +21,7 @@ class LoadingDialog {
                   height: 25,
                   width: 25,
                   child: CircularProgressIndicator(
-                    strokeWidth: 3,
-                    color: AppColors.primaryColor,
-                  ),
+                      strokeWidth: 3, color: AppColors.kPrimaryColor),
                 ),
                 SizedBox(width: deviceWidth * 0.05),
                 Text(

@@ -8,79 +8,43 @@ import '../../utils/fonts.dart';
 
 SnackBar buildErrorSnackBar(BuildContext context, dynamic error) {
   String errorMessage;
-  IconData errorIcon;
 
   if (error is TimeoutException) {
     errorMessage = 'Something went wrong. Please try again later.';
-    errorIcon = Icons.error_rounded;
   } else if (error is SocketException) {
     errorMessage = 'Please check your internet connection.';
-    errorIcon = Icons.wifi_off_rounded;
   } else {
     errorMessage = 'Something went wrong.';
-    errorIcon = Icons.error_rounded;
   }
 
   return SnackBar(
-    elevation: 0,
-    duration: const Duration(seconds: 2),
-    behavior: SnackBarBehavior.floating,
-    content: Container(
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      width: MediaQuery.of(context).size.width * 0.06,
-      height: MediaQuery.of(context).size.height * 0.048,
-      child: Row(
+      width: MediaQuery.of(context).size.width / 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 0,
+      duration: const Duration(seconds: 3),
+      behavior: SnackBarBehavior.floating,
+      content: Row(
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Align content vertically
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.06,
-            height: MediaQuery.of(context).size.width * 0.06,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Icon(
-                errorIcon,
-                color: Colors.red,
-                size: 18,
-              ),
-            ),
+          Center(
+              child: Image.asset(
+            'assets/snackbar_icon.png',
+            height: MediaQuery.of(context).size.height * 0.035,
+          )),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.02,
           ),
-          const SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    'Error',
-                    style: AppFonts.poppinsMedium.copyWith(
-                        color: AppColors.planeColor,
-                        fontSize: AppFonts.snackBarfontlarge),
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.width * 0.007,
-                ),
-                Flexible(
-                  child: Text(
-                    errorMessage,
-                    style: AppFonts.poppinsLightMediumsnackBar.copyWith(
-                        color: AppColors.planeColor,
-                        fontSize: AppFonts.snackBarfontsmall),
-                  ),
-                ),
-              ],
+          Flexible(
+            child: Text(
+              errorMessage,
+              maxLines: 2,
+              style: AppFonts.poppinsLightMediumsnackBar.copyWith(
+                  color: AppColors.kWhiteColor,
+                  fontSize: AppFonts.smallFontSize),
             ),
           ),
         ],
       ),
-    ),
-    backgroundColor: Colors.red,
-  );
+      backgroundColor: AppColors.kBlackColor);
 }

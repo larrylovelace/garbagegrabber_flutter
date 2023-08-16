@@ -91,13 +91,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
           startResendTimer();
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
-            context,
-            'Success',
-            'OTP code sent successfully',
-            AppColors.primaryColor,
-            Icons.check, // Custom icon
-            AppColors.primaryColor,
-          );
+              context, 'OTP code sent successfully');
         } else if (response.statusCode == 401) {
           await box.clear();
           await storage.deleteAll();
@@ -106,11 +100,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
             'Unauthorized',
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
           );
         }
       } else {
@@ -127,7 +117,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: AppColors.planeColor,
+      backgroundColor: AppColors.kBackgroundColor,
       appBar: AppBar(
         leading: Ink(
           child: IconButton(
@@ -141,7 +131,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         elevation: 0,
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.kBackgroundColor,
       ),
       body: Center(
           child: Obx(
@@ -200,8 +190,8 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                     borderRadius: BorderRadius.circular(6),
                     borderWidth: 0.5,
                     activeColor: settingsScreenController.isotpInvalid.value
-                        ? AppColors.errorColor
-                        : AppColors.primaryColor,
+                        ? AppColors.kErrorColor
+                        : AppColors.kPrimaryColor,
                     activeFillColor: Colors.transparent.withOpacity(0.018),
                     inactiveFillColor: Colors.transparent.withOpacity(0.018),
                     selectedFillColor: Colors.transparent.withOpacity(0.018),
@@ -233,7 +223,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                             'Resend code',
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.poppins(
-                                color: AppColors.primaryColor),
+                                color: AppColors.kPrimaryColor),
                           ),
                         ),
                       if (!settingsScreenController.showResendText.value)
@@ -243,7 +233,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                                 'Resend in ${countdown.toString().padLeft(2, '0')} sec',
                                 overflow: TextOverflow.ellipsis,
                                 style: AppFonts.poppinsRegular
-                                    .copyWith(color: AppColors.primaryColor))),
+                                    .copyWith(color: AppColors.kPrimaryColor))),
                     ],
                   ),
                   SizedBox(
@@ -254,7 +244,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
-                        color: AppColors.primaryColor),
+                        color: AppColors.kPrimaryColor),
                     child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(6)),
@@ -266,13 +256,11 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                             settingsScreenController.isLoading.value = false;
 
                             CustomSnackBar.show(
-                                context,
-                                'Error',
-                                'Enter the OTP',
-                                AppColors.errorColor, // Custom background color
-                                Icons.error_rounded, // Custom icon
-                                AppColors.errorColor // Custom icon color
-                                );
+                              context,
+
+                              'Enter the OTP',
+                        
+                            );
                           } else {
                             showDialog(
                                 context: context,
@@ -308,14 +296,14 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                                     height: deviceWidth * 0.062,
                                     child: CircularProgressIndicator(
                                         strokeWidth: 1.7,
-                                        color: AppColors.planeColor),
+                                        color: AppColors.kWhiteColor),
                                   ),
                                 ],
                               )
                             : Text('Verify',
                                 style: AppFonts.poppinsMedium.copyWith(
                                     fontSize: AppFonts.mediumFontSize,
-                                    color: AppColors.planeColor))),
+                                    color: AppColors.kWhiteColor))),
                   ),
                 ],
               ),

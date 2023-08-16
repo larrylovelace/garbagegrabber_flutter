@@ -8,12 +8,12 @@ class AppointmentData {
   });
 
   factory AppointmentData.fromJson(Map<String, dynamic> json) {
-    List<dynamic> activeAppointmentsData = json['active_appointments'];
+    List<dynamic> activeAppointmentsData = json['active'];
     List<Appointment> activeAppointments = activeAppointmentsData
         .map((item) => Appointment.fromJson(item))
         .toList();
 
-    List<dynamic> inactiveAppointmentsData = json['inactive_appointments'];
+    List<dynamic> inactiveAppointmentsData = json['past'];
     List<Appointment> inactiveAppointments = inactiveAppointmentsData
         .map((item) => Appointment.fromJson(item))
         .toList();
@@ -126,6 +126,23 @@ class Pickup {
           json['picked_on'] != null ? DateTime.parse(json['picked_on']) : null,
       customer: json['customer'],
       appointment: json['appointment'],
+    );
+  }
+}
+
+class UpcomingPickup {
+  final int pickupId;
+  final DateTime pickupDate;
+
+  UpcomingPickup({
+    required this.pickupId,
+    required this.pickupDate,
+  });
+
+  factory UpcomingPickup.fromJson(Map<String, dynamic> json) {
+    return UpcomingPickup(
+      pickupId: json['pickup_id'],
+      pickupDate: DateTime.parse(json['pickup_date']),
     );
   }
 }

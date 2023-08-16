@@ -1,15 +1,13 @@
 import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import 'package:flutter_svg/svg.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 import 'package:garbage_grabber/src/ui/screens/home/screenhandler.dart';
 import 'package:garbage_grabber/src/widgets/global/custom_button.dart';
 import 'package:garbage_grabber/src/widgets/global/error_dialog.dart';
 import 'package:get/get.dart';
-
 import 'package:http/http.dart' as http;
 
 import '../../../services/apihandler.dart';
@@ -62,11 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
-          'Success',
           'Login successfully',
-          AppColors.primaryColor, // Custom background color
-          Icons.check, // Custom icon
-          AppColors.primaryColor, // Custom icon color
         );
       } else if (response.statusCode == 400) {
         Map value = jsonDecode(response.body);
@@ -79,11 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
 // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
             value['password'][0],
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
           );
         }
 
@@ -127,10 +117,10 @@ class _LoginScreenState extends State<LoginScreen> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: AppColors.planeColor,
+      backgroundColor: AppColors.kBackgroundColor,
       appBar: AppBar(
         toolbarHeight: 20,
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.kBackgroundColor,
         elevation: 0,
       ),
       body: Center(
@@ -141,153 +131,155 @@ class _LoginScreenState extends State<LoginScreen> {
           }),
           child: GetBuilder<SetupScreenController>(
             builder: (controller) {
-              return Form(
-                key: _formKey1,
-                child:
-                    ListView(physics: const ClampingScrollPhysics(), children: [
-                  SizedBox(
-                    height: deviceHeight * 0.2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Login',
-                          style: AppFonts.poppinsBold
-                              .copyWith(fontSize: AppFonts.largeFontSize)),
-                    ],
-                  ),
-                  SizedBox(
-                    height: deviceHeight * 0.05,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: deviceWidth * 0.05,
-                      right: deviceWidth * 0.05,
-                    ),
-                    child: Column(
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: deviceWidth * 0.08,
+                  right: deviceWidth * 0.08,
+                ),
+                child: Form(
+                  key: _formKey1,
+                  child: ListView(
+                      physics: const ClampingScrollPhysics(),
                       children: [
-                        InputField(
-                          readonly: false,
-                          isPrefix: true,
-                          prefixIcon: const Icon(Icons.email_outlined),
-                          errorText: controller.errormail
-                              ? controller.errormailvalue
-                              : null,
-                          hintText: 'Email',
-                          keywordType: TextInputType.emailAddress,
-                          validation: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email required ';
-                            } else if (!EmailValidator.validate(value)) {
-                              return 'Invalid format';
-                            } else {
-                              return null;
-                            }
-                          },
-                          obscureText: false,
-                          controller: email,
-                          suffix: null,
+                        SvgPicture.asset(
+                          'assets/login.svg',
+                          height: deviceHeight * 0.38,
+                        ),
+                        SizedBox(
+                          height: deviceHeight * 0.05,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text('Login',
+                                style: AppFonts.poppinsBold.copyWith(
+                                    fontSize: AppFonts.largeFontSize)),
+                          ],
                         ),
                         SizedBox(
                           height: deviceHeight * 0.02,
                         ),
-                        InputField(
-                          readonly: false,
-                          isPrefix: true,
-                          prefixIcon: const Icon(Icons.lock_outlined),
-                          errorText: null,
-                          hintText: 'Password',
-                          keywordType: TextInputType.visiblePassword,
-                          validation: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                value.length < 8) {
-                              return 'Your password must be at least 8 characters';
-                            } else if (RegExp(r"\s").hasMatch(value)) {
-                              return 'Spaces are not allowed';
-                            } else {
-                              return null;
-                            }
-                          },
-                          obscureText: controller.passwordObscuredlogin,
-                          controller: password,
-                          suffix: IconButton(
-                            splashRadius: 5,
-                            onPressed: (() {
-                              controller.loginVisibility();
-                            }),
-                            icon: Icon(
-                                controller.passwordObscuredlogin
-                                    ? Icons.visibility_off_sharp
-                                    : Icons.visibility_sharp,
-                                color: AppColors.iconColor),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: deviceHeight * 0.05,
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(
-                        left: deviceWidth * 0.05,
-                        right: deviceWidth * 0.05,
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            height: deviceHeight * 0.052,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: AppColors.primaryColor),
-                            child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(6)),
-                                onPressed: () async {
-                                  final isvalid =
-                                      _formKey1.currentState!.validate();
-                                  if (isvalid) {
-                                    FocusScope.of(context).unfocus();
-                                    LoadingDialog.show(context);
+                        Column(
+                          children: [
+                            InputField(
+                              readonly: false,
+                              isPrefix: true,
+                              prefixIcon: Icons.email_outlined,
+                              errorText: controller.errormail
+                                  ? controller.errormailvalue
+                                  : null,
+                              hintText: 'Email',
+                              keywordType: TextInputType.emailAddress,
+                              validation: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Email required ';
+                                } else if (!EmailValidator.validate(value)) {
+                                  return 'Invalid format';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              obscureText: false,
+                              controller: email,
+                              suffix: null,
+                            ),
+                            SizedBox(
+                              height: deviceHeight * 0.02,
+                            ),
+                            InputField(
+                              readonly: false,
+                              isPrefix: true,
+                              prefixIcon: Icons.lock_outlined,
+                              errorText: null,
+                              hintText: 'Password',
+                              keywordType: TextInputType.visiblePassword,
+                              validation: (value) {
+                                if (value == null ||
+                                    value.isEmpty ||
+                                    value.length < 8) {
+                                  return 'Your password must be at least 8 characters';
+                                } else if (RegExp(r"\s").hasMatch(value)) {
+                                  return 'Spaces are not allowed';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              obscureText: controller.passwordObscuredlogin,
+                              controller: password,
+                              suffix: IconButton(
+                                splashRadius: 5,
+                                onPressed: (() {
+                                  controller.loginVisibility();
+                                }),
+                                icon: Icon(
+                                  controller.passwordObscuredlogin
+                                      ? Icons.visibility_off_sharp
+                                      : Icons.visibility_sharp,
+                                  color: AppColors.iconColor,
+                                  size: AppFonts.largeFontSize,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: deviceHeight * 0.05,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              color: AppColors.kPrimaryColor),
+                          child: MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6)),
+                              onPressed: () async {
+                                final isvalid =
+                                    _formKey1.currentState!.validate();
+                                if (isvalid) {
+                                  FocusScope.of(context).unfocus();
+                                  LoadingDialog.show(context);
 
-                                    sendingBody = {
-                                      "email": email.text,
-                                      "password": password.text
-                                    };
-                                    await login(context, sendingBody);
-                                  }
+                                  sendingBody = {
+                                    "email": email.text,
+                                    "password": password.text
+                                  };
+                                  await login(context, sendingBody);
+                                }
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Login',
+                                      style: AppFonts.poppinsMedium.copyWith(
+                                          fontSize: AppFonts.mediumFontSize,
+                                          color: AppColors.kWhiteColor)),
+                                ],
+                              )),
+                        ),
+                        SizedBox(
+                          height: deviceHeight * 0.1,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Don't have an account ?",
+                                style: AppFonts.poppinsRegular.copyWith()),
+                            TextButton(
+                                onPressed: () {
+                                  // Get.delete();
+                                  Get.offNamed(AppRoutes.register);
                                 },
-                                child: Text('Login',
-                                    style: AppFonts.poppinsMedium.copyWith(
-                                        fontSize: AppFonts.mediumFontSize,
-                                        color: AppColors.planeColor))),
-                          ),
-                          SizedBox(
-                            height: deviceHeight * 0.01,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Don't have an account ?",
-                                  style: AppFonts.poppinsRegular.copyWith()),
-                              TextButton(
-                                  onPressed: () {
-                                    // Get.delete();
-                                    Get.offNamed(AppRoutes.register);
-                                  },
-                                  child: Text(
-                                    'Sign up',
-                                    style: AppFonts.poppinsRegular.copyWith(
-                                      color: AppColors.primaryColor,
-                                    ),
-                                  ))
-                            ],
-                          )
-                        ],
-                      )),
-                ]),
+                                child: Text(
+                                  'Sign up',
+                                  style: AppFonts.poppinsRegular.copyWith(
+                                    color: AppColors.kPrimaryColor,
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ]),
+                ),
               );
             },
           ),
@@ -314,7 +306,7 @@ class OtpDialog extends StatelessWidget {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Dialog(
-      backgroundColor: const Color.fromARGB(255, 255, 252, 252),
+      backgroundColor: AppColors.kBackgroundColor,
       elevation: 0,
       child: SingleChildScrollView(
         child: Container(
@@ -373,8 +365,8 @@ class OtpDialog extends StatelessWidget {
                         deviceHeight: deviceHeight,
                         deviceWidth: deviceWidth / 1.1,
                         text: 'Send',
-                        textcolor: AppColors.planeColor,
-                        buttoncolor: AppColors.primaryColor,
+                        textcolor: AppColors.kWhiteColor,
+                        buttoncolor: AppColors.kPrimaryColor,
                         oncallback: () async {
                           LoadingDialog.show(context);
                           try {
@@ -405,8 +397,8 @@ class OtpDialog extends StatelessWidget {
                         deviceHeight: deviceHeight,
                         deviceWidth: deviceWidth / 1.1,
                         text: 'Cancel',
-                        textcolor: AppColors.planeColor,
-                        buttoncolor: AppColors.cancelButtonColor,
+                        textcolor: AppColors.kWhiteColor,
+                        buttoncolor: AppColors.kCancelButtonColor,
                         oncallback: () {
                           Get.back();
                         })

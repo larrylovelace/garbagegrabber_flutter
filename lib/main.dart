@@ -7,6 +7,7 @@ import 'package:garbage_grabber/src/data/controllers/routes.dart';
 import 'package:garbage_grabber/src/data/models/products.dart';
 
 import 'package:garbage_grabber/src/utils/colors.dart';
+import 'package:garbage_grabber/src/utils/fonts.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -31,6 +32,7 @@ void main() async {
   // Print the values inside the box
 
   Stripe.publishableKey = dotenv.env['publishablekey']!;
+  // Initialize here
 
   runApp(const MyApp());
 }
@@ -43,16 +45,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: AppColors.planeColor // transparent status bar
+        systemNavigationBarColor:
+            AppColors.kBackgroundColor // transparent status bar
         ));
+    AppFonts.init(context); // Initialize here
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryColor,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.kPrimaryColor),
       ),
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.paymentsuccess,
       getPages: AppRoutes.routes,
     );
   }

@@ -12,7 +12,6 @@ import '../../../data/models/pickups_model.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import 'pickups/pickups.dart';
-import 'floatingbutton/customerqr.dart';
 import 'home screen/homescreen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -36,7 +35,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     double deviceheight = MediaQuery.of(context).size.height;
-    double deviceWidth = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
         if (Get.find<MainScreenController>().currentIndex != 0) {
@@ -46,33 +44,13 @@ class _MainScreenState extends State<MainScreen> {
         return true;
       },
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.primaryColor,
-          onPressed: () {
-            showModalBottomSheet(
-                backgroundColor: AppColors.planeColor,
-                isScrollControlled: true,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                  ),
-                ),
-                context: context,
-                builder: (context) => const QRprofile());
-
-            // Add your logic for the FAB button here
-          },
-          child: const Icon(UniconsLine.qrcode_scan),
-        ),
         bottomNavigationBar: BottomAppBar(
-          notchMargin: 7,
-          shape: const CircularNotchedRectangle(),
+          elevation: 0,
+          color: AppColors.kBackgroundColor,
           child: GetBuilder<MainScreenController>(
             builder: (controller) {
               return SizedBox(
-                height: deviceheight * 0.07,
+                height: deviceheight * 0.08,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -87,14 +65,15 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           Icon(
                             UniconsLine.home,
+                            size: AppFonts.largeFontSize,
                             color: controller.currentIndex == 0
-                                ? AppColors.primaryColor
+                                ? AppColors.kPrimaryColor
                                 : AppColors.iconColor,
                           ),
                           Text(
                             'Home',
-                            style:
-                                AppFonts.poppinsRegular.copyWith(fontSize: 12),
+                            style: AppFonts.poppinsRegular
+                                .copyWith(fontSize: AppFonts.navBarSize),
                           )
                         ],
                       ),
@@ -110,18 +89,16 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           Icon(
                             UniconsLine.calendar_alt,
+                            size: AppFonts.largeFontSize,
                             color: controller.currentIndex == 1
-                                ? AppColors.primaryColor
+                                ? AppColors.kPrimaryColor
                                 : AppColors.iconColor,
                           ),
                           Text('Pickups',
                               style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 12))
+                                  .copyWith(fontSize: AppFonts.navBarSize))
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      width: deviceWidth * 0.06,
                     ),
                     MaterialButton(
                       highlightColor: Colors.transparent,
@@ -134,13 +111,14 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           Icon(
                             UniconsLine.bill,
+                            size: AppFonts.largeFontSize,
                             color: controller.currentIndex == 2
-                                ? AppColors.primaryColor
+                                ? AppColors.kPrimaryColor
                                 : AppColors.iconColor,
                           ),
                           Text('Payments',
                               style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 12))
+                                  .copyWith(fontSize: AppFonts.navBarSize))
                         ],
                       ),
                     ),
@@ -155,13 +133,14 @@ class _MainScreenState extends State<MainScreen> {
                         children: [
                           Icon(
                             UniconsLine.setting,
+                            size: AppFonts.largeFontSize,
                             color: controller.currentIndex == 3
-                                ? AppColors.primaryColor
+                                ? AppColors.kPrimaryColor
                                 : AppColors.iconColor,
                           ),
                           Text('Settings',
                               style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: 12))
+                                  .copyWith(fontSize: AppFonts.navBarSize))
                         ],
                       ),
                     )

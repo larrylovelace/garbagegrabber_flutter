@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 
 import 'package:get/get.dart';
@@ -17,9 +18,10 @@ class PaymentSuccess extends StatefulWidget {
 class _PaymentSuccessState extends State<PaymentSuccess> {
   final MainScreenController mainScreenController =
       Get.find<MainScreenController>();
-  var paidamount = Get.arguments['amount'];
-  int unixTimestamp = Get.arguments['created'];
+  // var paidamount = Get.arguments['amount'];
+  // int unixTimestamp = Get.arguments['created'];
 
+  var paidamount = '22';
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
@@ -30,10 +32,10 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: AppColors.planeColor,
+        backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
           toolbarHeight: deviceHeight * 0.01,
-          backgroundColor: AppColors.planeColor,
+          backgroundColor: AppColors.kBackgroundColor,
           automaticallyImplyLeading: false,
           elevation: 0,
         ),
@@ -41,82 +43,65 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                height: deviceHeight * 0.14,
-                width: deviceWidth * 0.2,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primaryColor,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.check,
-                    size: 45,
-                    color: AppColors.planeColor,
-                  ),
-                ),
-              ),
               Column(
                 children: [
-                  Text(
-                    'Successful ',
-                    style: AppFonts.poppinsMedium
-                        .copyWith(fontSize: AppFonts.mediumFontSize),
+                  SvgPicture.asset(
+                    'assets/order_complete.svg',
+                    height: deviceHeight * 0.3,
                   ),
                   SizedBox(
-                    height: deviceHeight * 0.01,
+                    height: deviceHeight * 0.1,
                   ),
                   Text(
-                    'Your payment was done successfully',
-                    style: AppFonts.poppinsRegular
-                        .copyWith(fontSize: AppFonts.smallFontSize),
+                    'Payment Successfull !',
+                    style: AppFonts.poppinsRegular.copyWith(
+                        fontSize: AppFonts.mediumFontSize,
+                        color: AppColors.kPrimaryColor),
                   ),
                   SizedBox(
-                    height: deviceHeight * 0.01,
+                    height: deviceHeight * 0.005,
                   ),
-                  Container(
-                    height: deviceHeight * 0.05,
-                    width: deviceWidth * 0.67,
-                    decoration: BoxDecoration(
-                        color: AppColors.fillColor.withOpacity(0.05),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(6))),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              'Amount Paid',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: AppFonts.smallFontSize),
-                            ),
-                          ),
-                          SizedBox(
-                            width: deviceWidth * 0.01,
-                          ),
-                          Flexible(
-                            child: Text(
-                              '\$$paidamount',
-                              style: AppFonts.poppinsMedium
-                                  .copyWith(fontSize: AppFonts.mediumFontSize),
-                            ),
-                          ),
-                        ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Amount Paid',
+                        style: AppFonts.poppinsRegular
+                            .copyWith(fontSize: AppFonts.smallFontSize),
                       ),
-                    ),
+                      SizedBox(
+                        width: deviceWidth * 0.04,
+                      ),
+                      Container(
+                        width: deviceWidth * 0.2,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadiusDirectional.circular(20),
+                            color: AppColors.kHighlightColor.withOpacity(0.1)),
+                        child: Center(
+                          child: Text(
+                            '\$$paidamount',
+                            style: AppFonts.poppinsBold.copyWith(
+                                fontSize: AppFonts.mediumFontSize,
+                                color: AppColors.kHighlightColor),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                   SizedBox(
-                    height: deviceHeight * 0.04,
+                    height: deviceHeight * 0.01,
+                  ),
+                  SizedBox(
+                    height: deviceHeight * 0.01,
                   ),
                   Container(
+                      height: deviceHeight * 0.05,
                       margin: EdgeInsets.only(
-                          left: deviceWidth * 0.05, right: deviceWidth * 0.05),
-                      height: deviceHeight * 0.048,
+                          left: deviceWidth * 0.08, right: deviceWidth * 0.08),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.primaryColor),
+                          borderRadius: BorderRadius.circular(15),
+                          color: AppColors.kPrimaryColor),
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
@@ -125,10 +110,10 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                           Get.offAllNamed(AppRoutes.screenhandler);
                         },
                         child: Text(
-                          'OK',
-                          style: AppFonts.poppinsBold.copyWith(
-                              color: AppColors.planeColor,
-                              fontSize: AppFonts.mediumFontSize),
+                          'Finish',
+                          style: AppFonts.poppinsLightMedium.copyWith(
+                              color: AppColors.kWhiteColor,
+                              fontSize: AppFonts.largeFontSize),
                         ),
                       ))
                 ],

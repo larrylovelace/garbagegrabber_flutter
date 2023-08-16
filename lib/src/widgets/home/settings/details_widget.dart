@@ -24,6 +24,7 @@ class DetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double deviceHeight = MediaQuery.of(context).size.height;
     return ListTile(
       onTap: () {
         onpress();
@@ -31,26 +32,30 @@ class DetailsWidget extends StatelessWidget {
       contentPadding: EdgeInsets.only(left: deviceWidth * 0.03),
       minLeadingWidth: deviceWidth * 0.1,
       leading: leadingicon
-          ? Container(
-              width: deviceWidth * 0.09,
-              height: deviceWidth * 0.09,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: AppColors.profileMenuIcon),
-              child: Icon(icon, color: AppColors.primaryColor),
+          ? CircleAvatar(
+              backgroundColor: deviceHeight > 1000
+                  ? Colors.transparent
+                  : AppColors.kPrimaryColor.withOpacity(0.1),
+              child: Icon(
+                icon,
+                color: AppColors.kPrimaryColor,
+                size: AppFonts.largeFontSize,
+              ),
             )
           : const SizedBox(),
       title: Row(
         children: [
           Text(title,
               style: AppFonts.poppinsLightMedium.copyWith(
-                  fontSize: 14, letterSpacing: 0.1, color: textColor)),
+                  fontSize: AppFonts.smalltext,
+                  letterSpacing: 0.1,
+                  color: textColor)),
         ],
       ),
       subtitle: Text(
         subtitle,
         style: AppFonts.poppinsRegular
-            .copyWith(fontSize: AppFonts.smallFontSize, letterSpacing: 0.3),
+            .copyWith(fontSize: AppFonts.smalltext, letterSpacing: 0.3),
       ),
     );
   }

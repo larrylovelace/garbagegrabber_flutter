@@ -8,7 +8,6 @@ import '../../../../services/token_manager.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
-import '../../../../utils/colors.dart';
 import '../../routes.dart';
 
 import 'package:http/http.dart' as http;
@@ -65,11 +64,9 @@ class SettingsScreenController extends GetxController {
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
+
             'Unauthorized',
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
+            // Custom background color
           );
         }
       } else {
@@ -112,11 +109,8 @@ class SettingsScreenController extends GetxController {
             // ignore: use_build_context_synchronously
             CustomSnackBar.show(
               context,
-              'Success',
               'Account Deleted Successfully',
-              AppColors.errorColor, // Custom background color
-              Icons.check, // Custom icon
-              AppColors.errorColor, // Custom icon color
+         
             );
           } else if (response.statusCode == 400) {
             Map<String, dynamic> errormsg = jsonDecode(response.body);
@@ -126,11 +120,9 @@ class SettingsScreenController extends GetxController {
             // ignore: use_build_context_synchronously
             CustomSnackBar.show(
               context,
-              'Error',
+
               errormsg['error'],
-              AppColors.errorColor, // Custom background color
-              Icons.error_rounded, // Custom icon
-              AppColors.errorColor, // Custom icon color
+          // Custom background color
             );
 
             Future.delayed(const Duration(seconds: 5), () {

@@ -8,7 +8,6 @@ import 'dart:convert';
 import '../../../models/currentappointment.dart';
 import '../../../models/homescreendata.dart';
 import '../../../models/products.dart';
-import '../../../../utils/colors.dart';
 import '../../../../services/apihandler.dart';
 import '../../date and time/datetime.dart';
 import '../../routes.dart';
@@ -99,11 +98,8 @@ class HomePageController extends GetxController {
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
-            'Error',
             'Unauthorized',
-            AppColors.errorColor, // Custom background color
-            Icons.error_rounded, // Custom icon
-            AppColors.errorColor, // Custom icon color
+            
           );
         }
       } else {
@@ -111,11 +107,8 @@ class HomePageController extends GetxController {
         // ignore: use_build_context_synchronously
         CustomSnackBar.show(
           context,
-          'Error',
           'Something went wrong',
-          AppColors.errorColor, // Custom background color
-          Icons.error_rounded, // Custom icon
-          AppColors.errorColor, // Custom icon color
+          
         );
         // Access token is expired or could not be obtained, handle accordingly
         Future.delayed(const Duration(seconds: 3), () {
@@ -127,11 +120,8 @@ class HomePageController extends GetxController {
       // ignore: use_build_context_synchronously
       CustomSnackBar.show(
         context,
-        'Error',
         'Something went wrong',
-        AppColors.errorColor, // Custom background color
-        Icons.error_rounded, // Custom icon
-        AppColors.errorColor, // Custom icon color
+        
       );
     }
   }

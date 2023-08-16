@@ -8,6 +8,7 @@ import '../../date and time/datetimehandler.dart';
 class PickupPageController extends GetxController {
   AppointmentData appointmentData =
       AppointmentData(activeAppointments: [], inactiveAppointments: []);
+  UpcomingPickup? upcomingPickup;
 
   DateConverter dateConverter = DateConverter();
   DateGenerator dategenerator = DateGenerator();
@@ -17,10 +18,12 @@ class PickupPageController extends GetxController {
     // Add the context parameter here
     try {
       Map<String, dynamic> data = await _pickupsRepository.pickupsRepo(context);
-      appointmentData = AppointmentData.fromJson(data['data']);
+      appointmentData = AppointmentData.fromJson(data['appointments']);
 
       if (appointmentData.activeAppointments.isEmpty) {
         appointmentsisempty = true;
+      } else {
+        upcomingPickup = UpcomingPickup.fromJson(data['upcoming_pickup']);
       }
       update();
     } catch (e) {
