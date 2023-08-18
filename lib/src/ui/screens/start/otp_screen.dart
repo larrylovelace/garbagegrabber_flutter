@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -89,7 +88,9 @@ class _OtpScreenState extends State<OtpScreen> {
         setState(() {
           isLoading = false;
         });
+        // ignore: use_build_context_synchronously
         final snackBar = buildErrorSnackBar(context, e);
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       // Trigger verification process here
@@ -254,17 +255,17 @@ class _OtpScreenState extends State<OtpScreen> {
                                   });
                                 }
                               } catch (e) {
+                                // ignore: use_build_context_synchronously
                                 final snackBar = buildErrorSnackBar(context, e);
+                                // ignore: use_build_context_synchronously
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                               }
                             },
-                            child: Text(
-                              'Resend code',
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.poppins(
-                                  color: AppColors.kPrimaryColor),
-                            ),
+                            child: Text('Resend code',
+                                overflow: TextOverflow.ellipsis,
+                                style: AppFonts.poppinsRegular
+                                    .copyWith(color: AppColors.kPrimaryColor)),
                           ),
                         if (!showResendText)
                           TextButton(

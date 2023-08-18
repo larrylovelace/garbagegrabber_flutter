@@ -14,6 +14,33 @@ class PickupPageController extends GetxController {
   DateGenerator dategenerator = DateGenerator();
   final PickupsRepository _pickupsRepository = PickupsRepository();
   bool appointmentsisempty = false;
+  DateTime? upcomingPickupDate;
+  String? upComingpickupMonth;
+  String? comingPickupDate;
+  String? remainingdays;
+  bool isSelectable(DateTime day) {
+    final weekday = day.weekday;
+    return weekday == DateTime.monday ||
+        weekday == DateTime.wednesday ||
+        weekday == DateTime.friday;
+  }
+
+  onDaySelected(DateTime day, DateTime focusedDays) {
+    if (isSelectable(day)) {
+      upcomingPickupDate = day;
+      upComingpickupMonth =
+          dateConverter.getMonthFromDate(upcomingPickupDate.toString());
+      comingPickupDate = dateConverter
+          .getDayFromDate(upcomingPickupDate.toString())
+          .toString();
+
+      remainingdays =
+          dateConverter.remainingdays(upcomingPickupDate.toString()).toString();
+
+      update();
+    }
+  }
+
   Future<void> pickupschedule(BuildContext context) async {
     // Add the context parameter here
     try {
@@ -24,6 +51,17 @@ class PickupPageController extends GetxController {
         appointmentsisempty = true;
       } else {
         upcomingPickup = UpcomingPickup.fromJson(data['upcoming_pickup']);
+        upcomingPickupDate = upcomingPickup!.pickupDate;
+
+        upComingpickupMonth =
+            dateConverter.getMonthFromDate(upcomingPickupDate.toString());
+        comingPickupDate = dateConverter
+            .getDayFromDate(upcomingPickupDate.toString())
+            .toString();
+
+        remainingdays = dateConverter
+            .remainingdays(upcomingPickupDate.toString())
+            .toString();
       }
       update();
     } catch (e) {

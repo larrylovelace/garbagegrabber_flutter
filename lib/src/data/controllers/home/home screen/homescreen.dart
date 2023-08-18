@@ -49,6 +49,7 @@ class HomePageController extends GetxController {
         if (response.statusCode == 200) {
           var data = json.decode(response.body);
           homescreendata = HomeScreenData.fromJson(data);
+
           if (data['current_appointment'].isNotEmpty) {
             currentAppointment =
                 CurrentAppointment.fromJson(data['current_appointment']);
@@ -99,7 +100,6 @@ class HomePageController extends GetxController {
           CustomSnackBar.show(
             context,
             'Unauthorized',
-            
           );
         }
       } else {
@@ -108,7 +108,6 @@ class HomePageController extends GetxController {
         CustomSnackBar.show(
           context,
           'Something went wrong',
-          
         );
         // Access token is expired or could not be obtained, handle accordingly
         Future.delayed(const Duration(seconds: 3), () {
@@ -121,7 +120,6 @@ class HomePageController extends GetxController {
       CustomSnackBar.show(
         context,
         'Something went wrong',
-        
       );
     }
   }

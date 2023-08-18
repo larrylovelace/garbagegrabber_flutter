@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:garbage_grabber/src/ui/screens/home/home%20screen/product_detail.dart';
 
 import 'package:get/get.dart';
@@ -108,11 +109,67 @@ class _HomeScreenState extends State<HomeScreen> {
                     return homecontroller.getHomeScreeData(context);
                   },
                   child: CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
                     slivers: [
                       SliverList(
                         delegate: SliverChildListDelegate([
                           homecontroller.currentAppointment == null
-                              ? const SizedBox()
+                              ? Container(
+                                  margin: EdgeInsets.symmetric(
+                                    horizontal: deviceWidth * 0.03,
+                                    vertical: deviceHeight * 0.01,
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: deviceWidth * 0.02,
+                                    vertical: deviceHeight * 0.01,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 1,
+                                            blurStyle: BlurStyle.solid,
+                                            color: AppColors.kBlackColor
+                                                .withOpacity(0.1),
+                                            offset: const Offset(0, 1))
+                                      ],
+                                      color: AppColors.kWhiteColor),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('Trash Ready ?',
+                                              style: AppFonts.poppinsMedium
+                                                  .copyWith(
+                                                fontSize:
+                                                    AppFonts.mediumFontSize,
+                                              )),
+                                          SizedBox(
+                                            height: deviceHeight * 0.005,
+                                          ),
+                                          Text(
+                                              'Schedule Pickup, Leave the Rest to Us!',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: AppFonts.poppinsRegular
+                                                  .copyWith(
+                                                      fontSize: AppFonts
+                                                          .minimalText)),
+                                        ],
+                                      ),
+                                      SvgPicture.asset(
+                                        'assets/pickups.svg',
+                                        height: deviceHeight > 1000
+                                            ? deviceHeight * 0.15
+                                            : deviceHeight * 0.1,
+                                      )
+                                    ],
+                                  ))
                               : Column(children: [
                                   Container(
                                     height: deviceHeight > 1000
@@ -221,58 +278,86 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 : deviceHeight *
                                                                     0.09,
                                                       ),
-                                                      Positioned(
-                                                          top: deviceHeight >
-                                                                  1000
-                                                              ? deviceHeight *
-                                                                  0.044
-                                                              : deviceHeight *
-                                                                  0.034,
-                                                          left: deviceHeight >
-                                                                  1000
-                                                              ? deviceHeight *
-                                                                  0.027
-                                                              : deviceHeight *
-                                                                  0.022,
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Row(
+                                                      int.parse(homecontroller
+                                                                  .remainingdays) ==
+                                                              0
+                                                          ? Positioned(
+                                                              top: deviceHeight > 1000
+                                                                  ? deviceHeight *
+                                                                      0.06
+                                                                  : deviceHeight *
+                                                                      0.049,
+                                                              left: deviceHeight >
+                                                                      1000
+                                                                  ? deviceHeight *
+                                                                      0.022
+                                                                  : deviceHeight *
+                                                                      0.018,
+                                                              child: Row(
                                                                 children: [
-                                                                  Text(
-                                                                      homecontroller
-                                                                          .remainingdays,
+                                                                  Text('Today',
                                                                       style: AppFonts
-                                                                          .poppinsBold
+                                                                          .poppinsMedium
                                                                           .copyWith(
                                                                         fontSize:
-                                                                            AppFonts.mediumFontSize,
+                                                                            AppFonts.smallFontSize,
                                                                         textBaseline:
                                                                             TextBaseline.alphabetic,
                                                                       )),
                                                                 ],
                                                               ),
-                                                              Row(
+                                                            )
+                                                          : Positioned(
+                                                              top: deviceHeight >
+                                                                      1000
+                                                                  ? deviceHeight *
+                                                                      0.044
+                                                                  : deviceHeight *
+                                                                      0.034,
+                                                              left: deviceHeight >
+                                                                      1000
+                                                                  ? deviceHeight *
+                                                                      0.027
+                                                                  : deviceHeight *
+                                                                      0.022,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
                                                                 children: [
-                                                                  Text(
-                                                                      int.parse(homecontroller.remainingdays) >
-                                                                              1
-                                                                          ? 'Days left'
-                                                                          : 'Day left',
-                                                                      style: AppFonts
-                                                                          .poppinsRegular
-                                                                          .copyWith(
-                                                                        fontSize:
-                                                                            AppFonts.innerboxTextSize,
-                                                                        textBaseline:
-                                                                            TextBaseline.alphabetic,
-                                                                      )),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                          homecontroller
+                                                                              .remainingdays,
+                                                                          style: AppFonts
+                                                                              .poppinsBold
+                                                                              .copyWith(
+                                                                            fontSize:
+                                                                                AppFonts.mediumFontSize,
+                                                                            textBaseline:
+                                                                                TextBaseline.alphabetic,
+                                                                          )),
+                                                                    ],
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      Text(
+                                                                          int.parse(homecontroller.remainingdays) > 1
+                                                                              ? 'Days left'
+                                                                              : 'Day left',
+                                                                          style: AppFonts
+                                                                              .poppinsRegular
+                                                                              .copyWith(
+                                                                            fontSize:
+                                                                                AppFonts.innerboxTextSize,
+                                                                            textBaseline:
+                                                                                TextBaseline.alphabetic,
+                                                                          )),
+                                                                    ],
+                                                                  )
                                                                 ],
-                                                              ),
-                                                            ],
-                                                          ))
+                                                              ))
                                                     ],
                                                   ),
                                                 ],
@@ -398,11 +483,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  ' Current Services',
+                                  ' Our Services',
                                   style: AppFonts.poppinsMedium.copyWith(
-                                    color: AppColors.kBlackColor,
-                                    fontSize: AppFonts.mediumtext,
-                                  ),
+                                      color: AppColors.kBlackColor,
+                                      fontSize: AppFonts.mediumtext,
+                                      letterSpacing: 0.5),
                                 ),
                               ],
                             ),
@@ -410,9 +495,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]),
                       ),
                       SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 0.8,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: deviceHeight > 1000 ? 0.87 : 0.8,
                           crossAxisCount: 2,
                           mainAxisSpacing: 1.8,
                         ),
@@ -444,8 +528,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               child: Container(
                                 margin: EdgeInsets.symmetric(
-                                    horizontal: deviceWidth * 0.035,
-                                    vertical: deviceHeight * 0.01),
+                                    horizontal: deviceWidth * 0.03,
+                                    vertical: deviceHeight * 0.009),
                                 decoration: BoxDecoration(
                                     boxShadow: [
                                       BoxShadow(
@@ -457,10 +541,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                     borderRadius: BorderRadius.circular(20),
                                     color: AppColors.kWhiteColor),
-                                padding: EdgeInsets.only(
-                                    top: deviceHeight * 0.02,
-                                    left: deviceWidth * 0.025,
-                                    right: deviceWidth * 0.025),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: deviceHeight * 0.015,
+                                  horizontal: deviceWidth * 0.025,
+                                ),
                                 child: Column(
                                   children: [
                                     Row(

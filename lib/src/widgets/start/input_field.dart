@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../utils/colors.dart';
-import '../../utils/fonts.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:garbage_grabber/src/utils/colors.dart';
+import 'package:garbage_grabber/src/utils/fonts.dart';
 
 class InputField extends StatelessWidget {
   const InputField({
@@ -26,8 +24,8 @@ class InputField extends StatelessWidget {
   final TextInputType keywordType;
   final bool obscureText;
   final bool isPrefix;
-  final IconButton? suffix;
-  final IconData? prefixIcon;
+  final Widget? suffix;
+  final Icon? prefixIcon;
   final bool readonly;
 
   @override
@@ -46,66 +44,66 @@ class InputField extends StatelessWidget {
       obscureText: obscureText,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        prefixIcon: Padding(
-          padding: EdgeInsets.only(left: deviceWidth * 0.01),
-          child: Icon(
-            prefixIcon,
-            size: AppFonts.largeFontSize,
+          prefixIcon: deviceHeight > 1000
+              ? Padding(
+                  padding: EdgeInsets.only(left: deviceWidth * 0.03),
+                  child: prefixIcon,
+                )
+              : prefixIcon,
+          prefixIconColor: AppColors.iconColor,
+          errorText: errorText,
+          fillColor: AppColors.fillColor,
+          filled: true,
+          contentPadding: EdgeInsets.only(
+            bottom: deviceHeight * 0.018,
+            top: deviceHeight * 0.015,
           ),
-        ),
-        prefixIconColor: AppColors.kPrimaryColor,
-        errorText: errorText,
-        fillColor: AppColors.fillColor,
-        filled: true,
-        contentPadding: EdgeInsets.only(
-          bottom: deviceHeight * 0.018,
-          top: deviceHeight * 0.015,
-        ),
-        prefix: isPrefix
-            ? Padding(
-                padding: EdgeInsets.only(
-                left: deviceWidth * 0.02,
-              ))
-            : Padding(padding: EdgeInsets.only(left: deviceWidth * 0.1)),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            width: 0.1,
-            color: Color.fromRGBO(0, 0, 0, 0.15),
+          prefix: isPrefix
+              ? Padding(
+                  padding: deviceHeight > 1000
+                      ? EdgeInsets.only(left: deviceWidth * 0.03)
+                      : EdgeInsets.zero)
+              : Padding(padding: EdgeInsets.only(left: deviceWidth * 0.04)),
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 0.1,
+              color: Color.fromRGBO(0, 0, 0, 0.15),
+            ),
+            borderRadius: BorderRadius.circular(6),
           ),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        hintText: hintText,
-        hintStyle: AppFonts.poppinsRegular.copyWith(
-            fontSize: AppFonts.smallFontSize,
-            color: AppColors.iconColor,
-            letterSpacing: 0.5),
-        suffixIcon: Padding(
-          padding: EdgeInsets.only(right: deviceWidth * 0.03),
-          child: suffix,
-        ),
-        disabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            width: 0.8,
-            color: Color.fromRGBO(0, 0, 0, 0.15),
+          hintText: hintText,
+          hintStyle: AppFonts.poppinsRegular.copyWith(
+              fontSize: AppFonts.smallFontSize,
+              color: AppColors.iconColor,
+              letterSpacing: 0.5),
+          suffixIcon: deviceHeight > 1000
+              ? Padding(
+                  padding: EdgeInsets.only(right: deviceWidth * 0.05),
+                  child: suffix,
+                )
+              : suffix,
+          disabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              width: 0.8,
+              color: Color.fromRGBO(0, 0, 0, 0.15),
+            ),
+            borderRadius: BorderRadius.circular(6),
           ),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 0.8, color: AppColors.kPrimaryColor),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        errorMaxLines: 3,
-        errorStyle: GoogleFonts.poppins(
-            color: AppColors.kErrorColor, fontSize: AppFonts.smallFontSize),
-      ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 0.8, color: AppColors.kPrimaryColor),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 0.8, color: AppColors.kErrorColor),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          errorMaxLines: 3,
+          errorStyle: AppFonts.poppinsRegular.copyWith(
+              color: AppColors.kErrorColor, fontSize: AppFonts.smallFontSize)),
       validator: (value) => validation(value),
     );
   }

@@ -18,10 +18,9 @@ class PaymentSuccess extends StatefulWidget {
 class _PaymentSuccessState extends State<PaymentSuccess> {
   final MainScreenController mainScreenController =
       Get.find<MainScreenController>();
-  // var paidamount = Get.arguments['amount'];
+  var paidamount = Get.arguments['amount'];
   // int unixTimestamp = Get.arguments['created'];
 
-  var paidamount = '22';
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;

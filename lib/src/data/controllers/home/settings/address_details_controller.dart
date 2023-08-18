@@ -16,7 +16,9 @@ class AddressDetailsScreenController extends GetxController {
       addressDetailsModel = AddressDetailsModel.fromMap(data);
       update();
     } catch (e) {
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       debugPrint(e.toString());
     }

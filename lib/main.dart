@@ -45,16 +45,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor:
-            AppColors.kBackgroundColor // transparent status bar
-        ));
+        systemNavigationBarColor: AppColors.kBackgroundColor));
     AppFonts.init(context); // Initialize here
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.kPrimaryColor),
       ),
-      initialRoute: AppRoutes.paymentsuccess,
+      initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
     );
   }

@@ -3,6 +3,7 @@ import 'package:garbage_grabber/src/ui/screens/home/settings/settings.dart';
 import 'package:garbage_grabber/src/ui/screens/home/payments/payments.dart';
 
 import 'package:get/get.dart';
+
 import 'package:unicons/unicons.dart';
 
 import '../../../data/controllers/home/home screen/homescreen.dart';
@@ -64,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            UniconsLine.home,
+                            UniconsLine.home_alt,
                             size: AppFonts.largeFontSize,
                             color: controller.currentIndex == 0
                                 ? AppColors.kPrimaryColor
@@ -72,8 +73,12 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                           Text(
                             'Home',
-                            style: AppFonts.poppinsRegular
-                                .copyWith(fontSize: AppFonts.navBarSize),
+                            style: AppFonts.poppinsRegular.copyWith(
+                              fontSize: AppFonts.navBarSize,
+                              color: controller.currentIndex == 0
+                                  ? AppColors.kPrimaryColor
+                                  : AppColors.kBlackColor,
+                            ),
                           )
                         ],
                       ),
@@ -95,8 +100,12 @@ class _MainScreenState extends State<MainScreen> {
                                 : AppColors.iconColor,
                           ),
                           Text('Pickups',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: AppFonts.navBarSize))
+                              style: AppFonts.poppinsRegular.copyWith(
+                                fontSize: AppFonts.navBarSize,
+                                color: controller.currentIndex == 1
+                                    ? AppColors.kPrimaryColor
+                                    : AppColors.kBlackColor,
+                              ))
                         ],
                       ),
                     ),
@@ -110,15 +119,19 @@ class _MainScreenState extends State<MainScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            UniconsLine.bill,
+                            Icons.payment_outlined,
                             size: AppFonts.largeFontSize,
                             color: controller.currentIndex == 2
                                 ? AppColors.kPrimaryColor
                                 : AppColors.iconColor,
                           ),
                           Text('Payments',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: AppFonts.navBarSize))
+                              style: AppFonts.poppinsRegular.copyWith(
+                                fontSize: AppFonts.navBarSize,
+                                color: controller.currentIndex == 2
+                                    ? AppColors.kPrimaryColor
+                                    : AppColors.kBlackColor,
+                              ))
                         ],
                       ),
                     ),
@@ -139,8 +152,12 @@ class _MainScreenState extends State<MainScreen> {
                                 : AppColors.iconColor,
                           ),
                           Text('Settings',
-                              style: AppFonts.poppinsRegular
-                                  .copyWith(fontSize: AppFonts.navBarSize))
+                              style: AppFonts.poppinsRegular.copyWith(
+                                fontSize: AppFonts.navBarSize,
+                                color: controller.currentIndex == 3
+                                    ? AppColors.kPrimaryColor
+                                    : AppColors.kBlackColor,
+                              ))
                         ],
                       ),
                     )

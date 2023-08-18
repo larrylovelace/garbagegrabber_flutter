@@ -18,10 +18,10 @@ class LoadingDialog {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
-                  height: 25,
-                  width: 25,
+                  width: deviceWidth * 0.07,
+                  height: deviceWidth * 0.07,
                   child: CircularProgressIndicator(
-                      strokeWidth: 3, color: AppColors.kPrimaryColor),
+                      strokeWidth: 2, color: AppColors.kPrimaryColor),
                 ),
                 SizedBox(width: deviceWidth * 0.05),
                 Text(

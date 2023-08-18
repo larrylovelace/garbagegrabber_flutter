@@ -60,7 +60,7 @@ class SettingsScreenController extends GetxController {
           await box.clear();
           await storage.deleteAll();
           Get.offAllNamed(AppRoutes.login);
-          // Show SnackBar using Get.snackbar (no need for context here)
+
           // ignore: use_build_context_synchronously
           CustomSnackBar.show(
             context,
@@ -73,7 +73,9 @@ class SettingsScreenController extends GetxController {
         // Handle the case when accessToken is null
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -110,7 +112,6 @@ class SettingsScreenController extends GetxController {
             CustomSnackBar.show(
               context,
               'Account Deleted Successfully',
-         
             );
           } else if (response.statusCode == 400) {
             Map<String, dynamic> errormsg = jsonDecode(response.body);
@@ -122,7 +123,7 @@ class SettingsScreenController extends GetxController {
               context,
 
               errormsg['error'],
-          // Custom background color
+              // Custom background color
             );
 
             Future.delayed(const Duration(seconds: 5), () {

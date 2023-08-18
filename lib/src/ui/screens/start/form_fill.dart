@@ -140,7 +140,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
       }
     } catch (e) {
       Get.back();
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -175,7 +177,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
       }
     } catch (e) {
       Get.back();
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -658,8 +662,9 @@ class _FormFillScreenState extends State<FormFillScreen> {
         appBar: AppBar(
           title: Text(
             'Fill your details',
-            style: AppFonts.poppinsMedium
-                .copyWith(fontSize: 22, color: Colors.black),
+            style: AppFonts.poppinsMedium.copyWith(
+                fontSize: AppFonts.mediumFontSize,
+                color: AppColors.kBlackColor),
           ),
           centerTitle: true,
           leading: Ink(
@@ -684,7 +689,7 @@ class _FormFillScreenState extends State<FormFillScreen> {
           child: GetBuilder<SetupScreenController>(
             builder: (controller) {
               return Stepper(
-                physics: const ClampingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 type: StepperType.vertical,
                 currentStep: controller.currentPosition,
                 onStepContinue: () async {
@@ -800,7 +805,8 @@ class Header extends StatelessWidget {
           children: [
             Text(
               text,
-              style: AppFonts.poppinsLightMedium.copyWith(),
+              style: AppFonts.poppinsLightMedium
+                  .copyWith(fontSize: AppFonts.smallFontSize),
             ),
           ],
         ),

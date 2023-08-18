@@ -76,6 +76,7 @@ class PaymentPageController extends GetxController {
       debugPrint(e.toString());
 
       Get.back();
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

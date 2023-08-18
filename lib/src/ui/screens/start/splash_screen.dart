@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:garbage_grabber/src/widgets/snackbars/error_snackbar.dart';
 import 'package:get/get.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -84,6 +85,8 @@ class _SplashScreenState extends State<SplashScreen>
         Future.delayed(const Duration(seconds: 3), () {
           Get.offAllNamed(AppRoutes.login);
         });
+        // ignore: use_build_context_synchronously
+        CustomSnackBar.show(context, 'Session Expired');
       }
     } else {
       // Tokens are not present, navigate to the login screen

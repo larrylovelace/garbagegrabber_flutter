@@ -24,7 +24,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: deviceHeight * 0.042,
-      width: deviceWidth * 0.34,
+      width: deviceWidth * 0.32,
       decoration: BoxDecoration(
         color: buttoncolor,
         borderRadius: BorderRadius.circular(12),

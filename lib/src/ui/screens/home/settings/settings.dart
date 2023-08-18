@@ -28,12 +28,12 @@ class _SettingsState extends State<Settings> {
   final SettingsScreenController settingsScreenController =
       Get.put(SettingsScreenController());
   final storage = const FlutterSecureStorage();
+  var box = Hive.box('homedata');
   @override
   Widget build(BuildContext context) {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
-    var box = Hive.box('homedata');
-    var products = box.get('homedata');
+
     return Scaffold(
         backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
@@ -51,153 +51,147 @@ class _SettingsState extends State<Settings> {
           elevation: 0,
           backgroundColor: AppColors.kBackgroundColor,
         ),
-        body: products == null
-            ? Center(
-                child:
-                    CircularProgressIndicator(color: AppColors.kPrimaryColor),
-              )
-            : CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildListDelegate([
-                      Container(
-                          padding: EdgeInsets.only(
-                              bottom: deviceHeight * 0.02,
-                              top: deviceHeight * 0.02),
-                          child: Column(
-                            children: [
-                              SettingsItems(
-                                  title: 'Profile Details',
-                                  deviceWidth: deviceWidth,
-                                  icon: LineAwesomeIcons.user,
-                                  onPress: (() {
-                                    Get.toNamed(AppRoutes.profiledetails);
-                                  })),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              SettingsItems(
-                                  title: 'Address Details',
-                                  deviceWidth: deviceWidth,
-                                  icon: Icons.location_on_outlined,
-                                  onPress: (() {
-                                    Get.toNamed(AppRoutes.addressdetails);
-                                  })),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              SettingsItems(
-                                  title: 'Support',
-                                  deviceWidth: deviceWidth,
-                                  icon: Icons.support_outlined,
-                                  onPress: (() {})),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              const Divider(),
-                              SizedBox(
-                                height: deviceHeight * 0.005,
-                              ),
-                              SettingsItems(
-                                  title: 'About Us',
-                                  icon: LineAwesomeIcons.info,
-                                  deviceWidth: deviceWidth,
-                                  onPress: (() {
-                                    Get.toNamed(AppRoutes.aboutus);
-                                  })),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              SettingsItems(
-                                  title: 'Privacy Policy',
-                                  deviceWidth: deviceWidth,
-                                  icon: LineAwesomeIcons.user_shield,
-                                  onPress: (() {
-                                    Get.toNamed(AppRoutes.privacypolicy);
-                                  })),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              SettingsItems(
-                                  title: 'Terms and Conditions',
-                                  deviceWidth: deviceWidth,
-                                  icon: UniconsLine.document_info,
-                                  onPress: (() {
-                                    Get.toNamed(AppRoutes.termsandconditions);
-                                  })),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              SettingsItems(
-                                  title: 'Account Deletion',
-                                  deviceWidth: deviceWidth,
-                                  icon: Icons.delete_forever_outlined,
-                                  onPress: (() {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AccountDeletionDialog(
-                                            deviceWidth: deviceWidth,
-                                            deviceHeight: deviceHeight,
-                                            settingsScreenController:
-                                                settingsScreenController,
-                                            headerText: 'Delete Account ?',
-                                            bodyText:
-                                                'This will delete your Garbage Grabbers account and all the data associated with it',
-                                            onPressed1: () {
-                                              Get.back();
-                                            },
-                                            onPressed2: () {
-                                              Get.back();
-                                              LoadingDialog.show(context);
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                    padding: EdgeInsets.only(
+                        bottom: deviceHeight * 0.02, top: deviceHeight * 0.02),
+                    child: Column(
+                      children: [
+                        SettingsItems(
+                            title: 'Profile Details',
+                            deviceWidth: deviceWidth,
+                            icon: LineAwesomeIcons.user,
+                            onPress: (() {
+                              Get.toNamed(AppRoutes.profiledetails);
+                            })),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        SettingsItems(
+                            title: 'Address Details',
+                            deviceWidth: deviceWidth,
+                            icon: Icons.location_on_outlined,
+                            onPress: (() {
+                              Get.toNamed(AppRoutes.addressdetails);
+                            })),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        SettingsItems(
+                            title: 'Support',
+                            deviceWidth: deviceWidth,
+                            icon: Icons.support_outlined,
+                            onPress: (() {})),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        const Divider(),
+                        SizedBox(
+                          height: deviceHeight * 0.005,
+                        ),
+                        SettingsItems(
+                            title: 'About Us',
+                            icon: LineAwesomeIcons.info,
+                            deviceWidth: deviceWidth,
+                            onPress: (() {
+                              Get.toNamed(AppRoutes.aboutus);
+                            })),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        SettingsItems(
+                            title: 'Privacy Policy',
+                            deviceWidth: deviceWidth,
+                            icon: LineAwesomeIcons.user_shield,
+                            onPress: (() {
+                              Get.toNamed(AppRoutes.privacypolicy);
+                            })),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        SettingsItems(
+                            title: 'Terms and Conditions',
+                            deviceWidth: deviceWidth,
+                            icon: UniconsLine.document_info,
+                            onPress: (() {
+                              Get.toNamed(AppRoutes.termsandconditions);
+                            })),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        SettingsItems(
+                            title: 'Account Deletion',
+                            deviceWidth: deviceWidth,
+                            icon: Icons.delete_forever_outlined,
+                            onPress: (() {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AccountDeletionDialog(
+                                      deviceWidth: deviceWidth,
+                                      deviceHeight: deviceHeight,
+                                      settingsScreenController:
+                                          settingsScreenController,
+                                      headerText: 'Delete Account ?',
+                                      bodyText:
+                                          'This will delete your Garbage Grabbers account and all the data associated with it',
+                                      onPressed1: () {
+                                        Get.back();
+                                      },
+                                      onPressed2: () {
+                                        Get.back();
+                                        LoadingDialog.show(context);
 
-                                              settingsScreenController
-                                                  .deleteAccount(context);
-                                            },
-                                          );
-                                        });
-                                  })),
-                              deviceHeight > 1000
-                                  ? SizedBox(
-                                      height: deviceHeight * 0.04,
-                                    )
-                                  : const SizedBox(),
-                              SettingsItems(
-                                  title: 'Log Out',
-                                  icon: LineAwesomeIcons.alternate_sign_out,
-                                  deviceWidth: deviceWidth,
-                                  textColor: AppColors.kErrorColor,
-                                  endIcon: false,
-                                  onPress: (() async {
-                                    await box.clear();
-                                    await storage.deleteAll();
-                                    mainScreenController.resetController();
-                                    Get.offAllNamed(AppRoutes.login);
-
-                                    // ignore: use_build_context_synchronously
-                                    CustomSnackBar.show(
-                                      context,
-                                      'Logged out',
-                                   
+                                        settingsScreenController
+                                            .deleteAccount(context);
+                                      },
                                     );
-                                  }))
-                            ],
-                          )),
-                    ]),
-                  ),
-                ],
-              ));
+                                  });
+                            })),
+                        deviceHeight > 1000
+                            ? SizedBox(
+                                height: deviceHeight * 0.04,
+                              )
+                            : const SizedBox(),
+                        SettingsItems(
+                            title: 'Log Out',
+                            icon: LineAwesomeIcons.alternate_sign_out,
+                            deviceWidth: deviceWidth,
+                            textColor: AppColors.kErrorColor,
+                            endIcon: false,
+                            onPress: (() async {
+                              await box.clear();
+                              await storage.deleteAll();
+                              mainScreenController.resetController();
+                              Get.offAllNamed(AppRoutes.login);
+
+                              // ignore: use_build_context_synchronously
+                              CustomSnackBar.show(
+                                context,
+                                'Logged out',
+                              );
+                            }))
+                      ],
+                    )),
+              ]),
+            ),
+          ],
+        ));
   }
 }

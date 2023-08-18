@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -67,10 +66,12 @@ class _ProductDetailState extends State<ProductDetail> {
           "total_payment": controller.priceindouble.toString()
         });
         Map<String, dynamic> data = jsonDecode(response.body);
+
         if (response.statusCode == 200) {
           await makePayment();
         } else if (response.statusCode == 400) {
-          String errorMessage = data['error'];
+          String errorMessage = data['errors']['appointment_date_start'][0];
+
           Get.back();
           appointmetError(errorMessage);
         } else if (response.statusCode == 403) {
@@ -87,6 +88,7 @@ class _ProductDetailState extends State<ProductDetail> {
         showErrorDialog();
       }
     } catch (e) {
+   
       Get.back();
       showErrorDialog();
     }

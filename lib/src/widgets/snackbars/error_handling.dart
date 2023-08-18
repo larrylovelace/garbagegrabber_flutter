@@ -16,25 +16,22 @@ SnackBar buildErrorSnackBar(BuildContext context, dynamic error) {
   } else {
     errorMessage = 'Something went wrong.';
   }
+  final textWidth = calculateTextWidth(
+      errorMessage,
+      AppFonts.poppinsLightMediumsnackBar
+          .copyWith(fontSize: AppFonts.smallFontSize));
+  final snackBarWidth = textWidth +
+      32; // Add some padding to the text width for better visual appearance
 
   return SnackBar(
-      width: MediaQuery.of(context).size.width / 2,
+      width: snackBarWidth,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 0,
       duration: const Duration(seconds: 3),
       behavior: SnackBarBehavior.floating,
       content: Row(
-        crossAxisAlignment:
-            CrossAxisAlignment.center, // Align content vertically
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Center(
-              child: Image.asset(
-            'assets/snackbar_icon.png',
-            height: MediaQuery.of(context).size.height * 0.035,
-          )),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.02,
-          ),
           Flexible(
             child: Text(
               errorMessage,
@@ -47,4 +44,14 @@ SnackBar buildErrorSnackBar(BuildContext context, dynamic error) {
         ],
       ),
       backgroundColor: AppColors.kBlackColor);
+}
+
+double calculateTextWidth(String text, TextStyle style) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    maxLines: 2,
+    textDirection: TextDirection.ltr,
+  )..layout(minWidth: 0, maxWidth: double.infinity);
+
+  return textPainter.width;
 }

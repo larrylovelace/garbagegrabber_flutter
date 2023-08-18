@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'dart:async';
@@ -90,8 +89,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
           countdown = 59;
           startResendTimer();
           // ignore: use_build_context_synchronously
-          CustomSnackBar.show(
-              context, 'OTP code sent successfully');
+          CustomSnackBar.show(context, 'OTP code sent successfully');
         } else if (response.statusCode == 401) {
           await box.clear();
           await storage.deleteAll();
@@ -107,7 +105,9 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
         // Handle the case when accessToken is null
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -219,12 +219,10 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
                           onPressed: () async {
                             reseondOTP(context);
                           },
-                          child: Text(
-                            'Resend code',
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.poppins(
-                                color: AppColors.kPrimaryColor),
-                          ),
+                          child: Text('Resend code',
+                              overflow: TextOverflow.ellipsis,
+                              style: AppFonts.poppinsRegular
+                                  .copyWith(color: AppColors.kPrimaryColor)),
                         ),
                       if (!settingsScreenController.showResendText.value)
                         TextButton(
@@ -257,9 +255,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
 
                             CustomSnackBar.show(
                               context,
-
                               'Enter the OTP',
-                        
                             );
                           } else {
                             showDialog(

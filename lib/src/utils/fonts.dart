@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppFonts {
@@ -43,29 +44,34 @@ class AppFonts {
   static double innerboxTextSize = scaledFontSize(9);
 
   static final TextStyle poppinsRegular = GoogleFonts.poppins(
-    fontWeight: FontWeight.normal,
-    fontSize: scaledFontSize(16.0),
-  );
+      fontWeight: FontWeight.normal,
+      fontSize: scaledFontSize(16.0),
+      letterSpacing: 0.1,
+      color: AppColors.kBlackColor);
 
   static final TextStyle poppinsLightMediumsnackBar = GoogleFonts.poppins(
-    fontWeight: FontWeight.w400,
-    fontSize: scaledFontSize(14.0),
-  );
+      fontWeight: FontWeight.w400,
+      fontSize: scaledFontSize(14.0),
+      letterSpacing: 0.1,
+      color: AppColors.kBlackColor);
 
   static final TextStyle poppinsLightMedium = GoogleFonts.poppins(
-    fontWeight: FontWeight.w500,
-    fontSize: scaledFontSize(16.0),
-  );
+      fontWeight: FontWeight.w500,
+      fontSize: scaledFontSize(16.0),
+      letterSpacing: 0.1,
+      color: AppColors.kBlackColor);
 
   static final TextStyle poppinsMedium = GoogleFonts.poppins(
-    fontWeight: FontWeight.w600,
-    fontSize: scaledFontSize(18.0),
-  );
+      fontWeight: FontWeight.w600,
+      fontSize: scaledFontSize(18.0),
+      letterSpacing: 0.1,
+      color: AppColors.kBlackColor);
 
   static final TextStyle poppinsBold = GoogleFonts.poppins(
-    fontWeight: FontWeight.bold,
-    fontSize: scaledFontSize(20.0),
-  );
+      fontWeight: FontWeight.bold,
+      fontSize: scaledFontSize(20.0),
+      letterSpacing: 0.1,
+      color: AppColors.kBlackColor);
 
   // Define other text styles similarly
 

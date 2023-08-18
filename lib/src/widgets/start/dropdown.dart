@@ -55,7 +55,7 @@ class DropDown extends StatelessWidget {
           ),
           hintText: hintText,
           hintStyle: AppFonts.poppinsRegular.copyWith(
-              fontSize: AppFonts.mediumFontSize,
+              fontSize: AppFonts.smallFontSize,
               color: AppColors.iconColor,
               letterSpacing: 0.5),
           disabledBorder: OutlineInputBorder(
@@ -111,6 +111,7 @@ class DropDown extends StatelessWidget {
           ),
         ),
         menuItemStyleData: MenuItemStyleData(
+          height: deviceHeight * 0.06,
           padding: EdgeInsets.only(
               left: deviceWidth * 0.04, right: deviceWidth * 0.04),
         ),

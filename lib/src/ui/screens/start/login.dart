@@ -96,8 +96,9 @@ class _LoginScreenState extends State<LoginScreen> {
           text: 'Cancel',
           deviceWidth: deviceWidth,
           deviceHeight: deviceHeight,
-          headerText: 'Profile Details are not filled',
-          bodyText: 'Continue to fill your details',
+          headerText: 'Error',
+          bodyText:
+              'Apartment details not filled. Please continue to fill your details.',
           onPressed: () {
             Get.back();
             Get.toNamed(AppRoutes.formfill,
@@ -107,7 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {}
     } catch (e) {
       Get.back();
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -118,11 +121,6 @@ class _LoginScreenState extends State<LoginScreen> {
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColors.kBackgroundColor,
-      appBar: AppBar(
-        toolbarHeight: 20,
-        backgroundColor: AppColors.kBackgroundColor,
-        elevation: 0,
-      ),
       body: Center(
         child: GestureDetector(
           onTapCancel: () {},
@@ -139,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Form(
                   key: _formKey1,
                   child: ListView(
-                      physics: const ClampingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       children: [
                         SvgPicture.asset(
                           'assets/login.svg',
@@ -164,7 +162,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             InputField(
                               readonly: false,
                               isPrefix: true,
-                              prefixIcon: Icons.email_outlined,
+                              prefixIcon: Icon(
+                                Icons.email_outlined,
+                                size: AppFonts.largeFontSize,
+                                color: AppColors.kPrimaryColor,
+                              ),
                               errorText: controller.errormail
                                   ? controller.errormailvalue
                                   : null,
@@ -189,7 +191,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             InputField(
                               readonly: false,
                               isPrefix: true,
-                              prefixIcon: Icons.lock_outlined,
+                              prefixIcon: Icon(
+                                Icons.lock_outlined,
+                                size: AppFonts.largeFontSize,
+                                color: AppColors.kPrimaryColor,
+                              ),
                               errorText: null,
                               hintText: 'Password',
                               keywordType: TextInputType.visiblePassword,
@@ -258,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               )),
                         ),
                         SizedBox(
-                          height: deviceHeight * 0.1,
+                          height: deviceHeight * 0.01,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -309,6 +315,7 @@ class OtpDialog extends StatelessWidget {
       backgroundColor: AppColors.kBackgroundColor,
       elevation: 0,
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Container(
           padding: EdgeInsets.only(
               left: deviceWidth * 0.05, right: deviceWidth * 0.05),
@@ -368,6 +375,7 @@ class OtpDialog extends StatelessWidget {
                         textcolor: AppColors.kWhiteColor,
                         buttoncolor: AppColors.kPrimaryColor,
                         oncallback: () async {
+                          Get.back();
                           LoadingDialog.show(context);
                           try {
                             String uri = APIConstants.baseURI +
@@ -378,7 +386,7 @@ class OtpDialog extends StatelessWidget {
                             });
                             if (response.statusCode == 200) {
                               Get.back();
-                              Get.back();
+
                               Get.toNamed(AppRoutes.otpscreen, arguments: {
                                 'email': email.text,
                                 'password': password.text,
@@ -388,7 +396,9 @@ class OtpDialog extends StatelessWidget {
                             }
                           } catch (e) {
                             Get.back();
+                            // ignore: use_build_context_synchronously
                             final snackBar = buildErrorSnackBar(context, e);
+                            // ignore: use_build_context_synchronously
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(snackBar);
                           }

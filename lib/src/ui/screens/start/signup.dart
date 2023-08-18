@@ -58,7 +58,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     } catch (e) {
       Get.back();
+      // ignore: use_build_context_synchronously
       final snackBar = buildErrorSnackBar(context, e);
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -68,12 +70,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-          automaticallyImplyLeading: true,
-          titleSpacing: 1,
-          elevation: 0,
-          backgroundColor: AppColors.kBackgroundColor),
-      backgroundColor: AppColors.kBackgroundColor,
       body: Center(
         child: GestureDetector(
           onTapCancel: () {},
@@ -90,6 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Form(
                   key: _formKey2,
                   child: ListView(
+                    physics: const BouncingScrollPhysics(),
                     children: [
                       SvgPicture.asset(
                         'assets/signup.svg',
@@ -116,7 +113,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: InputField(
                                 readonly: false,
                                 isPrefix: true,
-                                prefixIcon: Icons.person_2_outlined,
+                                prefixIcon: Icon(
+                                  Icons.lock_outlined,
+                                  size: AppFonts.largeFontSize,
+                                  color: AppColors.kPrimaryColor,
+                                ),
                                 keywordType: TextInputType.name,
                                 obscureText: false,
                                 controller: firstname,
@@ -144,7 +145,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: InputField(
                                 readonly: false,
                                 isPrefix: true,
-                                prefixIcon: Icons.person_2_outlined,
+                                prefixIcon: Icon(
+                                  Icons.lock_outlined,
+                                  size: AppFonts.largeFontSize,
+                                  color: AppColors.kPrimaryColor,
+                                ),
                                 keywordType: TextInputType.name,
                                 obscureText: false,
                                 controller: lastname,
@@ -173,7 +178,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           InputField(
                             readonly: false,
                             isPrefix: true,
-                            prefixIcon: Icons.local_phone_outlined,
+                            prefixIcon: Icon(
+                              Icons.local_phone_outlined,
+                              size: AppFonts.largeFontSize,
+                              color: AppColors.kPrimaryColor,
+                            ),
                             errorText: controller.phonenumerror
                                 ? controller.errorhponevalue
                                 : null,
@@ -197,7 +206,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           InputField(
                               readonly: false,
                               isPrefix: true,
-                              prefixIcon: Icons.email_outlined,
+                              prefixIcon: Icon(Icons.email_outlined,
+                                  color: AppColors.kPrimaryColor,
+                                  size: AppFonts.largeFontSize),
                               errorText: controller.errormail
                                   ? controller.errormailvalue
                                   : null,
@@ -223,7 +234,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               InputField(
                                   readonly: false,
                                   isPrefix: true,
-                                  prefixIcon: Icons.lock_outlined,
+                                  prefixIcon: Icon(
+                                    Icons.lock_outlined,
+                                    size: AppFonts.largeFontSize,
+                                    color: AppColors.kPrimaryColor,
+                                  ),
                                   errorText: null,
                                   hintText: 'Password',
                                   keywordType: TextInputType.visiblePassword,
@@ -248,7 +263,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               InputField(
                                 readonly: false,
                                 isPrefix: true,
-                                prefixIcon: Icons.lock_outlined,
+                                prefixIcon: Icon(
+                                  Icons.lock_outlined,
+                                  size: AppFonts.largeFontSize,
+                                  color: AppColors.kPrimaryColor,
+                                ),
                                 errorText: null,
                                 hintText: 'Confirm Password',
                                 keywordType: TextInputType.visiblePassword,

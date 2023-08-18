@@ -74,7 +74,7 @@ class _CalendarDialogState extends State<CalendarDialog> {
               weekendTextStyle: AppFonts.poppinsRegular
                   .copyWith(fontSize: AppFonts.smallFontSize),
               selectedTextStyle: AppFonts.poppinsRegular
-                  .copyWith(color: AppColors.kBackgroundColor),
+                  .copyWith(color: AppColors.kWhiteColor),
               disabledTextStyle: AppFonts.poppinsRegular,
               outsideTextStyle: AppFonts.poppinsRegular,
               withinRangeTextStyle: AppFonts.poppinsRegular,

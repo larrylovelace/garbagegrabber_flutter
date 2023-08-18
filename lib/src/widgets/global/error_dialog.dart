@@ -34,13 +34,13 @@ class ErrorDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
-        padding: EdgeInsets.only(
-            left: deviceWidth * 0.05, right: deviceWidth * 0.05),
+        padding: EdgeInsets.symmetric(
+            horizontal: deviceWidth * 0.03, vertical: deviceHeight * 0.01),
         decoration: BoxDecoration(
             color: AppColors.kWhiteColor,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
-        height: deleteAccountDialog ? deviceHeight * 0.28 : deviceHeight * 0.18,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -54,15 +54,18 @@ class ErrorDialog extends StatelessWidget {
                 SizedBox(
                   width: deviceWidth * 0.02,
                 ),
-                Text(headerText,
-                    maxLines: 2,
-                    style: AppFonts.poppinsMedium.copyWith(
-                        fontSize: AppFonts.mediumFontSize,
-                        color: AppColors.kErrorColor)),
+                Expanded(
+                  child: Text(headerText,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFonts.poppinsMedium.copyWith(
+                          fontSize: AppFonts.mediumFontSize,
+                          color: AppColors.kErrorColor)),
+                ),
               ],
             ),
             SizedBox(
-              height: deviceHeight * 0.01,
+              height: deviceHeight * 0.005,
             ),
             Column(
               children: [

@@ -195,19 +195,9 @@ class _ProfileDetisState extends State<ProfileDetis> {
                               ],
                             ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.kWhiteColor,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20)),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 1,
-                              blurStyle: BlurStyle.solid,
-                              color: AppColors.kBlackColor.withOpacity(0.1),
-                              offset: const Offset(0, 1))
-                        ],
-                      ),
+                    Card(
+                      elevation: 0,
+                      color: AppColors.kBackgroundColor,
                       margin: EdgeInsets.only(
                           top: deviceHeight * 0.04,
                           left: deviceWidth * 0.01,
@@ -218,12 +208,6 @@ class _ProfileDetisState extends State<ProfileDetis> {
                             SizedBox(
                               height: deviceHeight * 0.01,
                             ),
-                            // ProfileDetails(
-                            //     title: 'Change Password',
-                            //     subtitle: 'Change your password',
-                            //     icon: Icons.key_outlined,
-                            //     onpress: () {},
-                            //     deviceWidth: deviceWidth),
                             DetailsWidget(
                                 title: 'QR Code',
                                 subtitle: 'View your qr code',

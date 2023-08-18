@@ -138,15 +138,7 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
                                 top: deviceHeight * 0.04,
                               ),
                               decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 1,
-                                        blurStyle: BlurStyle.solid,
-                                        color: AppColors.kBlackColor
-                                            .withOpacity(0.1),
-                                        offset: const Offset(0, 1))
-                                  ],
-                                  color: AppColors.kWhiteColor,
+                                  color: AppColors.kBackgroundColor,
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(20))),
                               child: Column(
