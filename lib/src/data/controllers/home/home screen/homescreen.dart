@@ -4,7 +4,6 @@ import 'package:garbage_grabber/src/widgets/snackbars/error_snackbar.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
-
 import '../../../models/currentappointment.dart';
 import '../../../models/homescreendata.dart';
 import '../../../models/products.dart';
@@ -19,10 +18,10 @@ class HomePageController extends GetxController {
   String email = '';
   late HomeScreenData homescreendata;
   CurrentAppointment? currentAppointment;
+  UpcomingPickupData? upcomingPickupData;
   DateConverter dateConverter = DateConverter();
   String remainingdays = '';
-  String pickupmonth = '';
-  String pickupdate = '';
+
   // Your Hive box for storing data
   final homeDataBox = Hive.box('homedata');
 
@@ -56,11 +55,15 @@ class HomePageController extends GetxController {
             remainingdays = dateConverter
                 .remainingdays(homescreendata.upcomingPickupDate)
                 .toString();
-            pickupmonth = dateConverter
-                .getMonthFromDate(homescreendata.upcomingPickupDate);
-            pickupdate = dateConverter
-                .getDayFromDate(homescreendata.upcomingPickupDate)
-                .toString();
+            upcomingPickupData = UpcomingPickupData(
+                name: currentAppointment!.product.name,
+                plan: currentAppointment!.product.plan,
+                upcomingPickupDate: homescreendata.upcomingPickupDate,
+                remainingDays: remainingdays,
+                pickUpDates: List<PickupDates>.from(
+                    currentAppointment!.pickups.map((item) {
+                  return PickupDates(pickUpDate: item.pickupDate);
+                })));
           } else {}
 
           email = homescreendata.customerData.email;
@@ -68,6 +71,8 @@ class HomePageController extends GetxController {
           // Store product details in Hive
 
           final products = Products(
+            upComingPickupData:
+                upcomingPickupData == null ? [] : [upcomingPickupData!],
             firstname: homescreendata.customerData.firstName,
             lastname: homescreendata.customerData.lastName,
             email: homescreendata.customerData.email,
@@ -115,6 +120,7 @@ class HomePageController extends GetxController {
         });
       }
     } catch (e) {
+   
       // Show SnackBar using Get.snackbar (no need for context here)
       // ignore: use_build_context_synchronously
       CustomSnackBar.show(

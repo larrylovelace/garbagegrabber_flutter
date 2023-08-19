@@ -130,6 +130,15 @@ class _CalendarDialogState extends State<CalendarDialog> {
                           CustomButton(
                               deviceHeight: deviceHeight,
                               deviceWidth: deviceWidth,
+                              text: 'Cancel',
+                              textcolor: AppColors.kBlackColor,
+                              buttoncolor: AppColors.kBackgroundColor,
+                              oncallback: () {
+                                Get.back();
+                              }),
+                          CustomButton(
+                              deviceHeight: deviceHeight,
+                              deviceWidth: deviceWidth,
                               text: 'Submit',
                               textcolor: AppColors.kBackgroundColor,
                               buttoncolor: AppColors.kPrimaryColor,
@@ -139,15 +148,6 @@ class _CalendarDialogState extends State<CalendarDialog> {
                                   Get.back();
                                 }
                               }),
-                          CustomButton(
-                              deviceHeight: deviceHeight,
-                              deviceWidth: deviceWidth,
-                              text: 'Cancel',
-                              textcolor: AppColors.kWhiteColor,
-                              buttoncolor: AppColors.kCancelButtonColor,
-                              oncallback: () {
-                                Get.back();
-                              })
                         ],
                       ),
                     ),

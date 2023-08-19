@@ -33,6 +33,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
         backgroundColor: AppColors.kBackgroundColor,
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: EdgeInsets.only(
               left: deviceWidth * 0.05,
@@ -100,10 +101,10 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
               ),
               SizedBox(height: deviceHeight * 0.03),
               Text(
-                'Larry Love\n615-437-3087',
+                'Garbage Grabbers App Support Team\nInfo@garbagegrabbers.app\n615-437-3087',
                 textAlign: TextAlign.justify,
                 style: AppFonts.poppinsMedium
-                    .copyWith(fontSize: AppFonts.mediumFontSize),
+                    .copyWith(fontSize: AppFonts.smallFontSize),
               ),
             ],
           ),

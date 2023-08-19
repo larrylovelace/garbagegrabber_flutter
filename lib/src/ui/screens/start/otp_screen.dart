@@ -156,7 +156,7 @@ class _OtpScreenState extends State<OtpScreen> {
           }),
           child: Form(
             key: _formKey3,
-            child: ListView(children: [
+            child: ListView(physics: const BouncingScrollPhysics(), children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

@@ -38,15 +38,20 @@ class _SettingsState extends State<Settings> {
         backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
           toolbarHeight: deviceHeight > 1000 ? 100 : 50,
-          title: Row(
-            children: [
-              Text(
-                'Settings',
-                style: AppFonts.poppinsBold.copyWith(
-                    fontSize: AppFonts.largeFontSize,
-                    color: AppColors.kBlackColor),
-              ),
-            ],
+          title: Padding(
+            padding: deviceHeight > 1000
+                ? EdgeInsets.only(left: deviceWidth * 0.015)
+                : EdgeInsets.zero,
+            child: Row(
+              children: [
+                Text(
+                  'Settings',
+                  style: AppFonts.poppinsBold.copyWith(
+                      fontSize: AppFonts.largeFontSize,
+                      color: AppColors.kBlackColor),
+                ),
+              ],
+            ),
           ),
           elevation: 0,
           backgroundColor: AppColors.kBackgroundColor,
@@ -72,7 +77,9 @@ class _SettingsState extends State<Settings> {
                             ? SizedBox(
                                 height: deviceHeight * 0.04,
                               )
-                            : const SizedBox(),
+                            : SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
                         SettingsItems(
                             title: 'Address Details',
                             deviceWidth: deviceWidth,
@@ -84,17 +91,19 @@ class _SettingsState extends State<Settings> {
                             ? SizedBox(
                                 height: deviceHeight * 0.04,
                               )
-                            : const SizedBox(),
-                        SettingsItems(
-                            title: 'Support',
-                            deviceWidth: deviceWidth,
-                            icon: Icons.support_outlined,
-                            onPress: (() {})),
-                        deviceHeight > 1000
-                            ? SizedBox(
-                                height: deviceHeight * 0.04,
-                              )
-                            : const SizedBox(),
+                            : SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
+                        // SettingsItems(
+                        //     title: 'Support',
+                        //     deviceWidth: deviceWidth,
+                        //     icon: Icons.support_outlined,
+                        //     onPress: (() {})),
+                        // deviceHeight > 1000
+                        //     ? SizedBox(
+                        //         height: deviceHeight * 0.04,
+                        //       )
+                        //     : const SizedBox(),
                         const Divider(),
                         SizedBox(
                           height: deviceHeight * 0.005,
@@ -110,7 +119,9 @@ class _SettingsState extends State<Settings> {
                             ? SizedBox(
                                 height: deviceHeight * 0.04,
                               )
-                            : const SizedBox(),
+                            : SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
                         SettingsItems(
                             title: 'Privacy Policy',
                             deviceWidth: deviceWidth,
@@ -122,7 +133,9 @@ class _SettingsState extends State<Settings> {
                             ? SizedBox(
                                 height: deviceHeight * 0.04,
                               )
-                            : const SizedBox(),
+                            : SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
                         SettingsItems(
                             title: 'Terms and Conditions',
                             deviceWidth: deviceWidth,
@@ -134,7 +147,9 @@ class _SettingsState extends State<Settings> {
                             ? SizedBox(
                                 height: deviceHeight * 0.04,
                               )
-                            : const SizedBox(),
+                            : SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
                         SettingsItems(
                             title: 'Account Deletion',
                             deviceWidth: deviceWidth,
@@ -168,7 +183,9 @@ class _SettingsState extends State<Settings> {
                             ? SizedBox(
                                 height: deviceHeight * 0.04,
                               )
-                            : const SizedBox(),
+                            : SizedBox(
+                                height: deviceHeight * 0.01,
+                              ),
                         SettingsItems(
                             title: 'Log Out',
                             icon: LineAwesomeIcons.alternate_sign_out,

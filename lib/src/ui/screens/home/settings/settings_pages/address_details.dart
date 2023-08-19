@@ -50,11 +50,15 @@ class _AddressDetailsScreenState extends State<AddressDetailsScreen> {
           builder: (controller) {
             return addressDetailsScreenController.addressDetailsModel == null
                 ? Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.kPrimaryColor,
+                    child: SizedBox(
+                      width: deviceWidth * 0.07,
+                      height: deviceWidth * 0.07,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: AppColors.kPrimaryColor),
                     ),
                   )
                 : CustomScrollView(
+                    physics: const BouncingScrollPhysics(),
                     slivers: [
                       SliverList(
                           delegate: SliverChildListDelegate([

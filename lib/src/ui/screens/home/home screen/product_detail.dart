@@ -88,7 +88,6 @@ class _ProductDetailState extends State<ProductDetail> {
         showErrorDialog();
       }
     } catch (e) {
-   
       Get.back();
       showErrorDialog();
     }
@@ -380,6 +379,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       child: MaterialButton(
                         onPressed: () {
                           showModalBottomSheet(
+                              backgroundColor: AppColors.kBackgroundColor,
                               isScrollControlled: true,
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(

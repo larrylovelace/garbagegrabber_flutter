@@ -62,6 +62,7 @@ class _ProfileDetisState extends State<ProfileDetis> {
           //       ],
 
           body: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverList(
                   delegate: SliverChildListDelegate([

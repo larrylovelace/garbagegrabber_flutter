@@ -15,7 +15,7 @@ class AppFonts {
     double scaleFactor;
 
     if (deviceWidth > 1000 || deviceHeight > 1000) {
-      scaleFactor = 3;
+      scaleFactor = 2.5;
     } else if (deviceWidth > 800 || deviceHeight > 800) {
       scaleFactor = 1.0;
     } else {

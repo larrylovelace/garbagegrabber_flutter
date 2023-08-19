@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-
 import 'package:garbage_grabber/src/data/controllers/routes.dart';
 import 'package:garbage_grabber/src/data/models/products.dart';
-
 import 'package:garbage_grabber/src/utils/colors.dart';
 import 'package:garbage_grabber/src/utils/fonts.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-
 import 'src/ui/screens/home/screenhandler.dart';
 
 void main() async {
@@ -26,9 +23,10 @@ void main() async {
   // Register Hive adapters
   Hive.registerAdapter(ProductsAdapter());
   Hive.registerAdapter(ProductDataAdapter());
+  Hive.registerAdapter(UpcomingPickupDataAdapter());
+  Hive.registerAdapter(PickupDatesAdapter());
   // Open Hive box
   await Hive.openBox('homedata');
-
   // Print the values inside the box
 
   Stripe.publishableKey = dotenv.env['publishablekey']!;

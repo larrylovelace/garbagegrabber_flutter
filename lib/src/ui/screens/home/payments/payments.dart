@@ -25,22 +25,27 @@ class _TransactionScreenState extends State<TransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double deviceheight = MediaQuery.of(context).size.height;
+    double deviceHeight = MediaQuery.of(context).size.height;
     double deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
-          toolbarHeight: deviceheight > 1000 ? 100 : 50,
-          title: Row(
-            children: [
-              Text(
-                'Payments',
-                style: AppFonts.poppinsBold.copyWith(
-                  fontSize: AppFonts.largeFontSize,
-                  color: AppColors.kBlackColor,
+          toolbarHeight: deviceHeight > 1000 ? 100 : 50,
+          title: Padding(
+            padding: deviceHeight > 1000
+                ? EdgeInsets.only(left: deviceWidth * 0.02)
+                : EdgeInsets.zero,
+            child: Row(
+              children: [
+                Text(
+                  'Payments',
+                  style: AppFonts.poppinsBold.copyWith(
+                    fontSize: AppFonts.largeFontSize,
+                    color: AppColors.kBlackColor,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           elevation: 0,
           backgroundColor: AppColors.kBackgroundColor,
@@ -56,8 +61,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
               return paymentspagecontroller.paymentdetails == null &&
                       paymentspagecontroller.nopayments == false
                   ? Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.kPrimaryColor,
+                      child: SizedBox(
+                        width: deviceWidth * 0.07,
+                        height: deviceWidth * 0.07,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: AppColors.kPrimaryColor),
                       ),
                     )
                   // ignore: unnecessary_null_comparison
@@ -84,7 +92,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                     .paymentdetails!.data[index].paymentAt);
                                 return Container(
                                   margin: EdgeInsets.only(
-                                    top: deviceheight * 0.03,
+                                    top: deviceHeight * 0.03,
                                     left: deviceWidth * 0.03,
                                     right: deviceWidth * 0.03,
                                   ),
@@ -112,7 +120,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                                       month,
                                       date,
                                       time,
-                                      deviceheight,
+                                      deviceHeight,
                                       deviceWidth),
                                 );
                               },
@@ -187,16 +195,6 @@ Widget buildPaymentListTile(
                       fontSize: AppFonts.smallFontSize,
                       color: AppColors.kPrimaryColor),
                 ),
-                SizedBox(
-                  width: deviceWidth * 0.4,
-                ),
-                Text(
-                  '\$$totalPayment',
-                  overflow: TextOverflow.ellipsis,
-                  style: AppFonts.poppinsLightMedium.copyWith(
-                      fontSize: AppFonts.mediumtext,
-                      color: AppColors.kHighlightColor),
-                ),
               ],
             ),
             SizedBox(
@@ -211,6 +209,20 @@ Widget buildPaymentListTile(
             ),
           ],
         ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '\$$totalPayment',
+                overflow: TextOverflow.ellipsis,
+                style: AppFonts.poppinsLightMedium.copyWith(
+                    fontSize: AppFonts.mediumtext,
+                    color: AppColors.kHighlightColor),
+              ),
+            ],
+          ),
+        ),
       ],
     ),
   );
@@ -219,14 +231,19 @@ Widget buildPaymentListTile(
 String formatMonth(String backendDateTime) {
   final dateTime = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(backendDateTime);
   return DateFormat('MMM').format(dateTime);
+  //retrun the month from the provided date
 }
 
 String formatDate(String backendDateTime) {
   final dateTime = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(backendDateTime);
+
   return DateFormat('d').format(dateTime);
+  //returns only the date from the full date
 }
 
 String formatTime(String backendDateTime) {
   final dateTime = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(backendDateTime);
   return DateFormat('hh:mm a').format(dateTime);
+
+  //retruns only the time from the full date
 }

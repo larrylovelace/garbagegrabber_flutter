@@ -137,6 +137,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -168,8 +169,11 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ),
                   SizedBox(height: deviceHeight * 0.05),
-                  CircularProgressIndicator(
-                    color: AppColors.kPrimaryColor,
+                  SizedBox(
+                    width: deviceWidth * 0.08,
+                    height: deviceWidth * 0.08,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 3, color: AppColors.kPrimaryColor),
                   )
                 ],
               ),

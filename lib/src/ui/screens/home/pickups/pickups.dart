@@ -40,15 +40,20 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
         backgroundColor: AppColors.kBackgroundColor,
         appBar: AppBar(
           toolbarHeight: deviceHeight > 1000 ? 100 : 50,
-          title: Row(
-            children: [
-              Text(
-                'Pickups',
-                style: AppFonts.poppinsBold.copyWith(
-                    fontSize: AppFonts.largeFontSize,
-                    color: AppColors.kBlackColor),
-              ),
-            ],
+          title: Padding(
+            padding: deviceHeight > 1000
+                ? EdgeInsets.only(left: deviceWidth * 0.02)
+                : EdgeInsets.zero,
+            child: Row(
+              children: [
+                Text(
+                  'Pickups',
+                  style: AppFonts.poppinsBold.copyWith(
+                      fontSize: AppFonts.largeFontSize,
+                      color: AppColors.kBlackColor),
+                ),
+              ],
+            ),
           ),
           elevation: 0,
           backgroundColor: AppColors.kBackgroundColor,
@@ -56,6 +61,7 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
         body: GetBuilder<PickupPageController>(
           builder: (pickupscontroller) {
             return NestedScrollView(
+              physics: const BouncingScrollPhysics(),
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
@@ -93,8 +99,12 @@ class _PickUpsShceduleState extends State<PickUpsShcedule>
                               .appointmentData.activeAppointments.isEmpty &&
                           pickupscontroller.appointmentsisempty == false
                       ? Center(
-                          child: CircularProgressIndicator(
-                              color: AppColors.kPrimaryColor),
+                          child: SizedBox(
+                            width: deviceWidth * 0.07,
+                            height: deviceWidth * 0.07,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: AppColors.kPrimaryColor),
+                          ),
                         )
                       : pickupscontroller
                                   .appointmentData.activeAppointments.isEmpty &&

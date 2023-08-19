@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-
 part 'products.g.dart';
 
 @HiveType(typeId: 0)
@@ -17,6 +16,8 @@ class Products extends HiveObject {
 
   @HiveField(5)
   final List<ProductData> productDatas;
+  @HiveField(6)
+  final List<UpcomingPickupData> upComingPickupData;
 
   Products({
     required this.firstname,
@@ -25,6 +26,7 @@ class Products extends HiveObject {
     required this.phonenumber,
     required this.qrcodeno,
     required this.productDatas,
+    required this.upComingPickupData,
   });
 }
 
@@ -48,4 +50,32 @@ class ProductData extends HiveObject {
     required this.price,
     required this.plan,
   });
+}
+
+@HiveType(typeId: 2)
+class UpcomingPickupData extends HiveObject {
+  @HiveField(0)
+  final String name;
+  @HiveField(1)
+  final String plan;
+  @HiveField(2)
+  final String upcomingPickupDate;
+  @HiveField(3)
+  final String remainingDays;
+  @HiveField(4)
+  final List<PickupDates> pickUpDates;
+  UpcomingPickupData(
+      {required this.name,
+      required this.plan,
+      required this.upcomingPickupDate,
+      required this.remainingDays,
+      required this.pickUpDates,
+      required});
+}
+
+@HiveType(typeId: 3)
+class PickupDates extends HiveObject {
+  @HiveField(0)
+  final String pickUpDate;
+  PickupDates({required this.pickUpDate});
 }

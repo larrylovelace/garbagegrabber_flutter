@@ -33,6 +33,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
         backgroundColor: AppColors.kBackgroundColor,
       ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.only(
             left: deviceWidth * 0.05,
             right: deviceWidth * 0.05,
@@ -222,15 +223,15 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
             SizedBox(height: deviceHeight * 0.02),
             Text(
               'By using the Garbage Grabbers App, you signify your understanding and acceptance of this Privacy Policy. If you do not agree with this policy, please do not use the App.',
-              style: AppFonts.poppinsMedium
-                  .copyWith(fontSize: AppFonts.mediumtext),
+              style:
+                  AppFonts.poppinsMedium.copyWith(fontSize: AppFonts.smalltext),
               textAlign: TextAlign.justify,
             ),
             SizedBox(height: deviceHeight * 0.02),
             Text(
-              'Larry Love\n615-437-3087',
+              'Garbage Grabbers App Support Team\nInfo@garbagegrabbers.app\n615-437-3087',
               style: AppFonts.poppinsMedium
-                  .copyWith(fontSize: AppFonts.mediumFontSize),
+                  .copyWith(fontSize: AppFonts.smallFontSize),
               textAlign: TextAlign.justify,
             ),
           ],

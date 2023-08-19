@@ -23,13 +23,14 @@ class ProductsAdapter extends TypeAdapter<Products> {
       phonenumber: fields[3] as String,
       qrcodeno: fields[4] as String,
       productDatas: (fields[5] as List).cast<ProductData>(),
+      upComingPickupData: (fields[6] as List).cast<UpcomingPickupData>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Products obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.firstname)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class ProductsAdapter extends TypeAdapter<Products> {
       ..writeByte(4)
       ..write(obj.qrcodeno)
       ..writeByte(5)
-      ..write(obj.productDatas);
+      ..write(obj.productDatas)
+      ..writeByte(6)
+      ..write(obj.upComingPickupData);
   }
 
   @override
@@ -94,6 +97,86 @@ class ProductDataAdapter extends TypeAdapter<ProductData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ProductDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class UpcomingPickupDataAdapter extends TypeAdapter<UpcomingPickupData> {
+  @override
+  final int typeId = 2;
+
+  @override
+  UpcomingPickupData read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return UpcomingPickupData(
+      name: fields[0] as String,
+      plan: fields[1] as String,
+      upcomingPickupDate: fields[2] as String,
+      remainingDays: fields[3] as String,
+      pickUpDates: (fields[4] as List).cast<PickupDates>(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, UpcomingPickupData obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.name)
+      ..writeByte(1)
+      ..write(obj.plan)
+      ..writeByte(2)
+      ..write(obj.upcomingPickupDate)
+      ..writeByte(3)
+      ..write(obj.remainingDays)
+      ..writeByte(4)
+      ..write(obj.pickUpDates);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UpcomingPickupDataAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class PickupDatesAdapter extends TypeAdapter<PickupDates> {
+  @override
+  final int typeId = 3;
+
+  @override
+  PickupDates read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return PickupDates(
+      pickUpDate: fields[0] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, PickupDates obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.pickUpDate);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PickupDatesAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -140,7 +140,7 @@ class _AccountDeletionOTPState extends State<AccountDeletionOTP> {
           onTap: (() {
             FocusScope.of(context).unfocus();
           }),
-          child: ListView(children: [
+          child: ListView(physics: const BouncingScrollPhysics(), children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
