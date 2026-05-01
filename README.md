@@ -1,8 +1,6 @@
-# garbage_grabber
+# Garbage Grabbers
 
-# Garbage Grabber
-
-Garbage Grabber is a Flutter-based mobile app concept designed to help customers schedule waste pickup services from their apartment or residential location.
+Garbage Grabbers is a Flutter-based mobile app concept designed to help customers schedule waste pickup services from their apartment or residential location.
 
 ## Overview
 
