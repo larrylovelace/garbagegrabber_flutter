@@ -1,3 +1,26 @@
 # garbage_grabber
 
-A Flutter app for the customers, developed specially to manage their waste. Once they sign up and fill out their apartment and address details, they can take advantage of the service being offered by Garbage Grabber. They can select a specific service, take the appointment date, and pay for the service through their card, which is exclusively handled through Stripe. The customer can see the appointment details and the specific pickup dates inside the appointment.
+# Garbage Grabber
+
+Garbage Grabber is a Flutter-based mobile app concept designed to help customers schedule waste pickup services from their apartment or residential location.
+
+## Overview
+
+The app allows users to create an account, enter their apartment and address details, select a pickup service, schedule an appointment, and make payments through Stripe.
+
+Customers can also view appointment details and upcoming pickup dates inside the app.
+
+## Built With
+
+- Flutter
+- Dart
+- Stripe payment integration
+- Mobile-first app structure
+
+## Project Purpose
+
+This project was created as a practical app development concept focused on service scheduling, customer onboarding, and payment flow management.
+
+## Status
+
+Prototype / early-stage app concept.
